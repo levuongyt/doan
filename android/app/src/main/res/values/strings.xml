@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">doanqlthuchi</string>
+    <string name="facebook_app_id">27112316075082213</string>
+    <string name="fb_login_protocol_scheme">fb27112316075082213</string>
+    <string name="facebook_client_token">7436e7be432d7c9c0b5b3744dc111227</string>
+</resources>
