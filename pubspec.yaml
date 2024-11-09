@@ -50,6 +50,7 @@ dependencies:
   fl_chart: ^0.69.0
   syncfusion_flutter_charts: ^27.1.53
   shared_preferences: ^2.3.2
+  month_year_picker: ^0.4.0+1
 
 
 

@@ -36,7 +36,7 @@ class PrefsService{
     return result;
   }
 
-  Future<String> readStringData(String key) async {
+  Future<String?> readStringData(String key) async {
     String? result;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -44,6 +44,6 @@ class PrefsService{
     } catch (e) {
       print('error$e');
     }
-    return result ?? "";
+    return result;
   }
 }

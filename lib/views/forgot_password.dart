@@ -12,11 +12,11 @@ class ForgotPassword extends StatefulWidget {
 }
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  final ForgotPassController controller=Get.put(ForgotPassController());
-  final TextEditingController emailController=TextEditingController();
+  final ForgotPassController controller = Get.put(ForgotPassController());
+  final TextEditingController emailController = TextEditingController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ever(controller.isLoading, (callback) {
       if (callback) {
@@ -26,41 +26,83 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       }
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FORGOT PASSWORD',style: TextStyle(color: Colors.white),),
-        centerTitle: true,
-        backgroundColor: Colors.blueAccent,
-        iconTheme: const IconThemeData(
-            color: Colors.white
+        title: Text(
+          'QUÊN MẬT KHẨU'.tr,
+          style: Theme.of(context).textTheme.displayLarge,
         ),
+        centerTitle: true,
+        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Container(
-        padding: EdgeInsets.all(10),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text('Mời bạn nhập vào email mà bạn quên mật khẩu và chúng tôi sẽ gửi link để cập nhật lại mật khẩu!'),
-            SizedBox(height: 10,),
-            TextFormField(
-              controller: emailController,
-              decoration: InputDecoration(
-                  hintText: 'Email',
-                  border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(20)
-                  )
+            const SizedBox(height: 40),
+             Text(
+              'Bạn quên mật khẩu?'.tr,
+                  // 'Forgot Your Password?',
+              style: TextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(height: 10,),
-            ElevatedButton(
+            const SizedBox(height: 10),
+             Text(
+              'Vui lòng nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu của bạn.'.tr,
+              //Please enter the email associated with your account, and we’ll send a link to reset your password.
+              style: TextStyle(
+                fontSize: 16,
+                color:Theme.of(context).hintColor,
+              ),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(height: 30),
+            TextFormField(
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                hintStyle: TextStyle(color: Theme.of(context).hintColor),
+                hintText: 'Email',
+                //filled: true,
+               // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 18,
+                  horizontal: 20,
+                ),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+            ),
+            const SizedBox(height: 30),
+            SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blueAccent
+                  backgroundColor: Theme.of(context).indicatorColor,
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  // shape: RoundedRectangleBorder(
+                  //   borderRadius: BorderRadius.circular(30),
+                  // ),
                 ),
                 onPressed: () async {
                   await controller.sendEmaiAndResetPass(emailController.text);
-                }, child: Text('RESET PASSWORD',style: TextStyle(color: Colors.white),))
+                },
+                child: Text(
+                  'GỬI LIÊN KẾT ĐẶT LẠI'.tr,
+                  style: Theme.of(context).textTheme.displayLarge,
+                ),
+              ),
+            ),
+           // const SizedBox(height: 40),
           ],
         ),
       ),

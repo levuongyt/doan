@@ -1,7 +1,11 @@
+import 'package:doan_ql_thu_chi/views/add_category.dart';
+import 'package:doan_ql_thu_chi/views/add_transactions.dart';
+import 'package:doan_ql_thu_chi/views/home.dart';
+import 'package:doan_ql_thu_chi/views/update_category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loader_overlay/loader_overlay.dart';
-import '../controllers/category_controller.dart';
+
+import '../controllers/transaction_controller.dart';
 
 class Category extends StatefulWidget {
   const Category({super.key});
@@ -11,24 +15,7 @@ class Category extends StatefulWidget {
 }
 
 class _CategoryState extends State<Category> {
-  final CetegoryController controller = Get.put(CetegoryController());
-  final TextEditingController nameDMThuNhapController = TextEditingController();
-  final TextEditingController nameDMChiTieuController = TextEditingController();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    ever(controller.isLoading, (callback) {
-      print('loading state: ${controller.isLoading}');
-      if (callback) {
-        context.loaderOverlay.show();
-      } else {
-        context.loaderOverlay.hide();
-      }
-    });
-  }
-
+  final TransactionController controller = Get.find();
   @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
@@ -37,312 +24,242 @@ class _CategoryState extends State<Category> {
       initialIndex: 0,
       length: 2,
       child: Scaffold(
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: Container(
-        //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        //   width: double.infinity,
-        //   child: ElevatedButton(
-        //       style:
-        //           ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-        //       onPressed: () async {
-        //         await controller.addCategory(nameDMThuNhapController.text,
-        //             controller.selectedIconCode.value, 'Thu Nhập');
-        //       },
-        //       child: Text(
-        //         'Lưu danh mục',
-        //         style: TextStyle(color: Colors.white),
-        //       )),
-        // ),
         appBar: AppBar(
-          title: Text('Thêm danh mục'),
+         // automaticallyImplyLeading: false,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          title: Text(
+            'Thêm danh mục'.tr,
+            style: Theme.of(context).textTheme.displayLarge,
+          ),
+          // leading: IconButton(onPressed: (){
+          //   Get.to(Home());
+          // }, icon: Icon(Icons.arrow_back)),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Get.to(AddCategory());
+                },
+                icon: Icon(Icons.add))
+          ],
           centerTitle: true,
+          iconTheme: IconThemeData(color: Colors.white),
           bottom: PreferredSize(
             preferredSize: Size.fromHeight(50.0), // Adjust the height as needed
             child: Container(
-              color: Colors.grey[300], // Background color for unselected tabs
-              child: TabBar(
-                tabs: <Widget>[
-                  Tab(
-                    text: 'Thu nhập',
+              color: Theme.of(context).cardColor, // Background color for unselected tabs
+              child: Column(
+                children: [
+                  Container(
+                    height: 10,
+                    color: Theme.of(context).dividerColor,
                   ),
-                  Tab(
-                    text: 'Chi tiêu',
+                  TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        text: 'Thu nhập'.tr,
+                      ),
+                      Tab(
+                        text: 'Chi tiêu'.tr,
+                      ),
+                    ],
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.blue,
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).indicatorColor, // Background color for the selected tab
+                      borderRadius: BorderRadius.circular(
+                          5), // Rounded corners for the selected tab
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
                   ),
                 ],
-                labelColor: Colors.white,
-                unselectedLabelColor:
-                Colors.blue,
-                indicator: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(
-                      5),
-                ),
-                indicatorSize: TabBarIndicatorSize.tab,
               ),
             ),
           ),
         ),
         body: SafeArea(
-            child: TabBarView(
-              children: [
-                SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('Tên danh mục : '),
-                            Expanded(
-                              child: TextFormField(
-                                controller: nameDMThuNhapController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10))),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [Text('Biểu tượng')],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Obx(
-                              () => Container(
-                            height: doubleHeight*(215/800),
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 6,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10),
-                              itemCount: controller.iconCodes.length,
-                              itemBuilder: (context, index) {
-                                final iconCode = controller.iconCodes[index];
-                                return InkWell(
-                                  onTap: () {
-                                    controller.selectedIconTNCode.value = iconCode;
-                                  },
-                                  child: Obx(
-                                        () => Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                              controller.selectedIconTNCode.value ==
-                                                  iconCode
-                                                  ? Colors.blueAccent
-                                                  : Colors.grey),
-                                          borderRadius: BorderRadius.circular(10)),
-                                      child: Icon(IconData(iconCode,
-                                          fontFamily: 'MaterialIcons')),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text('Màu sắc'),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Obx(() => Container(
-                          height: doubleHeight*(215/800),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 6,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                            ),
-                            itemCount: controller.colors.length,
-                            itemBuilder: (context, index) {
-                              final color = controller.colors[index];
-                              return InkWell(
+            child: TabBarView(children: [
+          ///TAB 1
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  Obx(
+                    () => Container(
+                      //  height: doubleHeight*(260/800),
+                      child: ListView.builder(
+                        physics: NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: controller.listIncomeCategory.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final category =
+                                controller.listIncomeCategory[index];
+                            return InkWell(
                                 onTap: () {
-                                  controller.selectedTNColor.value =
-                                      color.value;
+                                  //controller.selectIncomeCategory(category.id ?? "");
+                                  // print(
+                                  //     'id la :${controller.selectedCategory.value}');
+                                  // print('a');
+                                  // idDanhMuc = '${category.id}';
+                                  // print(idDanhMuc);
+                                  Get.to(UpdateCategory(
+                                      id: category.id ?? "",
+                                      name: category.name,
+                                      iconDM: category.iconCode,
+                                      colorDM: category.colorIcon,
+                                      type: category.type,
+                                  ));
                                 },
-                                child: Obx(
-                                      () => Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: controller.selectedTNColor.value ==
-                                            color.value
-                                            ? Colors.black
-                                            : Colors.grey,
+                                child: Column(
+                                    children: [
+                                      Container(
+                                        //width: doubleWidth * (85 / 360),
+                                        // height: doubleHeight * (62 / 800),
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                              color: Colors.grey,
+                                                // color: controller
+                                                //             .selectedIncomeCategory
+                                                //             .value ==
+                                                //         category.id
+                                                //     ? Colors.blueAccent
+                                                //     : Colors.grey,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Icon(
+                                                IconData(
+                                                    category.iconCode ??
+                                                        Icons
+                                                            .category.codePoint,
+                                                    fontFamily:
+                                                        'MaterialIcons'),
+                                                color: Color(category
+                                                        .colorIcon ??
+                                                    Colors.blueAccent.value),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 4,
+                                              child:
+                                                  Text('${category.name}'.tr),
+                                            ),
+                                            Icon(Icons.dehaze)
+                                          ],
+                                        ),
                                       ),
-                                      color: color,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                      SizedBox(
+                                        height: 10,
+                                      )
+                                    ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        )),
-                        SizedBox(height: 20,),
-                        SizedBox(
-                          width: double.infinity,
-                          height: doubleHeight * (50 / 800),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent),
-                              onPressed: () async {
-                                await controller.addCategory(nameDMThuNhapController.text,
-                                    controller.selectedIconTNCode.value,
-                                    controller.selectedTNColor.value,
-                                    'Thu Nhập');
-                              },
-                              child: Text(
-                                'Lưu Danh Mục',
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              )),
-                        ),
-                      ],
+                            );
+                          }),
                     ),
                   ),
-                ),
+                ],
+              ),
+            ),
+          ),
 
-                ///Tab2
-                SingleChildScrollView(
-                  child: Container(
-                    padding: EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        Row(
-                          children: [
-                            Text('Tên danh mục : '),
-                            Expanded(
-                              child: TextFormField(
-                                controller: nameDMChiTieuController,
-                                decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                        borderRadius: BorderRadius.circular(10))),
-                              ),
-                            )
-                          ],
-                        ),
-                        SizedBox(
-                          height: 10,
-                        ),
-                        Row(
-                          children: [Text('Biểu tượng')],
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Obx(
-                              () => Container(
-                            height: doubleHeight*(215/800),
-                            child: GridView.builder(
-                              shrinkWrap: true,
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 6,
-                                  crossAxisSpacing: 10,
-                                  mainAxisSpacing: 10),
-                              itemCount: controller.iconCodes.length,
-                              itemBuilder: (context, index) {
-                                final iconCode = controller.iconCodes[index];
-                                return InkWell(
-                                  onTap: () {
-                                    controller.selectedIconCTCode.value = iconCode;
-                                  },
-                                  child: Obx(
-                                        () => Container(
-                                      decoration: BoxDecoration(
-                                          border: Border.all(
-                                              color:
-                                              controller.selectedIconCTCode.value ==
-                                                  iconCode
-                                                  ? Colors.blueAccent
-                                                  : Colors.grey),
-                                          borderRadius: BorderRadius.circular(10)),
-                                      child: Icon(IconData(iconCode,
-                                          fontFamily: 'MaterialIcons')),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: 10,),
-                        Row(
-                          children: [
-                            Text('Màu sắc'),
-                          ],
-                        ),
-                        SizedBox(height: 5),
-                        Obx(() => Container(
-                          height: doubleHeight*(215/800),
-                          child: GridView.builder(
-                            shrinkWrap: true,
-                            gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 6,
-                              crossAxisSpacing: 10,
-                              mainAxisSpacing: 10,
-                            ),
-                            itemCount: controller.colors.length,
-                            itemBuilder: (context, index) {
-                              final color = controller.colors[index];
-                              return InkWell(
+          ///TAB 2 CHI TIÊU
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Obx(
+                    () => Container(
+                      //  height: doubleHeight*(260/800),
+                      child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: controller.listExpenseCategory.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final category =
+                                controller.listExpenseCategory[index];
+                            return InkWell(
                                 onTap: () {
-                                  controller.selectedCTColor.value =
-                                      color.value;
+                                 // controller.selectExpenseCategory(category.id ?? "");
+                                  // print(
+                                  //     'id la :${controller.selectedCategory.value}');
+                                  // print('a');
+                                  // idDanhMuc = '${category.id}';
+                                  // print(idDanhMuc);
+                                  Get.to(UpdateCategory(
+                                      id: category.id ?? '',
+                                      name: category.name,
+                                      iconDM: category.iconCode,
+                                      colorDM: category.colorIcon,
+                                      type: category.type,
+                                  ));
                                 },
-                                child: Obx(
-                                      () => Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: controller.selectedCTColor.value ==
-                                            color.value
-                                            ? Colors.black
-                                            : Colors.grey,
+                                child: Column(
+                                    children: [
+                                      Container(
+                                        //width: doubleWidth * (85 / 360),
+                                        // height: doubleHeight * (62 / 800),
+                                        padding: EdgeInsets.all(20),
+                                        decoration: BoxDecoration(
+                                            border: Border.all(
+                                                // color: controller
+                                                //             .selectedExpenseCategory
+                                                //             .value ==
+                                                //         category.id
+                                                //     ? Colors.blueAccent
+                                                //     : Colors.grey,
+                                              color: Colors.grey,
+                                            ),
+                                            borderRadius:
+                                                BorderRadius.circular(10)),
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.start,
+                                          children: [
+                                            Expanded(
+                                              flex: 1,
+                                              child: Icon(
+                                                IconData(
+                                                    category.iconCode ??
+                                                        Icons
+                                                            .category.codePoint,
+                                                    fontFamily:
+                                                        'MaterialIcons'),
+                                                color: Color(category
+                                                        .colorIcon ??
+                                                    Colors.blueAccent.value),
+                                              ),
+                                            ),
+                                            Expanded(
+                                              flex: 4,
+                                              child:
+                                                  Text('${category.name}'.tr),
+                                            ),
+                                            Icon(Icons.dehaze)
+                                          ],
+                                        ),
                                       ),
-                                      color: color,
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
+                                      SizedBox(
+                                        height: 10,
+                                      )
+                                    ],
                                   ),
-                                ),
-                              );
-                            },
-                          ),
-                        )),
-                        SizedBox(height: 20,),
-                        SizedBox(
-                          width: double.infinity,
-                          height: doubleHeight * (50 / 800),
-                          child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: Colors.blueAccent),
-                              onPressed: () async {
-                                await controller.addCategory(nameDMChiTieuController.text,
-                                    controller.selectedIconCTCode.value,
-                                    controller.selectedCTColor.value,
-                                    'Chi Tiêu');
-                              },
-                              child: Text(
-                                'Lưu Danh Mục',
-                                style: TextStyle(color: Colors.white, fontSize: 15),
-                              )),
-                        ),
-                      ],
+                            );
+                          }),
                     ),
                   ),
-                ),
-              ],
-            )),
+                ],
+              ),
+            ),
+          ),
+        ])),
       ),
     );
   }

@@ -112,7 +112,13 @@ class FireBaseUtil {
       );
 
       // Once signed in, return the UserCredential
-      await FirebaseAuth.instance.signInWithCredential(credential);
+     // await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+
+      final String uid=userCredential.user?.uid??'';
+      final  String name = googleUser?.displayName ?? '';
+      final String email = googleUser?.email ?? '';
+      await FirebaseStorageUtil().addUsers(uid: uid, Email: email, name: name, ngayTao: DateTime.now(), tongSoDu: 0.0);
       result=true;
     }catch(e){
       result=false;

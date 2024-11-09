@@ -5,7 +5,7 @@ import '../utils/firebase/login/authentication.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
 
 class SignUpController extends GetxController {
-  final formKey = GlobalKey<FormState>();
+
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
@@ -19,7 +19,7 @@ class SignUpController extends GetxController {
 
   String? ktEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email Không được bỏ trống';
+      return 'Email không được bỏ trống';
     } else if (value.length < 6) {
       return 'Độ dài email phải từ 6 ký tự trở lên';
     } else if (!RegExp(
@@ -43,7 +43,7 @@ class SignUpController extends GetxController {
 
   String? ktPassWord(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password Không được bỏ trống';
+      return 'Password không được bỏ trống';
     } else if (value.length < 6) {
       return 'Độ dài Password phải từ 6 ký tự trở lên';
     }
@@ -55,11 +55,9 @@ class SignUpController extends GetxController {
 
   String? ktUserName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tên tài khoản Không được bỏ trống';
+      return 'Tên tài khoản không được bỏ trống';
     } else if (value.length < 6) {
       return 'Tên tài khoản phải từ 6 ký tự trở lên';
-    } else if (!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)) {
-      return 'Tên tài khoản không được chứa ký tự đặc biệt';
     }
     return null;
   }

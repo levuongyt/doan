@@ -19,7 +19,6 @@ class _SignInState extends State<SignIn> {
     // TODO: implement initState
     super.initState();
     ever(signInController.isLoading, (callback) {
-     // print('loading state: ${signInController.isLoading}');
       if (callback) {
         context.loaderOverlay.show();
       } else {
@@ -31,29 +30,20 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
-
-    // ever(signInController.isLoading, (callback) {
-    //   print('loading state: ${signInController.isLoading}');
-    //   if (callback) {
-    //     context.loaderOverlay.show();
-    //   } else {
-    //     context.loaderOverlay.hide();
-    //   }
-    // });
     return Form(
       key: signInController.formKey,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          title: const Text(
-            'LOGIN',
-            style: TextStyle(color: Colors.white),
+          title: Text(
+            'ĐĂNG NHẬP'.tr,
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           centerTitle: true,
-          backgroundColor: Colors.blue,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           iconTheme: const IconThemeData(color: Colors.white),
+          automaticallyImplyLeading: false,
         ),
-        backgroundColor: Colors.white,
         body: SafeArea(
           child: Container(
             padding: const EdgeInsets.all(10),
@@ -75,12 +65,7 @@ class _SignInState extends State<SignIn> {
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.email),
                         hintText: "Email",
-                        hintStyle: const TextStyle(color: Colors.grey),
-                        // focusedBorder: OutlineInputBorder(
-                        //     borderRadius: BorderRadius.circular(20)),
-                        // enabledBorder: OutlineInputBorder(
-                        //   borderRadius: BorderRadius.circular(20),
-                        // )
+                        hintStyle: TextStyle(color: Theme.of(context).hintColor),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
@@ -105,12 +90,8 @@ class _SignInState extends State<SignIn> {
                               icon: signInController.isVisibility.value
                                   ? const Icon(Icons.visibility)
                                   : const Icon(Icons.visibility_off)),
-                          hintText: " Password",
-                          hintStyle: const TextStyle(color: Colors.grey),
-                          // focusedBorder: OutlineInputBorder(
-                          //     borderRadius: BorderRadius.circular(20)),
-                          // enabledBorder: OutlineInputBorder(
-                          //     borderRadius: BorderRadius.circular(20))
+                          hintText: " Password".tr,
+                          hintStyle: TextStyle(color: Theme.of(context).hintColor),
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(30),
                           )),
@@ -125,7 +106,7 @@ class _SignInState extends State<SignIn> {
                             onChanged: (value) {
                               signInController.stateCheckBok();
                             }),
-                        const Text('Nhớ mật khẩu')
+                         Text('Nhớ mật khẩu'.tr)
                       ],
                     ),
                   ),
@@ -141,35 +122,15 @@ class _SignInState extends State<SignIn> {
                             await signInController.signIn(
                                 signInController.emailController.text,
                                 signInController.passwordController.text);
-                           // await signInController.saveLoginData();
-                            // Get.to(const Home());
-                            //  } else {
-                            //     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            //         backgroundColor: Colors.red,
-                            //         content: Container(
-                            //           child: const Row(
-                            //             children: [
-                            //               Icon(
-                            //                 Icons.clear,
-                            //                 color: Colors.white,
-                            //               ),
-                            //               SizedBox(
-                            //                 width: 10,
-                            //               ),
-                            //               Text('Login failed')
-                            //             ],
-                            //           ),
-                            //         )));
-                            //   }
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.blue,
+                          backgroundColor: Theme.of(context).indicatorColor,
                         ),
-                        child: const Center(
+                        child:  Center(
                             child: Text(
-                              'LOGIN',
-                              style: TextStyle(color: Colors.white, fontSize: 20),
+                              'LOGIN'.tr,
+                              style: Theme.of(context).textTheme.displayLarge,
                             ))),
                   ),
                   const SizedBox(
@@ -182,16 +143,16 @@ class _SignInState extends State<SignIn> {
                           onPressed: () {
                             Get.to(const ForgotPassword());
                           },
-                          child: const Text(
-                            'Quên mật khẩu',
+                          child:  Text(
+                            'Quên mật khẩu'.tr,
                             style: TextStyle(fontSize: 15),
                           )),
                       TextButton(
                           onPressed: () {
-                            Get.to(const SignUp());
+                            Get.off(const SignUp());
                           },
-                          child: const Text(
-                            'Đăng ký',
+                          child:  Text(
+                            'Đăng ký'.tr,
                             style: TextStyle(fontSize: 15),
                           )),
                     ],
@@ -204,8 +165,8 @@ class _SignInState extends State<SignIn> {
                         width: doubleWidth * (100 / 360),
                         color: Colors.black12,
                       ),
-                      const Text(
-                        'Hoặc đăng nhập bằng',
+                       Text(
+                        'Hoặc đăng nhập bằng'.tr,
                         style: TextStyle(fontSize: 15),
                       ),
                       Container(
@@ -242,8 +203,6 @@ class _SignInState extends State<SignIn> {
                             borderRadius: BorderRadius.circular(12)),
                         child: InkWell(
                           onTap: () async{
-                            // final FireBaseUtil qlFireBase = FireBaseUtil();
-                            // qlFireBase.signInWithGoogle();
                             await signInController.signInWithEmailGoogle();
                           },
                           child: Image.asset(

@@ -4,6 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../Models/category_model.dart';
+import '../../../Models/report_model.dart';
 import '../../../models/transaction_model.dart';
 import '../../../models/user_model.dart';
 
@@ -107,27 +108,56 @@ class FirebaseStorageUtil {
       required colorIcon,
       required type}) async {
     try {
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
+     // String? uid = FirebaseAuth.instance.currentUser?.uid;
       await storage.collection('Categories').doc(const Uuid().v1()).set({
         'name': name,
         'iconCode': iconCode,
         'colorIcon': colorIcon,
         'type': type,
-        'userId': uid,
+      //  'userId': uid,
       });
       print('Danh mục đã được thêm thành công');
     } catch (e) {
       print('Lỗi khi thêm danh mục: $e');
     }
   }
+  
+  ///sửa danh mục
+  Future<bool> updateCategory({required String id, required String name, required int icon,required int color, required String type}) async{
+    bool result=false;
+    try{
+      await storage.collection('Categories').doc(id).update({
+        'name': name,
+        'iconCode':icon,
+        'colorIcon':color,
+        'type':type,
+      });
+      result=true;
+    }catch(e){
+      result=false;
+    }
+    return result;
+  }
+
+  ///Xóa danh mục
+  Future<bool> deleteCategory({required String id})async{
+    bool result=false;
+    try{
+      await storage.collection('Categories').doc(id).delete();
+      result=true;
+    }catch(e){
+      result=false;
+    }
+    return result;
+  }
 
   Future<List<CategoryModel>> getCategories({required String type}) async {
     try {
-      String? uid = FirebaseAuth.instance.currentUser?.uid;
+     // String? uid = FirebaseAuth.instance.currentUser?.uid;
       QuerySnapshot snapshot = await storage
           .collection('Categories')
           .where('type', isEqualTo: type)
-          .where('userId', isEqualTo: uid)
+          //.where('userId', isEqualTo: uid)
           .get();
       List<CategoryModel> categories =
           snapshot.docs.map((doc) => CategoryModel.fromDocument(doc)).toList();
@@ -150,24 +180,66 @@ class FirebaseStorageUtil {
     }
   }
 
+  ///chi tiết báo cáo
+  Future<List<TransactionModel>> getCategoryTransactions(DateTime month, String categoryId) async {
+    String? uid = FirebaseAuth.instance.currentUser?.uid;
+    if (uid == null) return [];
+
+    DateTime startOfMonth = DateTime(month.year, month.month, 1);
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 1).subtract(Duration(seconds: 1));
+
+    QuerySnapshot querySnapshot = await storage
+        .collection('Transactions')
+        .where('userId', isEqualTo: uid)
+        .where('categoryId', isEqualTo: categoryId)
+        .where('ngayGD', isGreaterThanOrEqualTo: startOfMonth)
+        .where('ngayGD', isLessThanOrEqualTo: endOfMonth)
+        .get();
+
+    List<TransactionModel> transactions = querySnapshot.docs.map((doc) => TransactionModel.fromDocument(doc)).toList();
+    return transactions;
+  }
+
   ///Báo cáo
 
-  Future<DocumentSnapshot?> getReport(DateTime month) async {
+  // Future<DocumentSnapshot?> getReport(DateTime month) async {
+  //   String? uid = FirebaseAuth.instance.currentUser?.uid;
+  //   DocumentReference reportRef = FirebaseFirestore.instance
+  //       .collection('Reports')
+  //       .doc(
+  //           '${uid}-${DateFormat('yyyy-MM').format(month)}');
+  //
+  //   DocumentSnapshot reportSnapshot = await reportRef.get();
+  //   print(' ID la : ${reportRef.id}');
+  //   if (!reportSnapshot.exists) {
+  //     print('khong co du lieu');
+  //     return null;
+  //   }
+  //
+  //   return reportSnapshot;
+  // }
+
+  Future<ReportModel?> getReport(DateTime month) async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentReference reportRef = FirebaseFirestore.instance
         .collection('Reports')
-        .doc(
-            '${uid}-${DateFormat('yyyy-MM').format(month)}');
+        .doc('${uid}-${DateFormat('yyyy-MM').format(month)}');
 
-    DocumentSnapshot reportSnapshot = await reportRef.get();
-    print(' ID la : ${reportRef.id}');
-    if (!reportSnapshot.exists) {
-      print('khong co du lieu');
+    try {
+      DocumentSnapshot reportSnapshot = await reportRef.get();
+      print('ID la: ${reportRef.id}');
+
+      if (!reportSnapshot.exists) {
+        print('Khong co du lieu');
+        return null;
+      }
+      return ReportModel.fromDocument(reportSnapshot);
+    } catch (e) {
+      print('Lỗi khi lấy báo cáo: $e');
       return null;
     }
-
-    return reportSnapshot;
   }
+
 
   int daysInMonth(DateTime date) {
     DateTime firstDayOfNextMonth = (date.month < 12)
@@ -220,6 +292,70 @@ class FirebaseStorageUtil {
     double totalExpenseDay = totalExpense / soNgayTrongThang;
     double soDuThang = totalIncome - totalExpense;
 
+    ///bao cao moi
+    Map<String, Map<String, dynamic>> categoryReport = {};
+
+    for (var doc in incomeSnapshot.docs) {
+      String categoryId = doc['categoryId'];
+      double amount = doc['tienGD'];
+
+      if (!categoryReport.containsKey(categoryId)) {
+        DocumentSnapshot categorySnapshot = await storage
+            .collection('Categories')
+            .doc(categoryId)
+            .get();
+
+        categoryReport[categoryId] = {
+          'id': categoryId,
+          'name': categorySnapshot['name'],
+          'iconCode': categorySnapshot['iconCode'],
+          'color': categorySnapshot['colorIcon'],
+          'totalAmount': 0.0,
+         // 'transactionCount': 0,
+          'type': categorySnapshot['type'],
+          'percentage': 0.0,
+        };
+      }
+
+      categoryReport[categoryId]?['totalAmount'] += amount;
+    //  categoryReport[categoryId]?['transactionCount'] += 1;
+    }
+
+    ///chi tieeu
+    for (var doc in expenseSnapshot.docs) {
+      String categoryId = doc['categoryId'];
+      double amount = doc['tienGD'];
+
+      if (!categoryReport.containsKey(categoryId)) {
+        DocumentSnapshot categorySnapshot = await storage
+            .collection('Categories')
+            .doc(categoryId)
+            .get();
+
+        categoryReport[categoryId] = {
+          'id': categoryId,
+          'name': categorySnapshot['name'],
+          'iconCode': categorySnapshot['iconCode'],
+          'color': categorySnapshot['colorIcon'],
+          'totalAmount': 0.0,
+         // 'transactionCount': 0,
+          'type': categorySnapshot['type'],
+          'percentage': 0.0,
+        };
+      }
+
+      categoryReport[categoryId]?['totalAmount'] += amount;
+     // categoryReport[categoryId]?['transactionCount'] += 1;
+    }
+
+    categoryReport.forEach((id, data) {
+      if (data['type'] == 'Chi Tiêu') {
+        data['percentage'] = (data['totalAmount'] / totalExpense) * 100;
+      } else {
+        data['percentage'] = (data['totalAmount'] / totalIncome) * 100;
+      }
+    });
+
     DocumentReference reportRef = FirebaseFirestore.instance
         .collection('Reports')
         .doc(userId + '-' + DateFormat('yyyy-MM').format(month));
@@ -232,7 +368,21 @@ class FirebaseStorageUtil {
       'thuNhapNgay': totalIcomeDay,
       'chiTieuNgay': totalExpenseDay,
       'soDuThang': soDuThang,
+      'categories':categoryReport
     });
     print('Báo cáo tháng lưu thành công');
   }
+
+  /// Update Tổng số dư
+ Future<bool> updateTotalBalance(double newTotalBalance) async {
+    String uid=FirebaseAuth.instance.currentUser?.uid??'';
+    bool result=false;
+    try{
+      await storage.collection('Users').doc(uid).update({'tongSoDu': newTotalBalance});
+      result=true;
+    }catch(e){
+      result=false;
+    }
+  return result;
+}
 }

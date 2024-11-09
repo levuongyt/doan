@@ -1,8 +1,12 @@
 import 'package:doan_ql_thu_chi/config/SharedPreferences/prefs_service.dart';
+import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
+import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
+import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/firebase/login/authentication.dart';
 import '../views/home.dart';
+import 'home_controller.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
@@ -28,8 +32,8 @@ class SignInController extends GetxController {
   Future<void> loadLoginData() async {
     isCheckBok.value = await prefsService.readBoolCheck('checkbook');
     if (isCheckBok.value) {
-      emailController.text = await prefsService.readStringData('dataEmail');
-      passwordController.text = await prefsService.readStringData('dataPass');
+      emailController.text = await prefsService.readStringData('dataEmail')??"";
+      passwordController.text = await prefsService.readStringData('dataPass')??"";
     }
   }
 
@@ -88,6 +92,9 @@ class SignInController extends GetxController {
       if (result) {
         Get.snackbar('Success', 'Welcome');
         await saveLoginData();
+        Get.lazyPut(()=>HomeController());
+        Get.lazyPut(()=>TransactionController());
+        Get.lazyPut(()=>ReportController());
         Get.off(() => const Home());
         print('Trạng thái : ${isLoading.value}');
       } else {
@@ -106,6 +113,9 @@ class SignInController extends GetxController {
       bool result = await fireBaseUtil.signInWithGoogle();
       if (result) {
         Get.snackbar('Success', 'Welcome');
+        Get.lazyPut(()=>HomeController());
+        Get.lazyPut(()=>TransactionController());
+        Get.lazyPut(()=>ReportController());
         Get.off(() => const Home());
         print('Trạng thái : ${isLoading.value}');
       } else {

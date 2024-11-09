@@ -6,24 +6,26 @@ class CategoryModel {
   int iconCode;
   int colorIcon;
   String type;
-  String? userId;
-
-  CategoryModel(
-      {this.id,
-      required this.name,
-      required this.iconCode,
-      required this.colorIcon,
-      required this.type,
-      this.userId});
+  //String? userId;
+  CategoryModel({
+    this.id,
+    required this.name,
+    required this.iconCode,
+    required this.colorIcon,
+    required this.type,
+   // this.userId,
+  });
 
   factory CategoryModel.fromDocument(DocumentSnapshot doc) {
+
     return CategoryModel(
-        id: doc.id,
-        name: doc.get('name'),
-        iconCode: doc.get('iconCode'),
-        colorIcon: doc.get('colorIcon'),
-        type: doc.get('type'),
-        userId: doc.get('userId'));
+      id: doc.id,
+      name: doc.get('name'),
+      iconCode: doc.get('iconCode'),
+      colorIcon: doc.get('colorIcon'),
+      type: doc.get('type'),
+     // userId: doc.get('userId'),
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -32,7 +34,7 @@ class CategoryModel {
       'iconCode': iconCode,
       'colorIcon': colorIcon,
       'type': type,
-      'userId': userId,
+     // 'userId': userId,
     };
   }
 }

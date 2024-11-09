@@ -15,6 +15,7 @@ class SignUp extends StatefulWidget {
 
 class _SignUpState extends State<SignUp> {
   final SignUpController signUpController = Get.put(SignUpController());
+  final formKeySignUp = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -45,23 +46,24 @@ class _SignUpState extends State<SignUp> {
     //   }
     // });
     return Form(
-      key: signUpController.formKey,
+      key: formKeySignUp,
       child: Scaffold(
         appBar: AppBar(
+          automaticallyImplyLeading: false,
           title: Text(
-            'ĐĂNG KÝ',
-            style: TextStyle(color: Colors.white),
+            'ĐĂNG KÝ'.tr,
+            style: Theme.of(context).textTheme.displayLarge,
           ),
           centerTitle: true,
-          backgroundColor: Colors.blueAccent,
+          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           iconTheme: IconThemeData(color: Colors.white),
         ),
-        backgroundColor: Colors.white,
+       // backgroundColor: Colors.white,
         body: Obx(
               () => SingleChildScrollView(
             child: Container(
               // height: double.infinity,
-              color: Colors.white,
+             // color: Colors.white,
               padding: EdgeInsets.all(10),
               child: Column(
                 children: [
@@ -80,7 +82,7 @@ class _SignUpState extends State<SignUp> {
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.email),
                         hintText: "Email",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintStyle: TextStyle(color: Theme.of(context).hintColor),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
@@ -93,8 +95,8 @@ class _SignUpState extends State<SignUp> {
                     validator: signUpController.ktUserName,
                     decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.person),
-                        hintText: "Tên tài khoản",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "Tên tài khoản".tr,
+                        hintStyle: TextStyle(color: Theme.of(context).hintColor),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
@@ -118,8 +120,8 @@ class _SignUpState extends State<SignUp> {
                             icon: signUpController.isVisibility.value
                                 ? const Icon(Icons.visibility)
                                 : const Icon(Icons.visibility_off)),
-                        hintText: " Mật khẩu",
-                        hintStyle: TextStyle(color: Colors.grey),
+                        hintText: "Mật khẩu".tr,
+                        hintStyle: TextStyle(color: Theme.of(context).hintColor),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(30),
                         )),
@@ -131,7 +133,7 @@ class _SignUpState extends State<SignUp> {
                     height: doubleHeight * (50 / 800),
                     child: ElevatedButton(
                         onPressed: () async {
-                          if (signUpController.formKey.currentState!
+                          if (formKeySignUp.currentState!
                               .validate()) {
                             await signUpController.signUp(
                                 signUpController.emailController.text,
@@ -162,10 +164,10 @@ class _SignUpState extends State<SignUp> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                         ),
-                        child: const Center(
+                        child:  Center(
                             child: Text(
-                              'ĐĂNG KÝ',
-                              style: TextStyle(color: Colors.white, fontSize: 20),
+                              'ĐĂNG KÝ'.tr,
+                              style: Theme.of(context).textTheme.displayLarge,
                             ))),
                   ),
                   SizedBox(
@@ -175,15 +177,15 @@ class _SignUpState extends State<SignUp> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'Bạn đã có tài khoản?',
+                        'Bạn đã có tài khoản?'.tr,
                         style: TextStyle(fontSize: 15),
                       ),
                       TextButton(
                           onPressed: () {
-                            Get.to(const SignIn());
+                            Get.off(const SignIn());
                           },
                           child: Text(
-                            'Đăng nhập ngay',
+                            'Đăng nhập ngay'.tr,
                             style: TextStyle(fontSize: 15),
                           )),
                     ],

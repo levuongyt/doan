@@ -6,7 +6,6 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import '../config/images/image_app.dart';
 
-
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
@@ -16,7 +15,7 @@ class Welcome extends StatelessWidget {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      backgroundColor: Colors.white,
+      //backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -27,9 +26,23 @@ class Welcome extends StatelessWidget {
                 child: PageView(
                   controller: pageController,
                   children: [
-                    _buildPageContent(ImageApp.imageWelcome),
-                    _buildPageContent2(ImageApp.imageWelcome2),
-                    _buildPageContent3(ImageApp.imageWelcome3),
+                    //_buildPageContent(ImageApp.imageWelcome),
+                    buildPage(
+                        context,
+                        ImageApp.imageWelcome,
+                        'Chào mừng bạn đến với Sổ thu chi cá nhân\n',
+                        'Ứng dụng giúp bạn quản lý thu nhập, chi tiêu và ngân sách một cách hiệu quả. Đăng ký ngay để bắt đầu kiểm soát tài chính của bạn!'),
+                    buildPage(
+                        context,
+                        ImageApp.imageWcome2,
+                        'Kiểm soát chi tiêu thông minh\n',
+                        'Phân loại các khoản chi tiêu hàng ngày, từ ăn uống, mua sắm đến hóa đơn. Xác định các khoản chi lớn và tối ưu ngân sách.'),
+                    buildPage(
+                      context,
+                      ImageApp.imageWelcome3,
+                      'Báo cáo và phân tích tài chính\n',
+                      'Xem báo cáo tổng quan về tình hình tài chính, biểu đồ chi tiêu và thu nhập. Đưa ra quyết định tài chính dựa trên các phân tích chi tiết.',
+                    ),
                   ],
                 ),
               ),
@@ -48,14 +61,14 @@ class Welcome extends StatelessWidget {
                 width: doubleWidth * (250 / 360),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Theme.of(context).indicatorColor,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                     ),
                   ),
                   onPressed: () {
-                    Get.to(const SignUp());
+                    Get.off(const SignUp());
                   },
                   child: const Text(
                     'Đăng ký',
@@ -68,7 +81,7 @@ class Welcome extends StatelessWidget {
                 width: doubleWidth * (250 / 360),
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.blue,
+                    backgroundColor: Theme.of(context).indicatorColor,
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
@@ -92,7 +105,8 @@ class Welcome extends StatelessWidget {
     );
   }
 
-  Widget _buildPageContent(String imagePath) {
+  Padding buildPage(BuildContext context, String imagePath, String titleText,
+      String subText) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
       child: Column(
@@ -102,86 +116,19 @@ class Welcome extends StatelessWidget {
           const SizedBox(height: 20),
           RichText(
             textAlign: TextAlign.center,
-            text: const TextSpan(
-              style: TextStyle(fontFamily: 'Roboto', color: Colors.black),
+            text: TextSpan(
+              style: Theme.of(context).textTheme.titleMedium,
               children: [
                 TextSpan(
-                  text: 'Chào mừng bạn đến với Sổ thu chi cá nhân\n',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
+                  text: titleText,
+                  // style: TextStyle(
+                  //   fontSize: 18,
+                  //   fontWeight: FontWeight.bold,
+                  // ),
                 ),
                 TextSpan(
-                  text:
-                  'Ứng dụng giúp bạn quản lý thu nhập, chi tiêu và ngân sách một cách hiệu quả. Đăng ký ngay để bắt đầu kiểm soát tài chính của bạn!',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPageContent2(String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(imagePath, height: 250),
-          const SizedBox(height: 20),
-          RichText(
-            textAlign: TextAlign.center,
-            text: const TextSpan(
-              style: TextStyle(fontFamily: 'Roboto', color: Colors.black),
-              children: [
-                TextSpan(
-                  text: 'Kiểm soát chi tiêu thông minh\n',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextSpan(
-                  text:
-                  'Phân loại các khoản chi tiêu hàng ngày, từ ăn uống, mua sắm đến hóa đơn. Xác định các khoản chi lớn và tối ưu ngân sách.',
-                  style: TextStyle(fontSize: 16),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPageContent3(String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20.0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Image.asset(imagePath, height: 250),
-          const SizedBox(height: 20),
-          RichText(
-            textAlign: TextAlign.center,
-            text: const TextSpan(
-              style: TextStyle(fontFamily: 'Roboto', color: Colors.black),
-              children: [
-                TextSpan(
-                  text: 'Báo cáo và phân tích tài chính\n',
-                  style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                TextSpan(
-                  text:
-                  'Xem báo cáo tổng quan về tình hình tài chính, biểu đồ chi tiêu và thu nhập. Đưa ra quyết định tài chính dựa trên các phân tích chi tiết.',
-                  style: TextStyle(fontSize: 16),
+                  text: subText,
+                  style: Theme.of(context).textTheme.bodySmall,
                 ),
               ],
             ),
