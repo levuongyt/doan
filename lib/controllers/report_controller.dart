@@ -3,7 +3,6 @@ import 'package:doan_ql_thu_chi/models/transaction_model.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Models/report_model.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
 
@@ -25,8 +24,7 @@ class ReportController extends GetxController {
   Future<void> loadMoreTransactions() async {
     if (!isLoadingMore.value && !loadAll.value) {
       isLoadingMore.value = true;
-      print('Loading more transactions...');
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       currentPage++;
       var newTransactions = categoryTransactions
           .skip((currentPage - 1) * itemsPerPage)
@@ -34,45 +32,26 @@ class ReportController extends GetxController {
           .toList();
       if (newTransactions.isNotEmpty) {
         categoryTransactions.addAll(newTransactions);
-        print('Loaded ${newTransactions.length} more transactions.');
       } else {
         loadAll.value = true;
-        print('No more transactions to load.');
       }
       isLoadingMore.value = false;
-    }else { print('Currently loading, please wait...'); }
+    }else {
+    }
   }
-  // Future<void> fetchReport() async {
-  //   DocumentSnapshot? reportSnapshot = await firebaseStorageUtil.getReport(selectedMonth.value);
-  //   if (reportSnapshot != null && reportSnapshot.exists) {
-  //     report.value = ReportModel.fromDocument(reportSnapshot);
-  //     print('success');
-  //   } else {
-  //     print('khong co thang.');
-  //     report.value = null;
-  //   }
-  // }
-
 
   Future<void> fetchReport() async {
     ReportModel? reportModel = await firebaseStorageUtil.getReport(selectedMonth.value);
     if (reportModel != null) {
       report.value = reportModel;
-     // reportData.value=reportModel.toMap();
-      print('success');
-      print('dssss: ${report.value?.categories}');
-     // print('adsds: ${reportData.value}');
     } else {
-      print('khong co thang.');
       report.value = null;
-     // reportData.value={};
     }
   }
 
   void updateSelectedMonth(DateTime newMonth) {
     selectedMonth.value = newMonth;
     fetchReport();
-    //  fetchMonthlyReport();
   }
 
   ///Chi tiết baos cáo
@@ -90,7 +69,6 @@ class ReportController extends GetxController {
     for(var category in categories) {
       sections.add(
         PieChartSectionData(
-         // title: category.name,
           title: '${category.percentage.toStringAsFixed(1)}%',
           value: category.totalAmount,
           color: Color(category.color),
@@ -121,7 +99,6 @@ class ReportController extends GetxController {
   ///Tiền tệ
   void getCurrency(){
     donViTienTe.value=settingController.getCurrencySymbol();
-    print('donvitiente: ${donViTienTe.value}');
   }
   double convertAmount(double amount) {
     return settingController.convertAmount(amount);
@@ -139,6 +116,5 @@ class ReportController extends GetxController {
     fetchReport();
     getCurrency();
     updateCurrency();
-    // fetchMonthlyReport();
   }
 }

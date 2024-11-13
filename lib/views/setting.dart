@@ -1,8 +1,6 @@
-import 'dart:ffi';
 
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:doan_ql_thu_chi/views/add_category.dart';
-import 'package:doan_ql_thu_chi/views/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -23,7 +21,6 @@ class _SettingState extends State<Setting> {
     // TODO: implement initState
     super.initState();
     ever(settingController.isLoading, (callback) {
-      // print('loading state: ${signInController.isLoading}');
       if (mounted) {
         if (callback) {
           context.loaderOverlay.show();
@@ -45,15 +42,15 @@ class _SettingState extends State<Setting> {
         ),
         centerTitle: true,
         backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        iconTheme: IconThemeData(color: Colors.white),
+        iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.lock_reset,
                 color: Colors.blueAccent,
               ),
@@ -96,17 +93,17 @@ class _SettingState extends State<Setting> {
               },
             ),
             ListTile(
-              leading: Icon(
+              leading: const Icon(
                 Icons.playlist_add,
                 color: Colors.blueAccent,
               ),
               title: Text('Thêm danh mục'.tr),
               onTap: () {
-                Get.to(AddCategory());
+                Get.to(const AddCategory());
               },
             ),
             ListTile(
-              leading: Icon(Icons.language, color: Colors.blueAccent),
+              leading: const Icon(Icons.language, color: Colors.blueAccent),
               title: Text('Thay đổi ngôn ngữ'.tr),
               onTap: () {
                 final initialLanguage =
@@ -141,12 +138,14 @@ class _SettingState extends State<Setting> {
                                       flag,
                                       height: 25,
                                     ),
-                                    SizedBox(width: 10,),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
                                     Expanded(
                                       flex: 4,
                                       child: Text(
                                         '$currentLanguageValue'.tr,
-                                        style: TextStyle(
+                                        style: const TextStyle(
                                             fontSize: 17,
                                             fontWeight: FontWeight.bold),
                                       ),
@@ -155,9 +154,9 @@ class _SettingState extends State<Setting> {
                                       return settingController
                                                   .selectedLanguage.value ==
                                               currentLocalValue
-                                          ? Icon(Icons.check,
+                                          ? const Icon(Icons.check,
                                               color: Colors.blueAccent)
-                                          : SizedBox();
+                                          : const SizedBox();
                                     }),
                                   ],
                                 ),
@@ -190,105 +189,9 @@ class _SettingState extends State<Setting> {
                 );
               },
             ),
+
             ListTile(
-              leading: Icon(Icons.monetization_on_outlined,
-                  color: Colors.blueAccent),
-              title: Text('Thay đổi tiền tệ'.tr),
-              onTap: () {
-                final initialCurrency =
-                    settingController.selectedCurrency.value;
-                Get.dialog(
-                  AlertDialog(
-                    title: Text('Chọn đơn vị tiền tệ'.tr),
-                    content: Container(
-                      width: double.maxFinite,
-                      child: Obx(() {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Text(
-                                'đ',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              title: Text('Việt Nam Đồng'),
-                              trailing:
-                                  settingController.selectedCurrency.value ==
-                                          'VND'
-                                      ? Icon(Icons.check, color: Colors.blue)
-                                      : null,
-                              onTap: () {
-                                settingController.selectedCurrency.value =
-                                    'VND';
-                              },
-                            ),
-                            const Divider(),
-                            ListTile(
-                              leading: Text(
-                                '\$',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              //Icon(Icons.attach_money),
-                              title: Text('US Dollar'),
-                              trailing:
-                                  settingController.selectedCurrency.value ==
-                                          'USD'
-                                      ? Icon(Icons.check, color: Colors.blue)
-                                      : null,
-                              onTap: () {
-                                settingController.selectedCurrency.value =
-                                    'USD';
-                              },
-                            ),
-                            Divider(),
-                            ListTile(
-                              leading: Text(
-                                '€',
-                                style: TextStyle(fontSize: 17),
-                              ),
-                              //Icon(Icons.attach_money),
-                              title: Text('EURO'),
-                              trailing:
-                              settingController.selectedCurrency.value ==
-                                  'EUR'
-                                  ? Icon(Icons.check, color: Colors.blue)
-                                  : null,
-                              onTap: () {
-                                settingController.selectedCurrency.value =
-                                'EUR';
-                              },
-                            ),
-                          ],
-                        );
-                      }),
-                    ),
-                    // shape: RoundedRectangleBorder(
-                    //   borderRadius: BorderRadius.circular(15),
-                    // ),
-                    actions: [
-                      TextButton(
-                        onPressed: () {
-                          Get.back();
-                          settingController.selectedCurrency.value =
-                              initialCurrency;
-                        },
-                        child: Text('Hủy'.tr),
-                      ),
-                      TextButton(
-                        onPressed: () async {
-                          Get.back();
-                          await settingController.saveCurrency(
-                              settingController.selectedCurrency.value);
-                        },
-                        child: Text('Lưu'.tr),
-                      ),
-                    ],
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              leading: Icon(Icons.brightness_6, color: Colors.blueAccent),
+              leading: const Icon(Icons.brightness_6, color: Colors.blueAccent),
               title: Text('Đổi chế độ sáng/tối'.tr),
               trailing: Obx(
                 () => Switch(
@@ -300,50 +203,106 @@ class _SettingState extends State<Setting> {
                       Get.changeThemeMode(settingController.isDarkMode.value
                           ? ThemeMode.dark
                           : ThemeMode.light);
-                      print('stae: ${settingController.isDarkMode.value}');
                     }),
               ),
             ),
             ListTile(
-              leading: Icon(
-                Icons.logout,
-                color: Colors.blueAccent,
-              ),
-              title: Text('Đăng xuất'.tr),
+              leading: const Icon(Icons.monetization_on_outlined,
+                  color: Colors.blueAccent),
+              title: Text('Thay đổi tiền tệ'.tr),
               onTap: () {
-                // Get.delete<HomeController>();
-                // Get.delete<TransactionController>();
-                // Get.delete<ReportController>();
-                Get.offAll(() => SignIn());
+                final initialCurrency =
+                    settingController.selectedCurrency.value;
+                Get.dialog(
+                  AlertDialog(
+                    title: Text('Chọn đơn vị tiền tệ'.tr),
+                    content: Container(
+                      width: double.maxFinite,
+                      child: ListView.builder(
+                        shrinkWrap: true,
+                        itemCount: settingController.listCurrency.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final currentNameValue =
+                              settingController.listCurrency[index]['name'];
+                          final currentCurrencyValue =
+                              settingController.listCurrency[index]['currency'];
+                          final currentSymbolValue =
+                              settingController.listCurrency[index]['symbol'];
+                          final flag =
+                              settingController.listCurrency[index]['image'];
+
+                          return InkWell(
+                            onTap: () {
+                              settingController.selectedCurrency.value =
+                                  currentCurrencyValue;
+                            },
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Image.asset(
+                                      flag,
+                                      height: 25,
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Expanded(
+                                      flex: 4,
+                                      child: Text(
+                                        '$currentNameValue'.tr,
+                                        style: const TextStyle(
+                                            fontSize: 17,
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                    Expanded(child: Text(currentSymbolValue)),
+                                    SizedBox(
+                                      width: 20,
+                                      child: Obx(() {
+                                        return settingController
+                                                    .selectedCurrency.value ==
+                                                currentCurrencyValue
+                                            ? const Icon(Icons.check,
+                                                color: Colors.blueAccent)
+                                            : const SizedBox(
+                                                //width: 20,
+                                                );
+                                      }),
+                                    ),
+                                  ],
+                                ),
+                                const Divider(),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                    actions: [
+                      TextButton(
+                          onPressed: () {
+                            Get.back();
+                            settingController.selectedCurrency.value =
+                                initialCurrency;
+                          },
+                          child: Text('Hủy'.tr)),
+                      TextButton(
+                          onPressed: () async {
+                            Get.back();
+                            await settingController.saveCurrency(
+                                settingController.selectedCurrency.value);
+                          },
+                          child: Text('Lưu'.tr)),
+                    ],
+                  ),
+                );
               },
-            )
+            ),
           ],
         ),
       )),
-      // bottomNavigationBar: BottomNavigationBar(
-      //   items: <BottomNavigationBarItem>[
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.home),
-      //       label: 'Tổng quan',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.edit_note),
-      //       label: 'Nhập vào',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.bar_chart),
-      //       label: 'Báo cáo',
-      //     ),
-      //     BottomNavigationBarItem(
-      //       icon: Icon(Icons.settings),
-      //       label: 'Cài đặt',
-      //     ),
-      //   ],
-      //   //currentIndex: _selectedIndex,
-      //   //onTap: _onItemTapped,
-      //   type: BottomNavigationBarType.fixed,
-      //   backgroundColor: Colors.grey,
-      // ),
     );
   }
 }

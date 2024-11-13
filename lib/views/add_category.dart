@@ -31,7 +31,6 @@ class _AddCategoryState extends State<AddCategory> {
     // TODO: implement initState
     super.initState();
     ever(controller.isLoading, (callback) {
-      print('loading state: ${controller.isLoading}');
       if (callback) {
         context.loaderOverlay.show();
       } else {
@@ -50,22 +49,6 @@ class _AddCategoryState extends State<AddCategory> {
       child: Form(
         key: formKey,
         child: Scaffold(
-           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-          // floatingActionButton: Container(
-          //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-          //   width: double.infinity,
-          //   child: ElevatedButton(
-          //       style:
-          //           ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-          //       onPressed: () async {
-          //         await controller.addCategory(nameDMThuNhapController.text,
-          //             controller.selectedIconCode.value, 'Thu Nhập');
-          //       },
-          //       child: Text(
-          //         'Lưu danh mục',
-          //         style: TextStyle(color: Colors.white),
-          //       )),
-          // ),
           appBar: AppBar(
             backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
             title: Text(
@@ -73,10 +56,10 @@ class _AddCategoryState extends State<AddCategory> {
               style: Theme.of(context).textTheme.displayLarge,
             ),
             centerTitle: true,
-            iconTheme: IconThemeData(color: Colors.white),
+            iconTheme: const IconThemeData(color: Colors.white),
             bottom: PreferredSize(
               preferredSize:
-                  Size.fromHeight(50.0), // Adjust the height as needed
+                  const Size.fromHeight(50.0),
               child: Column(
                 children: [
                   Container(
@@ -84,7 +67,7 @@ class _AddCategoryState extends State<AddCategory> {
                     color: Theme.of(context).dividerColor,
                   ),
                   Container(
-                    color: Theme.of(context).cardColor, // Background color for unselected tabs
+                    color: Theme.of(context).cardColor,
                     child: TabBar(
                       tabs: <Widget>[
                         Tab(
@@ -112,7 +95,7 @@ class _AddCategoryState extends State<AddCategory> {
             children: [
               SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
                       Row(
@@ -137,7 +120,7 @@ class _AddCategoryState extends State<AddCategory> {
                           Text('Biểu tượng'.tr),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Container(
@@ -145,7 +128,7 @@ class _AddCategoryState extends State<AddCategory> {
                         child: GridView.builder(
                           shrinkWrap: true,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 6,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10),
@@ -180,7 +163,7 @@ class _AddCategoryState extends State<AddCategory> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -188,13 +171,13 @@ class _AddCategoryState extends State<AddCategory> {
                           Text('Màu sắc'.tr),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Container(
                         height: doubleHeight * (220 / 800),
                         child: GridView.builder(
                           shrinkWrap: true,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 6,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
@@ -228,7 +211,7 @@ class _AddCategoryState extends State<AddCategory> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SizedBox(
@@ -251,7 +234,7 @@ class _AddCategoryState extends State<AddCategory> {
                             child: Text(
                               'Lưu Danh Mục'.tr,
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                                  const TextStyle(color: Colors.white, fontSize: 15),
                             )),
                       ),
                     ],
@@ -262,7 +245,7 @@ class _AddCategoryState extends State<AddCategory> {
               ///Tab2
               SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(
                     children: [
                       Row(
@@ -282,7 +265,7 @@ class _AddCategoryState extends State<AddCategory> {
                       Row(
                         children: [Text('Biểu tượng'.tr)],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 5,
                       ),
                       Container(
@@ -290,7 +273,7 @@ class _AddCategoryState extends State<AddCategory> {
                         child: GridView.builder(
                           shrinkWrap: true,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 6,
                                   crossAxisSpacing: 10,
                                   mainAxisSpacing: 10),
@@ -325,7 +308,7 @@ class _AddCategoryState extends State<AddCategory> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       Row(
@@ -333,13 +316,13 @@ class _AddCategoryState extends State<AddCategory> {
                           Text('Màu sắc'.tr),
                         ],
                       ),
-                      SizedBox(height: 5),
+                      const SizedBox(height: 5),
                       Container(
                         height: doubleHeight * (220 / 800),
                         child: GridView.builder(
                           shrinkWrap: true,
                           gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                              const SliverGridDelegateWithFixedCrossAxisCount(
                             crossAxisCount: 6,
                             crossAxisSpacing: 10,
                             mainAxisSpacing: 10,
@@ -373,7 +356,7 @@ class _AddCategoryState extends State<AddCategory> {
                           },
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 10,
                       ),
                       SizedBox(
@@ -396,7 +379,7 @@ class _AddCategoryState extends State<AddCategory> {
                             child: Text(
                               'Lưu Danh Mục'.tr,
                               style:
-                                  TextStyle(color: Colors.white, fontSize: 15),
+                                  const TextStyle(color: Colors.white, fontSize: 15),
                             )),
                       ),
                     ],

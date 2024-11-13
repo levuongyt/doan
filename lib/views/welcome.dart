@@ -57,52 +57,60 @@ class Welcome extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 20),
-              SizedBox(
-                width: doubleWidth * (250 / 360),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).indicatorColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: () {
-                    Get.off(const SignUp());
-                  },
-                  child: const Text(
-                    'Đăng ký',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ),
+              buildSignUpButton(doubleWidth, context),
               const SizedBox(height: 10),
-              SizedBox(
-                width: doubleWidth * (250 / 360),
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Theme.of(context).indicatorColor,
-                    padding: const EdgeInsets.symmetric(vertical: 14),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(30),
-                    ),
-                  ),
-                  onPressed: () {
-                    // Get.to(const SignIn());
-                    Get.off(SignIn());
-                  },
-                  child: const Text(
-                    'Đăng nhập',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ),
-              ),
+              buildSignInButton(doubleWidth, context),
               const SizedBox(height: 30),
             ],
           ),
         ),
       ),
     );
+  }
+
+  SizedBox buildSignInButton(double doubleWidth, BuildContext context) {
+    return SizedBox(
+              width: doubleWidth * (250 / 360),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).indicatorColor,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onPressed: () {
+                  // Get.to(const SignIn());
+                  Get.off(SignIn());
+                },
+                child: const Text(
+                  'Đăng nhập',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            );
+  }
+
+  SizedBox buildSignUpButton(double doubleWidth, BuildContext context) {
+    return SizedBox(
+              width: doubleWidth * (250 / 360),
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Theme.of(context).indicatorColor,
+                  padding: const EdgeInsets.symmetric(vertical: 14),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+                onPressed: () {
+                  Get.off(const SignUp());
+                },
+                child: const Text(
+                  'Đăng ký',
+                  style: TextStyle(color: Colors.white, fontSize: 16),
+                ),
+              ),
+            );
   }
 
   Padding buildPage(BuildContext context, String imagePath, String titleText,

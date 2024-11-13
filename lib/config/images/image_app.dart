@@ -8,6 +8,7 @@ class ImageApp{
   static const String imageGoogle='${baseUrlImage}imageGoogle.png';
   static const String imageFlagVN='${baseUrlImage}imageFlagVN.png';
   static const String imageFlagEN='${baseUrlImage}imageFlagEN.png';
-
+  static const String imageFlaUSA='${baseUrlImage}imageFlagUSA.png';
+  static const String imageFlagEURO='${baseUrlImage}imageFlagEURO.png';
 
 }

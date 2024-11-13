@@ -1,7 +1,4 @@
 import 'package:doan_ql_thu_chi/config/images/image_app.dart';
-import 'package:doan_ql_thu_chi/controllers/home_controller.dart';
-import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
-import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:doan_ql_thu_chi/service/api_service.dart';
 import 'package:doan_ql_thu_chi/utils/firebase/storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +18,7 @@ class SettingController extends GetxController {
   final PrefsService prefsService = PrefsService();
   RxBool isLoading = false.obs;
   RxBool isDarkMode = false.obs;
-  Rx<Locale> selectedLanguage = Locale('vi', 'VI').obs;
+  Rx<Locale> selectedLanguage = const Locale('vi', 'VI').obs;
   RxString selectedCurrency = 'VND'.obs;
   RxDouble exchangeRate = 1.0.obs;
   final ApiService apiService = ApiService();
@@ -36,9 +33,9 @@ class SettingController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.check_circle, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
     } else {
@@ -48,9 +45,9 @@ class SettingController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.error, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
     }
@@ -86,10 +83,11 @@ class SettingController extends GetxController {
     },
   ];
 
+
+
   Future<void> saveLanguage(Locale locale) async {
     await prefsService.saveStringData('languageValue', locale.languageCode);
     await prefsService.saveStringData('localValue', locale.countryCode ?? 'VI');
-    print('done');
   }
 
   Future<void> readLanguage() async {
@@ -97,21 +95,10 @@ class SettingController extends GetxController {
         await prefsService.readStringData('languageValue') ?? 'vi';
     String? valueLocal =
         await prefsService.readStringData('localValue') ?? 'VI';
-    // valueLocale=Locale(valueLanguage,valueLocal);
 
     selectedLanguage.value = Locale(valueLanguage, valueLocal);
-    print('gg : ${selectedLanguage.value}');
-    //   Get.updateLocale(valueLocale);
     Get.updateLocale(selectedLanguage.value);
   }
-
-  // void setSelectedLanguage(Locale locale){
-  //   selectedLanguage.value=locale;
-  // }
-  // Future<void> confirmLanguageSelection()async{
-  //   await saveLanguage(selectedLanguage.value);
-  //   Get.updateLocale(selectedLanguage.value);
-  // }
 
   ///Lưu tiền tệ
   Future<void> saveCurrency(String currency) async {
@@ -131,20 +118,26 @@ class SettingController extends GetxController {
      await updateExchangeRate();
   }
 
-  // Future<void> updateExchangeRate(String fromCurrency, String toCurrency) async {
-  //   // Lấy tỷ giá từ `ExchangeRateService`
-  //   RateCurrencyModel? rateData = await exchangeRateService.getExchangeRate(fromCurrency);
-  //   if (rateData != null && rateData.conversionRates?..containsKey(toCurrency)) {
-  //     exchangeRate.value = rateData.conversionRates?[toCurrency] ?? 1.0;
-  //   } else {
-  //     print('Failed to update exchange rate for $fromCurrency to $toCurrency.');
-  //     exchangeRate.value = 1.0;
-  //   }
-  // }
-
-  // Future<void> ds() async {
-  //   exchangeRate.value = await exchangeRateService.getExchangeRate('VND');
-  // }
+  final List<Map<String, dynamic>> listCurrency = [
+    {
+      "name": "Việt Nam Đồng",
+      "currency": "VND",
+      "symbol":"đ",
+      "image": ImageApp.imageFlagVN,
+    },
+    {
+      "name": "US Dollar",
+      "currency": "USD",
+      "symbol":"\$",
+      "image": ImageApp.imageFlaUSA,
+    },
+    {
+      "name": "EURO",
+      "currency": "EUR",
+      "symbol":"€",
+      "image": ImageApp.imageFlagEURO,
+    },
+  ];
 
   Future<void> updateExchangeRate() async {
     RatesCurrencyModel? rateModel =
@@ -178,6 +171,10 @@ class SettingController extends GetxController {
     return amount * exchangeRate.value;
   }
 
+  double amountToVND(double amount){
+    return amount / exchangeRate.value;
+  }
+
   String getCurrencySymbol() {
     switch (selectedCurrency.value) {
       case 'USD':
@@ -198,7 +195,5 @@ class SettingController extends GetxController {
     loadThemeFromPreferences();
     readLanguage();
     readCurrency();
-    // updateExchangeRate();
-    // ds();
   }
 }

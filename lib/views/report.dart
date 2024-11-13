@@ -37,92 +37,90 @@ class _BaoCaoState extends State<BaoCao> {
           ),
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(100.0),
-            child: Container(
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      IconButton(
-                          onPressed: (){
-                            DateTime backMonth = DateTime(
-                              reportController.selectedMonth.value.year,
-                              reportController.selectedMonth.value.month - 1,
+            preferredSize: const Size.fromHeight(100.0),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    IconButton(
+                        onPressed: (){
+                          DateTime backMonth = DateTime(
+                            reportController.selectedMonth.value.year,
+                            reportController.selectedMonth.value.month - 1,
+                          );
+                          reportController.updateSelectedMonth(backMonth);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_back_ios,
+                          color: Colors.white,
+                        )),
+                    Obx(
+                      () => TextButton(
+                          onPressed: () async {
+                            DateTime? chonNgay = await showDatePicker(
+                                context: context,
+                                initialDate:
+                                    reportController.selectedMonth.value,
+                                firstDate: DateTime(2019),
+                                lastDate: DateTime(2100),
+                                initialDatePickerMode: DatePickerMode.year,
+                              locale: Get.locale,
                             );
-                            reportController.updateSelectedMonth(backMonth);
-                          },
-                          icon: Icon(
-                            Icons.arrow_back_ios,
-                            color: Colors.white,
-                          )),
-                      Obx(
-                        () => TextButton(
-                            onPressed: () async {
-                              DateTime? chonNgay = await showDatePicker(
-                                  context: context,
-                                  initialDate:
-                                      reportController.selectedMonth.value,
-                                  firstDate: DateTime(2019),
-                                  lastDate: DateTime(2100),
-                                  initialDatePickerMode: DatePickerMode.year,
-                                locale: Get.locale,
+                            if (chonNgay != null) {
+                              reportController.updateSelectedMonth(
+                                DateTime(chonNgay.year, chonNgay.month, 1),
                               );
-                              if (chonNgay != null) {
-                                reportController.updateSelectedMonth(
-                                  DateTime(chonNgay.year, chonNgay.month, 1),
-                                );
-                              }
-                            },
-                            child: Text(
-                              DateFormat('MM/yyyy')
-                                  .format(reportController.selectedMonth.value),
-                              style:
-                                  Theme.of(context).textTheme.displayLarge,
-                            )),
-                      ),
-                      IconButton(
-                          onPressed: () {
-                            DateTime nextMonth = DateTime(
-                              reportController.selectedMonth.value.year,
-                              reportController.selectedMonth.value.month + 1,
-                            );
-                            reportController.updateSelectedMonth(nextMonth);
+                            }
                           },
-                          icon: Icon(
-                            Icons.arrow_forward_ios,
-                            color: Colors.white,
-                          ))
-                    ],
-                  ),
-                  Container(
-                    color: Theme.of(context).dividerColor,
-                    height: 10,
-                  ),
-                  Container(
-                    color: Theme.of(context).cardColor,
-                    child: TabBar(
-                      tabs: <Widget>[
-                        Tab(
-                          text: 'Thu nhập'.tr,
-                        ),
-                        Tab(
-                          text: 'Chi tiêu'.tr,
-                        ),
-                      ],
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.blue,
-                      indicator: BoxDecoration(
-                        color: Theme.of(context).indicatorColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
+                          child: Text(
+                            DateFormat('MM/yyyy')
+                                .format(reportController.selectedMonth.value),
+                            style:
+                                Theme.of(context).textTheme.displayLarge,
+                          )),
                     ),
+                    IconButton(
+                        onPressed: () {
+                          DateTime nextMonth = DateTime(
+                            reportController.selectedMonth.value.year,
+                            reportController.selectedMonth.value.month + 1,
+                          );
+                          reportController.updateSelectedMonth(nextMonth);
+                        },
+                        icon: const Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ))
+                  ],
+                ),
+                Container(
+                  color: Theme.of(context).dividerColor,
+                  height: 10,
+                ),
+                Container(
+                  color: Theme.of(context).cardColor,
+                  child: TabBar(
+                    tabs: <Widget>[
+                      Tab(
+                        text: 'Thu nhập'.tr,
+                      ),
+                      Tab(
+                        text: 'Chi tiêu'.tr,
+                      ),
+                    ],
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.blue,
+                    indicator: BoxDecoration(
+                      color: Theme.of(context).indicatorColor,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    indicatorSize: TabBarIndicatorSize.tab,
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -131,25 +129,24 @@ class _BaoCaoState extends State<BaoCao> {
             children: [
               ///TAB 1
               SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(children: [
                     Obx(
                       () => Container(
                         height: doubleHeight * (200 / 800),
                         width: doubleWidth * (250 / 360),
-                        //color: Colors.grey,
                         child: PieChart(
                             swapAnimationDuration:
-                                Duration(milliseconds: 150), // Optional
+                                const Duration(milliseconds: 150), // Optional
                             swapAnimationCurve: Curves.linear,
                             PieChartData(
                                 sections:
                                     reportController.getSectionsThuNhap())),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -161,7 +158,6 @@ class _BaoCaoState extends State<BaoCao> {
                         Obx(
                           () => Text(
                             formatBalance(reportController.report.value?.totalIncome ?? 0),
-                             // '${NumberFormat('#,##0').format(reportController.report.value?.totalIncome ?? 0)} ${reportController.donViTienTe.value}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         )
@@ -176,13 +172,12 @@ class _BaoCaoState extends State<BaoCao> {
                         Obx(
                           () => Text(
                             formatBalance(reportController.report.value?.totalIncomeDay ?? 0),
-                            //  '${NumberFormat('#,##0').format(reportController.report.value?.totalIncomeDay ?? 0)} ${reportController.donViTienTe.value}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
@@ -190,7 +185,7 @@ class _BaoCaoState extends State<BaoCao> {
                       height: 2,
                       color: Colors.grey,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -201,7 +196,7 @@ class _BaoCaoState extends State<BaoCao> {
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Obx(() => Container(
@@ -213,8 +208,8 @@ class _BaoCaoState extends State<BaoCao> {
                           true
                           ? Center(
                         child: Text(
-                          'Chưa có giao dịch'.tr,
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          'Chưa có dữ liệu'.tr,
+                          style: const TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                       )
                           : ListView.builder(
@@ -225,8 +220,6 @@ class _BaoCaoState extends State<BaoCao> {
                             0,
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          // print(
-                          //     'length là : ${reportController.report.value?.categories?.values.where((category) => category.type == 'Thu Nhập').length ?? 0}');
                           CategoryReportModel? category = reportController
                               .report.value?.categories?.values
                               .where((category) => category.type == 'Thu Nhập')
@@ -236,22 +229,14 @@ class _BaoCaoState extends State<BaoCao> {
                           }
                           return Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               Container(
-                                padding: EdgeInsets.all(10),
+                                padding: const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).focusColor,
                                   borderRadius: BorderRadius.circular(15),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Colors.grey.withOpacity(0.5),
-                                  //     spreadRadius: 5,
-                                  //     blurRadius: 7,
-                                  //     offset: Offset(0, 3),
-                                  //   )
-                                  // ],
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -276,7 +261,6 @@ class _BaoCaoState extends State<BaoCao> {
                                         Obx(()=>
                                           Text(
                                             formatBalance(category.totalAmount),
-                                           //'${NumberFormat('#,##0').format(category.totalAmount)} ${reportController.donViTienTe.value}',
                                             style: Theme.of(context).textTheme.bodySmall,
                                           ),
                                         ),
@@ -295,12 +279,12 @@ class _BaoCaoState extends State<BaoCao> {
                                           colorIcon: category.color,
                                         ));
                                       },
-                                      icon: Icon(Icons.navigate_next),
+                                      icon: const Icon(Icons.navigate_next),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                             ],
@@ -316,23 +300,22 @@ class _BaoCaoState extends State<BaoCao> {
               ///TAB 2
               SingleChildScrollView(
                 child: Container(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Column(children: [
                     Obx(
                       () => Container(
                         height: doubleHeight * (200 / 800),
                         width: doubleWidth * (250 / 360),
-                        //color: Colors.grey,
                         child: PieChart(
                             swapAnimationDuration:
-                                Duration(milliseconds: 150), // Optional
+                                const Duration(milliseconds: 150), // Optional
                             swapAnimationCurve: Curves.linear,
                             PieChartData(
                                 sections:
                                     reportController.getSectionsChiTieu())),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -343,7 +326,6 @@ class _BaoCaoState extends State<BaoCao> {
                         Obx(
                           () => Text(
                             formatBalance(reportController.report.value?.totalExpense ?? 0),
-                             // '${NumberFormat('#,##0').format(reportController.report.value?.totalExpense ?? 0)} ${reportController.donViTienTe.value}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         )
@@ -358,13 +340,12 @@ class _BaoCaoState extends State<BaoCao> {
                         Obx(
                           () => Text(
                             formatBalance(reportController.report.value?.totalExpenseDay ?? 0),
-                            //  '${NumberFormat('#,##0').format(reportController.report.value?.totalExpenseDay ?? 0)} ${reportController.donViTienTe.value}',
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         )
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Container(
@@ -372,7 +353,7 @@ class _BaoCaoState extends State<BaoCao> {
                       height: 2,
                       color: Colors.grey,
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Row(
@@ -383,7 +364,7 @@ class _BaoCaoState extends State<BaoCao> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 10,
                     ),
                     Obx(() => Container(
@@ -394,8 +375,8 @@ class _BaoCaoState extends State<BaoCao> {
                           true
                           ? Center(
                         child: Text(
-                          'Chưa có giao dịch'.tr,
-                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                          'Chưa có dữ liệu'.tr,
+                          style: const TextStyle(fontSize: 18, color: Colors.grey),
                         ),
                       )
                           : ListView.builder(
@@ -406,8 +387,6 @@ class _BaoCaoState extends State<BaoCao> {
                             0,
                         shrinkWrap: true,
                         itemBuilder: (BuildContext context, int index) {
-                          print(
-                              'length là : ${reportController.report.value?.categories?.values.where((category) => category.type == 'Chi Tiêu').length ?? 0}');
                           CategoryReportModel? category = reportController
                               .report.value?.categories?.values
                               .where((category) => category.type == 'Chi Tiêu')
@@ -417,22 +396,14 @@ class _BaoCaoState extends State<BaoCao> {
                           }
                           return Column(
                             children: [
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                               Container(
-                                padding:EdgeInsets.all(10),
+                                padding:const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                   color: Theme.of(context).focusColor,
                                   borderRadius: BorderRadius.circular(15),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Colors.grey.withOpacity(0.5),
-                                  //     spreadRadius: 5,
-                                  //     blurRadius: 7,
-                                  //     offset: Offset(0, 3),
-                                  //   )
-                                  // ],
                                 ),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -457,7 +428,6 @@ class _BaoCaoState extends State<BaoCao> {
                                         Obx(
                                           ()=> Text(
                                             formatBalance(category.totalAmount),
-                                          //  '${NumberFormat('#,##0').format(category.totalAmount)} ${reportController.donViTienTe.value}',
                                             style: Theme.of(context).textTheme.bodySmall,
                                           ),
                                         ),
@@ -476,12 +446,12 @@ class _BaoCaoState extends State<BaoCao> {
                                           colorIcon: category.color,
                                         ));
                                       },
-                                      icon: Icon(Icons.navigate_next),
+                                      icon: const Icon(Icons.navigate_next),
                                     ),
                                   ],
                                 ),
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 height: 5,
                               ),
                             ],
@@ -496,30 +466,6 @@ class _BaoCaoState extends State<BaoCao> {
             ],
           ),
         ),
-        // bottomNavigationBar: BottomNavigationBar(
-        //   items: <BottomNavigationBarItem>[
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.home),
-        //       label: 'Tổng quan',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.edit_note),
-        //       label: 'Nhập vào',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.bar_chart),
-        //       label: 'Báo cáo',
-        //     ),
-        //     BottomNavigationBarItem(
-        //       icon: Icon(Icons.settings),
-        //       label: 'Cài đặt',
-        //     ),
-        //   ],
-        //currentIndex: _selectedIndex,
-        //onTap: _onItemTapped,
-        //  type: BottomNavigationBarType.fixed,
-        //  backgroundColor: Colors.grey,
-        // ),
       ),
     );
   }

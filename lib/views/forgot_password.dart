@@ -57,7 +57,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             const SizedBox(height: 10),
              Text(
               'Vui lòng nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu của bạn.'.tr,
-              //Please enter the email associated with your account, and we’ll send a link to reset your password.
               style: TextStyle(
                 fontSize: 16,
                 color:Theme.of(context).hintColor,
@@ -71,8 +70,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               decoration: InputDecoration(
                 hintStyle: TextStyle(color: Theme.of(context).hintColor),
                 hintText: 'Email',
-                //filled: true,
-               // fillColor: Theme.of(context).inputDecorationTheme.fillColor,
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 18,
                   horizontal: 20,
@@ -89,9 +86,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Theme.of(context).indicatorColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  // shape: RoundedRectangleBorder(
-                  //   borderRadius: BorderRadius.circular(30),
-                  // ),
                 ),
                 onPressed: () async {
                   await controller.sendEmaiAndResetPass(emailController.text);
@@ -102,7 +96,6 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 ),
               ),
             ),
-           // const SizedBox(height: 40),
           ],
         ),
       ),

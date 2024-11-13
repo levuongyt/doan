@@ -1,6 +1,5 @@
 import 'package:doan_ql_thu_chi/config/SharedPreferences/prefs_service.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
-import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -10,33 +9,37 @@ import 'home_controller.dart';
 
 class SignInController extends GetxController {
   final formKey = GlobalKey<FormState>();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   RxBool isVisibility = false.obs;
   RxBool isLoading = false.obs;
-  RxBool isCheckBok=false.obs;
+  RxBool isCheckBok = false.obs;
   final FireBaseUtil fireBaseUtil = FireBaseUtil();
-  final PrefsService prefsService=PrefsService();
+  final PrefsService prefsService = PrefsService();
 
-  void stateCheckBok(){
-    isCheckBok.value=!isCheckBok.value;
+  void stateCheckBok() {
+    isCheckBok.value = !isCheckBok.value;
   }
+
   Future<void> saveLoginData() async {
     if (isCheckBok.value == true) {
       await prefsService.saveStringData('dataEmail', emailController.text);
       await prefsService.saveStringData('dataPass', passwordController.text);
     }
-    await prefsService.saveBoolCheck('checkbook',isCheckBok.value);
+    await prefsService.saveBoolCheck('checkbook', isCheckBok.value);
   }
 
   Future<void> loadLoginData() async {
     isCheckBok.value = await prefsService.readBoolCheck('checkbook');
     if (isCheckBok.value) {
-      emailController.text = await prefsService.readStringData('dataEmail')??"";
-      passwordController.text = await prefsService.readStringData('dataPass')??"";
+      emailController.text =
+          await prefsService.readStringData('dataEmail') ?? "";
+      passwordController.text =
+          await prefsService.readStringData('dataPass') ?? "";
     }
   }
-
 
   // bool isEmail(String email) {
   //   bool emailValid = RegExp(
@@ -47,11 +50,11 @@ class SignInController extends GetxController {
 
   String? ktEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email Không được bỏ trống';
+      return 'Email không được bỏ trống';
     } else if (value.length < 6) {
       return 'Độ dài email phải từ 6 ký tự trở lên';
     } else if (!RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value)) {
       return 'Email không đúng định dạng';
     }
@@ -71,7 +74,7 @@ class SignInController extends GetxController {
 
   String? ktPassWord(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password Không được bỏ trống';
+      return 'Password không được bỏ trống';
     } else if (value.length < 6) {
       return 'Độ dài Password phải từ 6 ký tự trở lên';
     }
@@ -92,11 +95,10 @@ class SignInController extends GetxController {
       if (result) {
         Get.snackbar('Success', 'Welcome');
         await saveLoginData();
-        Get.lazyPut(()=>HomeController());
-        Get.lazyPut(()=>TransactionController());
-        Get.lazyPut(()=>ReportController());
+        Get.lazyPut(() => HomeController());
+        Get.lazyPut(() => TransactionController());
+        Get.lazyPut(() => ReportController());
         Get.off(() => const Home());
-        print('Trạng thái : ${isLoading.value}');
       } else {
         Get.snackbar('Error', 'Mời thử lại');
       }
@@ -113,11 +115,10 @@ class SignInController extends GetxController {
       bool result = await fireBaseUtil.signInWithGoogle();
       if (result) {
         Get.snackbar('Success', 'Welcome');
-        Get.lazyPut(()=>HomeController());
-        Get.lazyPut(()=>TransactionController());
-        Get.lazyPut(()=>ReportController());
+        Get.lazyPut(() => HomeController());
+        Get.lazyPut(() => TransactionController());
+        Get.lazyPut(() => ReportController());
         Get.off(() => const Home());
-        print('Trạng thái : ${isLoading.value}');
       } else {
         Get.snackbar('Error', 'Mời thử lại');
       }
@@ -135,7 +136,6 @@ class SignInController extends GetxController {
       if (result) {
         Get.snackbar('Success', 'Welcome');
         Get.off(() => const Home());
-        print('Trạng thái : ${isLoading.value}');
       } else {
         Get.snackbar('Error', 'Mời thử lại');
       }
@@ -145,6 +145,7 @@ class SignInController extends GetxController {
       isLoading.value = false;
     }
   }
+
   @override
   void onInit() {
     // TODO: implement onInit

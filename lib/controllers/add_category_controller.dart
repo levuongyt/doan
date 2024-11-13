@@ -24,9 +24,9 @@ class AddCetegoryController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.check_circle, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
       await transactionController.layDanhMucThuNhap();
@@ -38,9 +38,9 @@ class AddCetegoryController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.error, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
      // Get.snackbar('Error', 'Lỗi');

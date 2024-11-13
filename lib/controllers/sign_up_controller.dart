@@ -1,4 +1,3 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/firebase/login/authentication.dart';
@@ -9,6 +8,9 @@ class SignUpController extends GetxController {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
   final emailController = TextEditingController();
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode usernameFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
   RxBool isVisibility = false.obs;
   RxBool isLoading = false.obs;
 

@@ -1,7 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -47,7 +44,7 @@ class FireBaseUtil {
       );
 
       String uid=credential.user?.uid ?? '';
-      await FirebaseStorageUtil().addUsers(uid: uid, Email: email, name: name, ngayTao: DateTime.now(), tongSoDu: tongSoDu);
+      await FirebaseStorageUtil().addUsers(uid: uid, email: email, name: name, ngayTao: DateTime.now(), tongSoDu: tongSoDu);
 
       result = true;
     } on FirebaseAuthException catch (e) {
@@ -118,7 +115,7 @@ class FireBaseUtil {
       final String uid=userCredential.user?.uid??'';
       final  String name = googleUser?.displayName ?? '';
       final String email = googleUser?.email ?? '';
-      await FirebaseStorageUtil().addUsers(uid: uid, Email: email, name: name, ngayTao: DateTime.now(), tongSoDu: 0.0);
+      await FirebaseStorageUtil().addUsers(uid: uid, email: email, name: name, ngayTao: DateTime.now(), tongSoDu: 0.0);
       result=true;
     }catch(e){
       result=false;

@@ -33,22 +33,18 @@ class TransactionController extends GetxController {
 
   void selectIncomeCategory(String category) {
     selectedIncomeCategory.value = category;
-    print('abccc');
   }
 
   void selectExpenseCategory(String category) {
     selectedExpenseCategory.value = category;
-    print('abccc11');
   }
 
   Future<void> layDanhMucThuNhap() async {
     listIncomeCategory.clear();
     listIncomeCategory.value =
         await firebaseStorageUtil.getCategories(type: 'Thu Nhập');
-    // listIncomeCategory.addAll(danhMuc.dsDMThuNhapMacDinh);
     if (listIncomeCategory.isNotEmpty && selectedIncomeCategory.isEmpty) {
       selectedIncomeCategory.value = listIncomeCategory[0].id ?? "";
-      print('tn ${selectedIncomeCategory.value}');
     }
   }
 
@@ -59,9 +55,7 @@ class TransactionController extends GetxController {
     // listExpenseCategory.addAll(danhMuc.dsDMChiTieuMacDinh);
     if (listExpenseCategory.isNotEmpty && selectedExpenseCategory.isEmpty) {
       selectedExpenseCategory.value = listExpenseCategory[0].id ?? "";
-      print('ct ${selectedExpenseCategory.value}');
     }
-    print('ds hiện đânh có: ${listExpenseCategory.length}');
   }
 
   Future<void> addTransaction({
@@ -97,9 +91,9 @@ class TransactionController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.check_circle, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.check_circle, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
     } catch (e) {
@@ -109,9 +103,9 @@ class TransactionController extends GetxController {
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.shade600,
         colorText: Colors.white,
-        icon: Icon(Icons.error, color: Colors.white),
-        duration: Duration(seconds: 3),
-        margin: EdgeInsets.all(16),
+        icon: const Icon(Icons.error, color: Colors.white),
+        duration: const Duration(seconds: 3),
+        margin: const EdgeInsets.all(16),
         borderRadius: 8,
       );
       //  print('loi khi add transaction la: $e');
@@ -124,7 +118,6 @@ class TransactionController extends GetxController {
     await firebaseStorageUtil.saveMonthlyReport(month);
     await homeController.getReport();
     await reportController.fetchReport();
-    print('da dc');
   }
 
   String? ktNoiDung(String? value) {
@@ -170,7 +163,10 @@ class TransactionController extends GetxController {
 //Dơn vị tiền tệ
   void getCurrency() {
     donViTienTe.value = settingController.getCurrencySymbol();
-    print('donvitiente: ${donViTienTe.value}');
+  }
+
+  double amountToVND(double amount) {
+    return settingController.amountToVND(amount);
   }
 
   void updateCurrency() {

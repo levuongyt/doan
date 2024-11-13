@@ -18,13 +18,13 @@ class FirebaseStorageUtil {
 
   Future<void> addUsers(
       {required String uid,
-      required String Email,
+      required String email,
       required String name,
       required DateTime ngayTao,
       required double tongSoDu}) async {
     try {
       await storage.collection('Users').doc(uid).set({
-        'Email': Email,
+        'Email': email,
         'Name': name,
         'ngayTao': ngayTao,
         'tongSoDu': tongSoDu,
@@ -46,6 +46,32 @@ class FirebaseStorageUtil {
       print('Lỗi lấy User là : $e');
       return null;
     }
+  }
+
+  ///Cập nhật tổng số dư
+  Future<bool> updateTotalBalance(double newTotalBalance) async {
+    String uid=FirebaseAuth.instance.currentUser?.uid??'';
+    bool result=false;
+    try{
+      await storage.collection('Users').doc(uid).update({'tongSoDu': newTotalBalance});
+      result=true;
+    }catch(e){
+      result=false;
+    }
+    return result;
+  }
+
+  ///Cập nhật tên user
+  Future<bool> updateNameUser(String newName) async {
+    String uid=FirebaseAuth.instance.currentUser?.uid??'';
+    bool result=false;
+    try{
+      await storage.collection('Users').doc(uid).update({'Name': newName});
+      result=true;
+    }catch(e){
+      result=false;
+    }
+    return result;
   }
 
   Future<void> addTransaction({
@@ -186,7 +212,7 @@ class FirebaseStorageUtil {
     if (uid == null) return [];
 
     DateTime startOfMonth = DateTime(month.year, month.month, 1);
-    DateTime endOfMonth = DateTime(month.year, month.month + 1, 1).subtract(Duration(seconds: 1));
+    DateTime endOfMonth = DateTime(month.year, month.month + 1, 1).subtract(const Duration(seconds: 1));
 
     QuerySnapshot querySnapshot = await storage
         .collection('Transactions')
@@ -245,7 +271,7 @@ class FirebaseStorageUtil {
     DateTime firstDayOfNextMonth = (date.month < 12)
         ? DateTime(date.year, date.month + 1, 1)
         : DateTime(date.year + 1, 1, 1);
-    return firstDayOfNextMonth.subtract(Duration(days: 1)).day;
+    return firstDayOfNextMonth.subtract(const Duration(days: 1)).day;
   }
 
   Future<void> saveMonthlyReport(DateTime month) async {
@@ -256,7 +282,7 @@ class FirebaseStorageUtil {
     }
     DateTime startOfMonth = DateTime(month.year, month.month, 1);
     DateTime endOfMonth =
-        DateTime(month.year, month.month + 1, 1).subtract(Duration(seconds: 1));
+        DateTime(month.year, month.month + 1, 1).subtract(const Duration(seconds: 1));
 
     /// Lấy giao dịch thu nhập
     QuerySnapshot incomeSnapshot = await FirebaseFirestore.instance
@@ -283,9 +309,9 @@ class FirebaseStorageUtil {
     // }
 
     double totalIncome =
-        incomeSnapshot.docs.fold(0.0, (sum, doc) => sum + doc['tienGD']);
+        incomeSnapshot.docs.fold(0.0, (double sum, doc) => sum + doc['tienGD']);
     double totalExpense =
-        expenseSnapshot.docs.fold(0.0, (sum, doc) => sum + doc['tienGD']);
+        expenseSnapshot.docs.fold(0.0, (double sum, doc) => sum + doc['tienGD']);
 
     int soNgayTrongThang = daysInMonth(month);
     double totalIcomeDay = totalIncome / soNgayTrongThang;
@@ -373,16 +399,5 @@ class FirebaseStorageUtil {
     print('Báo cáo tháng lưu thành công');
   }
 
-  /// Update Tổng số dư
- Future<bool> updateTotalBalance(double newTotalBalance) async {
-    String uid=FirebaseAuth.instance.currentUser?.uid??'';
-    bool result=false;
-    try{
-      await storage.collection('Users').doc(uid).update({'tongSoDu': newTotalBalance});
-      result=true;
-    }catch(e){
-      result=false;
-    }
-  return result;
-}
+
 }

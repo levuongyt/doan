@@ -25,15 +25,11 @@ class _CategoryState extends State<Category> {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-         // automaticallyImplyLeading: false,
           backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           title: Text(
             'Thêm danh mục'.tr,
             style: Theme.of(context).textTheme.displayLarge,
           ),
-          // leading: IconButton(onPressed: (){
-          //   Get.to(Home());
-          // }, icon: Icon(Icons.arrow_back)),
           actions: [
             IconButton(
                 onPressed: () {
@@ -44,9 +40,9 @@ class _CategoryState extends State<Category> {
           centerTitle: true,
           iconTheme: IconThemeData(color: Colors.white),
           bottom: PreferredSize(
-            preferredSize: Size.fromHeight(50.0), // Adjust the height as needed
+            preferredSize: Size.fromHeight(50.0),
             child: Container(
-              color: Theme.of(context).cardColor, // Background color for unselected tabs
+              color: Theme.of(context).cardColor,
               child: Column(
                 children: [
                   Container(
@@ -65,9 +61,9 @@ class _CategoryState extends State<Category> {
                     labelColor: Colors.white,
                     unselectedLabelColor: Colors.blue,
                     indicator: BoxDecoration(
-                      color: Theme.of(context).indicatorColor, // Background color for the selected tab
+                      color: Theme.of(context).indicatorColor,
                       borderRadius: BorderRadius.circular(
-                          5), // Rounded corners for the selected tab
+                          5),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
                   ),
@@ -87,7 +83,6 @@ class _CategoryState extends State<Category> {
                   SizedBox(height: 10),
                   Obx(
                     () => Container(
-                      //  height: doubleHeight*(260/800),
                       child: ListView.builder(
                         physics: NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
@@ -97,12 +92,6 @@ class _CategoryState extends State<Category> {
                                 controller.listIncomeCategory[index];
                             return InkWell(
                                 onTap: () {
-                                  //controller.selectIncomeCategory(category.id ?? "");
-                                  // print(
-                                  //     'id la :${controller.selectedCategory.value}');
-                                  // print('a');
-                                  // idDanhMuc = '${category.id}';
-                                  // print(idDanhMuc);
                                   Get.to(UpdateCategory(
                                       id: category.id ?? "",
                                       name: category.name,
@@ -114,18 +103,10 @@ class _CategoryState extends State<Category> {
                                 child: Column(
                                     children: [
                                       Container(
-                                        //width: doubleWidth * (85 / 360),
-                                        // height: doubleHeight * (62 / 800),
                                         padding: EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                             border: Border.all(
                                               color: Colors.grey,
-                                                // color: controller
-                                                //             .selectedIncomeCategory
-                                                //             .value ==
-                                                //         category.id
-                                                //     ? Colors.blueAccent
-                                                //     : Colors.grey,
                                             ),
                                             borderRadius:
                                                 BorderRadius.circular(10)),
@@ -137,22 +118,19 @@ class _CategoryState extends State<Category> {
                                               flex: 1,
                                               child: Icon(
                                                 IconData(
-                                                    category.iconCode ??
-                                                        Icons
-                                                            .category.codePoint,
+                                                    category.iconCode,
                                                     fontFamily:
                                                         'MaterialIcons'),
                                                 color: Color(category
-                                                        .colorIcon ??
-                                                    Colors.blueAccent.value),
+                                                        .colorIcon),
                                               ),
                                             ),
                                             Expanded(
                                               flex: 4,
                                               child:
-                                                  Text('${category.name}'.tr),
+                                                  Text(category.name.tr),
                                             ),
-                                            Icon(Icons.dehaze)
+                                            const Icon(Icons.dehaze)
                                           ],
                                         ),
                                       ),
@@ -178,7 +156,6 @@ class _CategoryState extends State<Category> {
                 children: [
                   Obx(
                     () => Container(
-                      //  height: doubleHeight*(260/800),
                       child: ListView.builder(
                           shrinkWrap: true,
                           itemCount: controller.listExpenseCategory.length,
@@ -187,12 +164,6 @@ class _CategoryState extends State<Category> {
                                 controller.listExpenseCategory[index];
                             return InkWell(
                                 onTap: () {
-                                 // controller.selectExpenseCategory(category.id ?? "");
-                                  // print(
-                                  //     'id la :${controller.selectedCategory.value}');
-                                  // print('a');
-                                  // idDanhMuc = '${category.id}';
-                                  // print(idDanhMuc);
                                   Get.to(UpdateCategory(
                                       id: category.id ?? '',
                                       name: category.name,
@@ -204,17 +175,9 @@ class _CategoryState extends State<Category> {
                                 child: Column(
                                     children: [
                                       Container(
-                                        //width: doubleWidth * (85 / 360),
-                                        // height: doubleHeight * (62 / 800),
-                                        padding: EdgeInsets.all(20),
+                                        padding: const EdgeInsets.all(20),
                                         decoration: BoxDecoration(
                                             border: Border.all(
-                                                // color: controller
-                                                //             .selectedExpenseCategory
-                                                //             .value ==
-                                                //         category.id
-                                                //     ? Colors.blueAccent
-                                                //     : Colors.grey,
                                               color: Colors.grey,
                                             ),
                                             borderRadius:
@@ -227,22 +190,19 @@ class _CategoryState extends State<Category> {
                                               flex: 1,
                                               child: Icon(
                                                 IconData(
-                                                    category.iconCode ??
-                                                        Icons
-                                                            .category.codePoint,
+                                                    category.iconCode,
                                                     fontFamily:
                                                         'MaterialIcons'),
                                                 color: Color(category
-                                                        .colorIcon ??
-                                                    Colors.blueAccent.value),
+                                                        .colorIcon),
                                               ),
                                             ),
                                             Expanded(
                                               flex: 4,
                                               child:
-                                                  Text('${category.name}'.tr),
+                                                  Text(category.name.tr),
                                             ),
-                                            Icon(Icons.dehaze)
+                                            const Icon(Icons.dehaze)
                                           ],
                                         ),
                                       ),

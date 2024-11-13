@@ -27,7 +27,6 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
     // TODO: implement initState
     super.initState();
     reportController.fetchCategoryTransactions(widget.categoryId);
-    print('a : ${reportController.categoryTransactions.length}');
   }
   String formatBalance(double amount ) {
     return reportController.donViTienTe.value == 'đ'
@@ -50,19 +49,18 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
       ),
       body: SafeArea(
           child: Container(
-        padding: EdgeInsets.all(10),
+        padding: const EdgeInsets.all(10),
         child: Column(
           children: [
             Text('Giao dịch trong tháng'.tr,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-          //  Text(widget.categoryName),
             SizedBox(
               height: 10,
             ),
             Obx(() {
               if (reportController.categoryTransactions.isEmpty) {
-                return Center(
+                return const Center(
                   child: Text('Không có giao dịch'),
                 );
               }
@@ -82,14 +80,6 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
                           decoration: BoxDecoration(
                             color: Theme.of(context).focusColor,
                             borderRadius: BorderRadius.circular(15),
-                            //boxShadow: [
-                            //   BoxShadow(
-                            //     color: Colors.grey.withOpacity(0.5),
-                            //     spreadRadius: 5,
-                            //     blurRadius: 7,
-                            //     offset: Offset(0, 3),
-                            //   )
-                            // ],
                           ),
                           child: Column(
                             children: [

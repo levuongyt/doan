@@ -15,11 +15,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'firebase_options.dart';
 
-// void main() {
-//  // runApp(const MyApp());
-//   runApp(const GetMyApp());
-//
-// }
 Future<void> configure() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -35,34 +30,6 @@ Future<void> main() async {
   runApp(const GetMyApp());
 }
 
-// Future<void> main() async {
-//   WidgetsFlutterBinding.ensureInitialized();
-//   await configure();
-//   await Firebase.initializeApp();
-//   Get.lazyPut(()=>ReportController());
-//   final prefs = await SharedPreferences.getInstance();
-//   final isDarkMode = prefs.getBool('isDarkMode') ?? false;
-//   runApp( GetMyApp(isDarkMode: isDarkMode));
-// }
-
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const SpalshScreen(),
-    );
-  }
-}
-
 class GetMyApp extends StatelessWidget {
   const GetMyApp({super.key});
 
@@ -70,20 +37,6 @@ class GetMyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final SettingController settingController = Get.find();
     print('kkk: ${settingController.selectedLanguage.value}');
-    // return GetMaterialApp(
-    //   debugShowCheckedModeBanner: false,
-    //   home: LoaderOverlay(
-    //     child: SpalshScreen(),
-    //     overlayWidgetBuilder: (_) {
-    //       return Center(
-    //         child: SpinKitCubeGrid(
-    //           color: Colors.blueAccent,
-    //           size: 50,
-    //         ),
-    //       );
-    //     },
-    //   ),
-
     return GlobalLoaderOverlay(
       overlayWidgetBuilder: (_) {
         return const Center(

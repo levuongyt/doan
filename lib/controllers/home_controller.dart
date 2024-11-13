@@ -1,7 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
-import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../Models/category_model.dart';
@@ -18,8 +15,8 @@ class HomeController extends GetxController {
   List<TransactionModel> transactions = <TransactionModel>[].obs;
   List<TransactionModel> listResultTK = <TransactionModel>[].obs;
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
-  RxMap<String, Map<String, dynamic>> categoryIdToDetails =
-      <String, Map<String, dynamic>>{}.obs;
+  RxMap<String, CategoryModel> categoryIdToDetails =
+      <String, CategoryModel>{}.obs;
   Rxn<ReportModel> report = Rxn<ReportModel>();
   Rx<DateTime> selectedMonth = DateTime.now().obs;
   RxBool isVisibility = false.obs;
@@ -38,7 +35,6 @@ class HomeController extends GetxController {
 
   void getCurrency() {
     donViTienTe.value = settingController.getCurrencySymbol();
-    print('donvitiente: ${donViTienTe.value}');
   }
 
   double convertAmount(double amount) {
@@ -50,17 +46,13 @@ class HomeController extends GetxController {
     List<TransactionModel> response =
         await firebaseStorageUtil.getUserTransactions();
     if (response.isEmpty) {
-      // Get.snackbar('ERROR', 'Lỗi');
     } else {
       transactions.clear();
       transactions.addAll(response);
       await getCategoriesForTransactions();
-      //  await firebaseStorageUtil.getCategoriesTransaction(uid)
       listResultTK.clear();
-      // listResultTK.assignAll(transactions);
       listResultTK
           .addAll(transactions.take(itemsPerPage * currentPage).toList());
-      //  print('ds đang hiển thị ở fech: $listResultTK');
     }
 
     isLoading.value = false;
@@ -69,8 +61,7 @@ class HomeController extends GetxController {
   Future<void> loadMoreTransactions() async {
     if (!isSearching.value && !isLoadingMore.value && !loadAll.value) {
       isLoadingMore.value = true;
-      print('Loading more transactions...');
-      await Future.delayed(Duration(seconds: 2));
+      await Future.delayed(const Duration(seconds: 2));
       currentPage++;
       var newTransactions = transactions
           .skip((currentPage - 1) * itemsPerPage)
@@ -78,18 +69,15 @@ class HomeController extends GetxController {
           .toList();
       if (newTransactions.isNotEmpty) {
         listResultTK.addAll(newTransactions);
-        print('Loaded ${newTransactions.length} more transactions.');
       } else {
         loadAll.value = true;
-        print('No more transactions to load.');
       }
       isLoadingMore.value = false;
-    }else { print('Currently loading, please wait...'); }
+    } else {}
   }
 
   Future<void> updateTotalBalance(double newTotalBalance) async {
     isLoading.value = true;
-    // bool resultUpdate=await FirebaseStorageUtil.singleton.updateTotalBalance(newTotalBalance);
     bool resultUpdate =
         await firebaseStorageUtil.updateTotalBalance(newTotalBalance);
     if (resultUpdate == true) {
@@ -105,9 +93,7 @@ class HomeController extends GetxController {
     isLoading.value = true;
     userModel.value = null;
     userModel.value = await firebaseStorageUtil.getUser();
-    print('DS1 là: ${userModel.value?.tongSoDu}');
     if (userModel.value == null) {
-      print('lỗi là ');
       Get.snackbar('ERROR1', 'Lỗi');
     } else {}
     isLoading.value = false;
@@ -122,33 +108,21 @@ class HomeController extends GetxController {
     if (!datePattern.hasMatch(date)) {
       return 'Mời nhập định dạng ngày (dd/MM/yyyy)';
     }
-    // final dateParts = date.split('/');
-    // if (dateParts.length != 3) {
-    //   return 'Mời nhập định dạng ngày dd/MM/yyyy';
-    // }
     return null;
   }
 
   Future<void> searchTransaction(DateTime? selectedDate) async {
     if (selectedDate == null) {
-      isSearching.value=false;
-      listResultTK.assignAll(transactions.take(itemsPerPage * currentPage).toList());
-     // listResultTK.assignAll(transactions);
-      print('ds đang hiển thị ở: $listResultTK');
+      isSearching.value = false;
+      listResultTK
+          .assignAll(transactions.take(itemsPerPage * currentPage).toList());
     } else {
-      isSearching.value=true;
+      isSearching.value = true;
       final dateFormatter = DateFormat('dd/MM/yyyy');
       final formattedDate = dateFormatter.format(selectedDate);
-      listResultTK.assignAll(transactions
-          .where((transaction) {
-             return dateFormatter.format(transaction.date) == formattedDate;
-             }).toList());
-          //   return dateFormatter.format(transaction.date) == formattedDate;
-          // })
-          // .toList()
-          // .take(itemsPerPage * currentPage)
-          // .toList());
-      print('ds đang hiển thị ở 1: ${listResultTK.length}');
+      listResultTK.assignAll(transactions.where((transaction) {
+        return dateFormatter.format(transaction.date) == formattedDate;
+      }).toList());
     }
   }
 
@@ -159,51 +133,19 @@ class HomeController extends GetxController {
         CategoryModel? category = await firebaseStorageUtil
             .getCategoriesTransaction(transaction.categoryId);
         if (category != null) {
-          categoryIdToDetails[transaction.categoryId] = {
-            'name': category.name,
-            'iconCode': category.iconCode,
-            'colorIcon': category.colorIcon,
-          };
+          categoryIdToDetails[transaction.categoryId] = category;
         }
-        // else {
-        //   CategoryModel? defaultCategory = danhMuc.dsDMThuNhapMacDinh.firstWhereOrNull((dm) =>
-        //   dm.id == transaction.categoryId)
-        //       ??
-        //       danhMuc.dsDMChiTieuMacDinh.firstWhereOrNull((dm) => dm.id == transaction.categoryId);
-        //   if (defaultCategory != null) {
-        //     categoryIdToDetails[transaction.categoryId] = {
-        //       'name': defaultCategory.name,
-        //       'iconCode': defaultCategory.iconCode,
-        //       'colorIcon': defaultCategory.colorIcon,
-        //     };
-        //   }
-        // }
       }
     }
   }
 
-  // Future<void> getReport() async {
-  //   DocumentSnapshot? reportSnapshot =
-  //   await firebaseStorageUtil.getReport(selectedMonth.value);
-  //   if (reportSnapshot != null && reportSnapshot.exists) {
-  //     report.value = ReportModel.fromDocument(reportSnapshot);
-  //     print('success');
-  //   } else {
-  //     print('loi');
-  //     report.value = null;
-  //   }
-  // }
   Future<void> getReport() async {
     ReportModel? reportModel =
         await firebaseStorageUtil.getReport(selectedMonth.value);
     if (reportModel != null) {
       report.value = reportModel;
-      // reportData.value=reportModel.toMap();
-      print('success');
     } else {
-      print('khong co thang.');
       report.value = null;
-      //  reportData.value={};
     }
   }
 
