@@ -11,9 +11,6 @@ import '../utils/firebase/login/authentication.dart';
 
 class SettingController extends GetxController {
   final FireBaseUtil fireBaseUtil = FireBaseUtil();
-  // final HomeController homeController=Get.find();
-  // final TransactionController transactionController=Get.find();
-  // final ReportController reportController=Get.find();
   final FirebaseStorageUtil firebaseStorageUtil = FirebaseStorageUtil();
   final PrefsService prefsService = PrefsService();
   RxBool isLoading = false.obs;
@@ -22,37 +19,6 @@ class SettingController extends GetxController {
   RxString selectedCurrency = 'VND'.obs;
   RxDouble exchangeRate = 1.0.obs;
   final ApiService apiService = ApiService();
-
-  Future<void> resetPass(String emailReset) async {
-    isLoading.value = true;
-    bool resultSend = await fireBaseUtil.sendPasswordResetEmail(emailReset);
-    if (resultSend == true) {
-      Get.snackbar(
-        'Thành công',
-        'Đã gửi thông báo đến email của bạn',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
-    } else {
-      Get.snackbar(
-        'Thất bại',
-        'Vui lòng kiểm tra lại thông tin!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
-    }
-    isLoading.value = false;
-  }
 
   void toggleTheme() {
     isDarkMode.value = !isDarkMode.value;

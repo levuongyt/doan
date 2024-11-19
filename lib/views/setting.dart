@@ -51,49 +51,6 @@ class _SettingState extends State<Setting> {
           children: [
             ListTile(
               leading: const Icon(
-                Icons.lock_reset,
-                color: Colors.blueAccent,
-              ),
-              title: Text('Đặt lại mật khẩu'.tr),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (context) {
-                      return AlertDialog(
-                        title:
-                            Text('Vui lòng nhập email để đặt lại mật khẩu'.tr),
-                        content: TextFormField(
-                          controller: emailResetController,
-                          keyboardType: TextInputType.emailAddress,
-                          decoration: InputDecoration(
-                              hintText: 'Nhập email'.tr,
-                              hintStyle: TextStyle(
-                                color: Theme.of(context).hintColor,
-                              ),
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              )),
-                        ),
-                        actions: [
-                          TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text('Hủy'.tr)),
-                          TextButton(
-                              onPressed: () async {
-                                Get.back();
-                                await settingController
-                                    .resetPass(emailResetController.text);
-                              },
-                              child: Text('Gửi'.tr)),
-                        ],
-                      );
-                    });
-              },
-            ),
-            ListTile(
-              leading: const Icon(
                 Icons.playlist_add,
                 color: Colors.blueAccent,
               ),

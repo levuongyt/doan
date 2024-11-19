@@ -38,7 +38,6 @@ class _UpdateCategoryState extends State<UpdateCategory> {
       controller.selectedTNColor.value = widget.colorDM;
     });
     ever(controller.isLoading, (callback) {
-      print('loading state: ${controller.isLoading}');
       if (callback) {
         context.loaderOverlay.show();
       } else {
@@ -76,7 +75,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
             style: Theme.of(context).textTheme.displayLarge,
           ),
           centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white),
+          iconTheme: const IconThemeData(color: Colors.white),
           actions: [
             IconButton(
                 onPressed: () {
@@ -104,161 +103,156 @@ class _UpdateCategoryState extends State<UpdateCategory> {
                     ),
                   ));
                 },
-                icon: Icon(Icons.delete))
+                icon: const Icon(Icons.delete))
           ],
         ),
         body: SafeArea(
             child: SingleChildScrollView(
           child: Container(
-            padding: EdgeInsets.all(10),
+            padding: const EdgeInsets.all(10),
             child: Column(
               children: [
-                Row(
-                  children: [
-                    Text('Tên danh mục : '.tr),
-                    Expanded(
-                      child: TextFormField(
-                        validator: controller.checkNameDM,
-                        controller: nameDMController,
-                        decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(10))),
-                      ),
-                    )
-                  ],
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [Text('Biểu tượng'.tr)],
-                ),
-                SizedBox(
-                  height: 5,
-                ),
-                Container(
-                  height: doubleHeight * (245 / 800),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 6,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10),
-                    itemCount: IconColorCategory.iconCodes.length,
-                    itemBuilder: (context, index) {
-                      final iconCode = IconColorCategory.iconCodes[index];
-                      return InkWell(
-                        onTap: () {
-                          controller.selectedIconTNCode.value = iconCode;
-                        },
-                        child: Obx(
-                          () => Container(
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: controller.selectedIconTNCode.value ==
-                                          iconCode
-                                      ? Colors.blueAccent
-                                      : Colors.grey,
-                                  width: controller.selectedIconTNCode.value ==
-                                          iconCode
-                                      ? 2
-                                      : 1,
-                                ),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Icon(IconData(iconCode,
-                                fontFamily: 'MaterialIcons')),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  children: [
-                    Text('Màu sắc'.tr),
-                  ],
-                ),
-                SizedBox(height: 5),
-                Container(
-                  height: doubleHeight * (245 / 800),
-                  child: GridView.builder(
-                    shrinkWrap: true,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 6,
-                      crossAxisSpacing: 10,
-                      mainAxisSpacing: 10,
-                    ),
-                    itemCount: IconColorCategory.colors.length,
-                    itemBuilder: (context, index) {
-                      final color = IconColorCategory.colors[index];
-                      return InkWell(
-                        onTap: () {
-                          controller.selectedTNColor.value = color.value;
-                        },
-                        child: Obx(
-                          () => Container(
-                           // padding: EdgeInsets.all(10),
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: controller.selectedTNColor.value == color.value
-                                    ? Colors.yellow
-                                    : Colors.grey,
-                                width: controller.selectedTNColor.value == color.value ? 4 : 2,
-                              ),
-                              color: color,
-                              borderRadius: BorderRadius.circular(10),
-                              // boxShadow: controller.selectedTNColor.value == color.value
-                              //     ? [
-                              //   BoxShadow(
-                              //     color: Colors.yellow.withOpacity(0.5), // Bóng vàng mờ
-                              //     spreadRadius: 2,
-                              //     blurRadius: 4,
-                              //   ),
-                              // ]
-                              //     : [],
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  height: doubleHeight * (50 / 800),
-                  child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Theme.of(context).indicatorColor,
-                      ),
-                      onPressed: () async {
-                        if (formKey.currentState!.validate()) {
-                          await controller.updateCategory(
-                            widget.id,
-                            nameDMController.text,
-                            controller.selectedIconTNCode.value,
-                            controller.selectedTNColor.value,
-                            widget.type,
-                          );
-                          Get.until(
-                              (route) => route.settings.name == '/Category');
-                        }
-                      },
-                      child: Text(
-                        'Lưu Danh Mục'.tr,
-                        style: TextStyle(color: Colors.white, fontSize: 15),
-                      )),
-                ),
+                buildRowNameCategory(),
+                const SizedBox(height: 10),
+                buildTitleSection('Biểu tượng'),
+                const SizedBox(height: 5),
+                buildListIcon(doubleHeight),
+                const SizedBox(height: 10),
+                buildTitleSection('Màu sắc'),
+                const SizedBox(height: 5),
+                buildListColor(doubleHeight),
+                const SizedBox(height: 20),
+                buildButtonSave(doubleHeight, context),
               ],
             ),
           ),
         )),
       ),
+    );
+  }
+
+  Row buildTitleSection(String title) {
+    return Row(
+                children: [
+                  Text(title.tr)],
+              );
+  }
+
+  SizedBox buildButtonSave(double doubleHeight, BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: doubleHeight * (50 / 800),
+      child: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Theme.of(context).indicatorColor,
+          ),
+          onPressed: () async {
+            if (formKey.currentState!.validate()) {
+              await controller.updateCategory(
+                widget.id,
+                nameDMController.text,
+                controller.selectedIconTNCode.value,
+                controller.selectedTNColor.value,
+                widget.type,
+              );
+              Get.until((route) => route.settings.name == '/Category');
+            }
+          },
+          child: Text(
+            'Lưu Danh Mục'.tr,
+            style: const TextStyle(color: Colors.white, fontSize: 15),
+          )),
+    );
+  }
+
+  Container buildListColor(double doubleHeight) {
+    return Container(
+      height: doubleHeight * (245 / 800),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 6,
+          crossAxisSpacing: 10,
+          mainAxisSpacing: 10,
+        ),
+        itemCount: IconColorCategory.colors.length,
+        itemBuilder: (context, index) {
+          final color = IconColorCategory.colors[index];
+          return InkWell(
+            onTap: () {
+              controller.selectedTNColor.value = color.value;
+            },
+            child: Obx(
+              () => Container(
+                // padding: EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: controller.selectedTNColor.value == color.value
+                        ? Colors.yellow
+                        : Colors.grey,
+                    width:
+                        controller.selectedTNColor.value == color.value ? 4 : 2,
+                  ),
+                  color: color,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Container buildListIcon(double doubleHeight) {
+    return Container(
+      height: doubleHeight * (245 / 800),
+      child: GridView.builder(
+        shrinkWrap: true,
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 6, crossAxisSpacing: 10, mainAxisSpacing: 10),
+        itemCount: IconColorCategory.iconCodes.length,
+        itemBuilder: (context, index) {
+          final iconCode = IconColorCategory.iconCodes[index];
+          return InkWell(
+            onTap: () {
+              controller.selectedIconTNCode.value = iconCode;
+            },
+            child: Obx(
+              () => Container(
+                decoration: BoxDecoration(
+                    border: Border.all(
+                      color: controller.selectedIconTNCode.value == iconCode
+                          ? Colors.blueAccent
+                          : Colors.grey,
+                      width: controller.selectedIconTNCode.value == iconCode
+                          ? 2
+                          : 1,
+                    ),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Icon(IconData(iconCode, fontFamily: 'MaterialIcons')),
+              ),
+            ),
+          );
+        },
+      ),
+    );
+  }
+
+  Row buildRowNameCategory() {
+    return Row(
+      children: [
+        Text('Tên danh mục : '.tr),
+        Expanded(
+          child: TextFormField(
+            validator: controller.checkNameDM,
+            controller: nameDMController,
+            decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10))),
+          ),
+        )
+      ],
     );
   }
 }

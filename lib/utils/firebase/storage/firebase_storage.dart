@@ -29,9 +29,7 @@ class FirebaseStorageUtil {
         'ngayTao': ngayTao,
         'tongSoDu': tongSoDu,
       });
-      print('Thành công');
     } catch (e) {
-      print('Lỗi là: $e');
     }
   }
 
@@ -42,8 +40,7 @@ class FirebaseStorageUtil {
       final snapshot = await storage.collection('Users').doc(uid).get();
       return UserModel.fromDocument(snapshot);
     } catch (e) {
-      print('aaa');
-      print('Lỗi lấy User là : $e');
+
       return null;
     }
   }
@@ -58,7 +55,9 @@ class FirebaseStorageUtil {
     }catch(e){
       result=false;
     }
+
     return result;
+
   }
 
   ///Cập nhật tên user
@@ -104,9 +103,9 @@ class FirebaseStorageUtil {
 
       await storage.collection('Users').doc(uid).update({'tongSoDu': soDuMoi});
 
-      print('Thành công');
+
     } catch (e) {
-      print('Lỗi: $e');
+
     }
   }
 
@@ -122,7 +121,7 @@ class FirebaseStorageUtil {
           snapshot.docs.map((e) => TransactionModel.fromDocument(e)).toList();
       return result;
     } catch (e) {
-      print('Lỗi là: $e');
+
       return [];
     }
   }
@@ -142,9 +141,9 @@ class FirebaseStorageUtil {
         'type': type,
       //  'userId': uid,
       });
-      print('Danh mục đã được thêm thành công');
+
     } catch (e) {
-      print('Lỗi khi thêm danh mục: $e');
+
     }
   }
   
@@ -189,7 +188,7 @@ class FirebaseStorageUtil {
           snapshot.docs.map((doc) => CategoryModel.fromDocument(doc)).toList();
       return categories;
     } catch (e) {
-    //  print('Lỗi khi lấy danh mục: $e');
+
       return [];
     }
   }
@@ -201,7 +200,7 @@ class FirebaseStorageUtil {
           await storage.collection('Categories').doc(uid).get();
       return CategoryModel.fromDocument(snapshot);
     } catch (e) {
-      // print('Lỗi khi lấy danh mục: $e');
+
       return null;
     }
   }
@@ -228,23 +227,6 @@ class FirebaseStorageUtil {
 
   ///Báo cáo
 
-  // Future<DocumentSnapshot?> getReport(DateTime month) async {
-  //   String? uid = FirebaseAuth.instance.currentUser?.uid;
-  //   DocumentReference reportRef = FirebaseFirestore.instance
-  //       .collection('Reports')
-  //       .doc(
-  //           '${uid}-${DateFormat('yyyy-MM').format(month)}');
-  //
-  //   DocumentSnapshot reportSnapshot = await reportRef.get();
-  //   print(' ID la : ${reportRef.id}');
-  //   if (!reportSnapshot.exists) {
-  //     print('khong co du lieu');
-  //     return null;
-  //   }
-  //
-  //   return reportSnapshot;
-  // }
-
   Future<ReportModel?> getReport(DateTime month) async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentReference reportRef = FirebaseFirestore.instance
@@ -253,15 +235,11 @@ class FirebaseStorageUtil {
 
     try {
       DocumentSnapshot reportSnapshot = await reportRef.get();
-      print('ID la: ${reportRef.id}');
-
       if (!reportSnapshot.exists) {
-        print('Khong co du lieu');
         return null;
       }
       return ReportModel.fromDocument(reportSnapshot);
     } catch (e) {
-      print('Lỗi khi lấy báo cáo: $e');
       return null;
     }
   }
@@ -277,7 +255,6 @@ class FirebaseStorageUtil {
   Future<void> saveMonthlyReport(DateTime month) async {
     String? userId = FirebaseAuth.instance.currentUser?.uid;
     if (userId == null) {
-      print('Lỗi: Người dùng chưa đăng nhập');
       return;
     }
     DateTime startOfMonth = DateTime(month.year, month.month, 1);
@@ -396,7 +373,6 @@ class FirebaseStorageUtil {
       'soDuThang': soDuThang,
       'categories':categoryReport
     });
-    print('Báo cáo tháng lưu thành công');
   }
 
 

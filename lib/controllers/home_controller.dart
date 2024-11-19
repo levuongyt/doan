@@ -1,9 +1,11 @@
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../Models/category_model.dart';
 import '../Models/report_model.dart';
 import '../config/category/category_app.dart';
+import '../config/notifications/notifications.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
@@ -21,6 +23,7 @@ class HomeController extends GetxController {
   Rx<DateTime> selectedMonth = DateTime.now().obs;
   RxBool isVisibility = false.obs;
   RxBool isLoading = false.obs;
+  RxBool isUpdateLoading=false.obs;
   RxBool isLoadingMore = false.obs;
   RxBool loadAll = false.obs;
   RxBool isSearching = false.obs;
@@ -42,7 +45,7 @@ class HomeController extends GetxController {
   }
 
   Future<void> getUserTransactions() async {
-    isLoading.value = true;
+   // isLoading.value = true;
     List<TransactionModel> response =
         await firebaseStorageUtil.getUserTransactions();
     if (response.isEmpty) {
@@ -55,7 +58,7 @@ class HomeController extends GetxController {
           .addAll(transactions.take(itemsPerPage * currentPage).toList());
     }
 
-    isLoading.value = false;
+  //  isLoading.value = false;
   }
 
   Future<void> loadMoreTransactions() async {
@@ -77,26 +80,50 @@ class HomeController extends GetxController {
   }
 
   Future<void> updateTotalBalance(double newTotalBalance) async {
-    isLoading.value = true;
+   // isLoading.value = true;
+   isUpdateLoading.value=true;
     bool resultUpdate =
         await firebaseStorageUtil.updateTotalBalance(newTotalBalance);
     if (resultUpdate == true) {
       await getUser();
-      Get.snackbar('Thành công', 'Thiết lập số dư ban đầu thành công');
+     // print('123: ${isLoading.value}');
+      showSnackbar('Thành công'.tr, 'Thiết lập số dư ban đầu thành công'.tr, true);
     } else {
-      Get.snackbar('Lỗi', 'Thất bại');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
-    isLoading.value = false;
+   // isLoading.value = false;
+    isUpdateLoading.value=false;
   }
 
   Future<void> getUser() async {
-    isLoading.value = true;
+   // isLoading.value = true;
     userModel.value = null;
     userModel.value = await firebaseStorageUtil.getUser();
+   // print('321: ${isLoading.value}');
     if (userModel.value == null) {
       Get.snackbar('ERROR1', 'Lỗi');
-    } else {}
-    isLoading.value = false;
+    } else {
+
+    }
+   // isLoading.value = false;
+  }
+
+  String? validateTotalBalance(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Số tiền không được để trống'.tr;
+    }
+    try {
+      // final parsedValue = int.parse(value.replaceAll(',', ''));
+      // if (parsedValue <= 0) {
+      //   return 'Số tiền phải lớn hơn 0'.tr;
+      // }
+      if (value.replaceAll(',', '').length > 13) {
+        return 'Số tiền phải nhỏ hơn 14 chữ số'.tr;
+      }
+    } catch (e) {
+      return 'Số tiền không hợp lệ'.tr;
+    }
+    return null;
   }
 
   String? dateValidator(String? date) {
@@ -106,7 +133,7 @@ class HomeController extends GetxController {
     final datePattern = RegExp(r"^\d{2}/\d{2}/\d{4}$");
 
     if (!datePattern.hasMatch(date)) {
-      return 'Mời nhập định dạng ngày (dd/MM/yyyy)';
+      return 'Mời nhập định dạng ngày (dd/MM/yyyy)'.tr;
     }
     return null;
   }

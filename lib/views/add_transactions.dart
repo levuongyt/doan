@@ -167,8 +167,16 @@ class _NhapLieuState extends State<NhapLieu> {
           ),
           onPressed: () async {
             if (formKey.currentState!.validate()) {
+              double amountCT;
+              if(controller.donViTienTe.value=="đ"){
+                amountCT=double.parse(tienChiController.text.replaceAll(',', ''));
+              }
+              else{
+                amountCT=controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', '')));
+              }
               await controller.addTransaction(
-                  amount:controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', ''))),
+                 // amount:controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', ''))),
+                  amount: amountCT,
                   description: noiDungChiController.text,
                   categoryId: idDanhMucCT,
                   type: 'Chi Tiêu',
@@ -387,8 +395,16 @@ class _NhapLieuState extends State<NhapLieu> {
           ),
           onPressed: () async {
             if (formKey.currentState!.validate()) {
+              double amountTN;
+              if(controller.donViTienTe.value=="đ"){
+                amountTN=double.parse(tienController.text.replaceAll(',', ''));
+              }
+              else{
+                amountTN=controller.amountToVND(double.parse(tienController.text.replaceAll(',', '')));
+              }
               await controller.addTransaction(
-                  amount: controller.amountToVND(double.parse(tienController.text.replaceAll(',', ''))),
+                 // amount: controller.amountToVND(double.parse(tienController.text.replaceAll(',', ''))),
+                  amount: amountTN,
                   description: noiDungController.text,
                   categoryId: idDanhMucTN,
                   type: 'Thu Nhập',

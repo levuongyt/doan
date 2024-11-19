@@ -1,4 +1,5 @@
 import 'package:doan_ql_thu_chi/config/SharedPreferences/prefs_service.dart';
+import 'package:doan_ql_thu_chi/config/notifications/notifications.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
@@ -41,22 +42,13 @@ class SignInController extends GetxController {
     }
   }
 
-  // bool isEmail(String email) {
-  //   bool emailValid = RegExp(
-  //       r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
-  //       .hasMatch(email);
-  //   return emailValid;
-  // }
-
   String? ktEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email không được bỏ trống';
-    } else if (value.length < 6) {
-      return 'Độ dài email phải từ 6 ký tự trở lên';
-    } else if (!RegExp(
+      return 'Email không được bỏ trống'.tr;
+    }else if (!RegExp(
             r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value)) {
-      return 'Email không đúng định dạng';
+      return 'Email không đúng định dạng'.tr;
     }
     // else if (!RegExp(
     //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -74,13 +66,10 @@ class SignInController extends GetxController {
 
   String? ktPassWord(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password không được bỏ trống';
+      return 'Mật khẩu không được bỏ trống'.tr;
     } else if (value.length < 6) {
-      return 'Độ dài Password phải từ 6 ký tự trở lên';
+      return 'Độ dài mật khẩu phải lớn hơn 6 ký tự'.tr;
     }
-    //else if(!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$').hasMatch(value)){
-    //  return 'Password chưa đúng định dạng';
-    // }
     return null;
   }
 
@@ -93,17 +82,17 @@ class SignInController extends GetxController {
       isLoading.value = true;
       bool result = await fireBaseUtil.login(email, pass);
       if (result) {
-        Get.snackbar('Success', 'Welcome');
+       // Get.snackbar('Thành công', 'Chào mừng '.tr);
         await saveLoginData();
         Get.lazyPut(() => HomeController());
         Get.lazyPut(() => TransactionController());
         Get.lazyPut(() => ReportController());
         Get.off(() => const Home());
       } else {
-        Get.snackbar('Error', 'Mời thử lại');
+        showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Mời thử lại');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     } finally {
       isLoading.value = false;
     }
@@ -114,37 +103,37 @@ class SignInController extends GetxController {
       isLoading.value = true;
       bool result = await fireBaseUtil.signInWithGoogle();
       if (result) {
-        Get.snackbar('Success', 'Welcome');
+       // Get.snackbar('Success', 'Welcome');
         Get.lazyPut(() => HomeController());
         Get.lazyPut(() => TransactionController());
         Get.lazyPut(() => ReportController());
         Get.off(() => const Home());
       } else {
-        Get.snackbar('Error', 'Mời thử lại');
+        showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Mời thử lại');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     } finally {
       isLoading.value = false;
     }
   }
 
-  Future<void> signInWithAccountFacebook() async {
-    try {
-      isLoading.value = true;
-      bool result = await fireBaseUtil.signInWithFacebook();
-      if (result) {
-        Get.snackbar('Success', 'Welcome');
-        Get.off(() => const Home());
-      } else {
-        Get.snackbar('Error', 'Mời thử lại');
-      }
-    } catch (e) {
-      Get.snackbar('Error', 'Mời thử lại');
-    } finally {
-      isLoading.value = false;
-    }
-  }
+  // Future<void> signInWithAccountFacebook() async {
+  //   try {
+  //     isLoading.value = true;
+  //     bool result = await fireBaseUtil.signInWithFacebook();
+  //     if (result) {
+  //       Get.snackbar('Success', 'Welcome');
+  //       Get.off(() => const Home());
+  //     } else {
+  //       Get.snackbar('Error', 'Mời thử lại');
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar('Error', 'Mời thử lại');
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 
   @override
   void onInit() {

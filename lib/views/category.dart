@@ -5,6 +5,7 @@ import 'package:doan_ql_thu_chi/views/update_category.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Models/category_model.dart';
 import '../controllers/transaction_controller.dart';
 
 class Category extends StatefulWidget {
@@ -62,8 +63,7 @@ class _CategoryState extends State<Category> {
                     unselectedLabelColor: Colors.blue,
                     indicator: BoxDecoration(
                       color: Theme.of(context).indicatorColor,
-                      borderRadius: BorderRadius.circular(
-                          5),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                     indicatorSize: TabBarIndicatorSize.tab,
                   ),
@@ -74,152 +74,77 @@ class _CategoryState extends State<Category> {
         ),
         body: SafeArea(
             child: TabBarView(children: [
-          ///TAB 1
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  SizedBox(height: 10),
-                  Obx(
-                    () => Container(
-                      child: ListView.builder(
-                        physics: NeverScrollableScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: controller.listIncomeCategory.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final category =
-                                controller.listIncomeCategory[index];
-                            return InkWell(
-                                onTap: () {
-                                  Get.to(UpdateCategory(
-                                      id: category.id ?? "",
-                                      name: category.name,
-                                      iconDM: category.iconCode,
-                                      colorDM: category.colorIcon,
-                                      type: category.type,
-                                  ));
-                                },
-                                child: Column(
-                                    children: [
-                                      Container(
-                                        padding: EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: Icon(
-                                                IconData(
-                                                    category.iconCode,
-                                                    fontFamily:
-                                                        'MaterialIcons'),
-                                                color: Color(category
-                                                        .colorIcon),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 4,
-                                              child:
-                                                  Text(category.name.tr),
-                                            ),
-                                            const Icon(Icons.dehaze)
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      )
-                                    ],
-                                  ),
-                            );
-                          }),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          ///TAB 2 CHI TIÊU
-          SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Obx(
-                    () => Container(
-                      child: ListView.builder(
-                          shrinkWrap: true,
-                          itemCount: controller.listExpenseCategory.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            final category =
-                                controller.listExpenseCategory[index];
-                            return InkWell(
-                                onTap: () {
-                                  Get.to(UpdateCategory(
-                                      id: category.id ?? '',
-                                      name: category.name,
-                                      iconDM: category.iconCode,
-                                      colorDM: category.colorIcon,
-                                      type: category.type,
-                                  ));
-                                },
-                                child: Column(
-                                    children: [
-                                      Container(
-                                        padding: const EdgeInsets.all(20),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                              color: Colors.grey,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(10)),
-                                        child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          children: [
-                                            Expanded(
-                                              flex: 1,
-                                              child: Icon(
-                                                IconData(
-                                                    category.iconCode,
-                                                    fontFamily:
-                                                        'MaterialIcons'),
-                                                color: Color(category
-                                                        .colorIcon),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              flex: 4,
-                                              child:
-                                                  Text(category.name.tr),
-                                            ),
-                                            const Icon(Icons.dehaze)
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: 10,
-                                      )
-                                    ],
-                                  ),
-                            );
-                          }),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
+          buildTabContent(controller.listIncomeCategory),
+          buildTabContent(controller.listExpenseCategory),
         ])),
+      ),
+    );
+  }
+
+  Padding buildTabContent(List<CategoryModel> categories) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 10),
+            Obx(
+              () => Container(
+                child: ListView.builder(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: categories.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final category = categories[index];
+                      return InkWell(
+                        onTap: () {
+                          Get.to(UpdateCategory(
+                            id: category.id ?? "",
+                            name: category.name,
+                            iconDM: category.iconCode,
+                            colorDM: category.colorIcon,
+                            type: category.type,
+                          ));
+                        },
+                        child: Column(
+                          children: [
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              decoration: BoxDecoration(
+                                  border: Border.all(
+                                    color: Colors.grey,
+                                  ),
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    flex: 1,
+                                    child: Icon(
+                                      IconData(category.iconCode,
+                                          fontFamily: 'MaterialIcons'),
+                                      color: Color(category.colorIcon),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 4,
+                                    child: Text(category.name.tr),
+                                  ),
+                                  const Icon(Icons.dehaze)
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: 10,
+                            )
+                          ],
+                        ),
+                      );
+                    }),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

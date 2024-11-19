@@ -1,5 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../config/notifications/notifications.dart';
 import '../utils/firebase/login/authentication.dart';
 
 class ForgotPassController extends GetxController{
@@ -10,10 +12,32 @@ class ForgotPassController extends GetxController{
     isLoading.value=true;
     bool resultSend=await fireBaseUtil.sendPasswordResetEmail(emailSendReset);
     if(resultSend==true){
-      Get.snackbar('Success', 'Đã gửi thông báo đến email của bạn');
+      showSnackbar('Thành công'.tr, 'Đã gửi thông báo đến email của bạn'.tr, true);
     }else{
-      Get.snackbar('Erorr', 'Vui lòng thử lại!');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value=false;
+  }
+
+  String? ktEmail(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Email không được bỏ trống'.tr;
+    }else if (!RegExp(
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        .hasMatch(value)) {
+      return 'Email không đúng định dạng'.tr;
+    }
+    // else if (!RegExp(
+    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+    //     .hasMatch(value)) {
+    //   return 'Email không đúng định dạng';
+    // }
+    // else if(!isEmail(value)){
+    //   return 'Email không đúng định dạng';
+    // }
+    // else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
+    //   return 'Username không được chứa ký tự đặc biệt';
+    // }
+    return null;
   }
 }

@@ -5,6 +5,7 @@ import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../config/notifications/notifications.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
 
 class UpdateCategoryController extends GetxController {
@@ -22,33 +23,13 @@ class UpdateCategoryController extends GetxController {
     isLoading.value=true;
     bool resultUpdate = await firebaseStorageUtil.updateCategory(id: id,name: nameDM, icon: iconDM, color: colorDM, type: typeDM);
     if (resultUpdate == true) {
-      Get.snackbar(
-        'Thành công',
-        'Danh mục đã được sửa thành công',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thành công'.tr, 'Danh mục đã được sửa thành công'.tr, true);
       await transactionController.layDanhMucThuNhap();
       await transactionController.layDanhMucChiTieu();
       await transactionController.saveMonthlyReport(DateTime.now());
       await homeController.getCategoriesForTransactions();
     }else{
-      Get.snackbar(
-        'Thất bại',
-        'Bạn vui lòng kiểm tra lại thông tin!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value=false;
   }
@@ -57,30 +38,20 @@ class UpdateCategoryController extends GetxController {
     isLoading.value=true;
     bool resultDelete=await firebaseStorageUtil.deleteCategory(id: idDM);
     if(resultDelete==true){
-      Get.snackbar(
-        'Thành công',
-        'Danh mục đã được xóa thành công',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thành công'.tr, 'Danh mục đã được xóa thành công'.tr, true);
       await transactionController.layDanhMucThuNhap();
       await transactionController.layDanhMucChiTieu();
     }else{
-      Get.snackbar('Error', 'Lỗi');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value=false;
 }
 
   String? checkNameDM(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập tên danh mục';
+      return 'Vui lòng nhập tên danh mục'.tr;
     } else if (value.length > 200) {
-      return 'Độ dài danh mục không được quá 200 ký tự';
+      return 'Độ dài không được quá 100 ký tự'.tr;
     }
     return null;
   }

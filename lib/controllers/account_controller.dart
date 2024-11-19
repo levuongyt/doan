@@ -4,6 +4,7 @@ import 'package:doan_ql_thu_chi/utils/firebase/storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../config/notifications/notifications.dart';
 import '../models/user_model.dart';
 
 class AccountController extends GetxController{
@@ -31,31 +32,11 @@ class AccountController extends GetxController{
     isLoading.value=true;
     bool resultUpdate=await firebaseStorageUtil.updateNameUser(newName);
     if(resultUpdate==true){
-      Get.snackbar(
-        'Thành công',
-        'Tên tài khoản đã được cập nhật thành công',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thành công'.tr,'Tên tài khoản đã được cập nhật thành công'.tr, true);
       await getUser();
       await homeController.getUser();
     }else{
-      Get.snackbar(
-        'Thất bại',
-        'Vui lòng kiểm tra lại thông tin!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value=false;
   }
@@ -63,9 +44,9 @@ class AccountController extends GetxController{
 
   String? checkUserName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tên tài khoản không được bỏ trống';
+      return 'Tên tài khoản không được bỏ trống'.tr;
     } else if (value.length < 6) {
-      return 'Tên tài khoản phải từ 6 ký tự trở lên';
+      return 'Tên tài khoản phải lớn hơn 6 ký tự'.tr;
     }
     return null;
   }
@@ -75,29 +56,9 @@ class AccountController extends GetxController{
     isLoading.value = true;
     bool resultSend = await fireBaseUtil.sendPasswordResetEmail(emailReset);
     if (resultSend == true) {
-      Get.snackbar(
-        'Thành công',
-        'Đã gửi thông báo đến email của bạn',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thành công'.tr, 'Thông báo đã được gửi tới email của bạn'.tr, true);
     } else {
-      Get.snackbar(
-        'Thất bại',
-        'Vui lòng kiểm tra lại thông tin!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value = false;
   }

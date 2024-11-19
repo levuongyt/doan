@@ -215,18 +215,18 @@ class _SignInState extends State<SignIn> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Container(
-            padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-            child: IconButton(
-                onPressed: () async {
-                  await signInController.signInWithAccountFacebook();
-                },
-                icon: const Icon(
-                  Icons.facebook,
-                  size: 79,
-                  color: Colors.blueAccent,
-                ))),
+        // Container(
+        //     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
+        //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
+        //     child: IconButton(
+        //         onPressed: () async {
+        //           await signInController.signInWithAccountFacebook();
+        //         },
+        //         icon: const Icon(
+        //           Icons.facebook,
+        //           size: 79,
+        //           color: Colors.blueAccent,
+        //         ))),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),

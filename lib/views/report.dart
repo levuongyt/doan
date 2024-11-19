@@ -239,36 +239,38 @@ class _BaoCaoState extends State<BaoCao> {
                                   borderRadius: BorderRadius.circular(15),
                                 ),
                                 child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Icon(
-                                      IconData(category.iconCode,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: Color(category.color),
+                                    Expanded(
+                                      child: Icon(
+                                        IconData(category.iconCode,
+                                            fontFamily: 'MaterialIcons'),
+                                        color: Color(category.color),
+                                      ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          category.name.tr,
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        ),
-                                      ],
+                                    Expanded(
+                                      flex:2,
+                                      child: Text(
+                                        category.name.tr,
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                      ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Obx(()=>
-                                          Text(
-                                            formatBalance(category.totalAmount),
-                                            style: Theme.of(context).textTheme.bodySmall,
+                                    Expanded(
+                                      flex:2,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Obx(()=>
+                                            Text(
+                                              formatBalance(category.totalAmount),
+                                              style: Theme.of(context).textTheme.bodySmall,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '${category.percentage.toStringAsFixed(1)}%',
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        )
-                                      ],
+                                          Text(
+                                            '${category.percentage.toStringAsFixed(1)}%',
+                                          )
+                                        ],
+                                      ),
                                     ),
                                     IconButton(
                                       onPressed: () {
@@ -408,34 +410,36 @@ class _BaoCaoState extends State<BaoCao> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                                   children: [
-                                    Icon(
-                                      IconData(category.iconCode,
-                                          fontFamily: 'MaterialIcons'),
-                                      color: Color(category.color),
+                                    Expanded(
+                                      child: Icon(
+                                        IconData(category.iconCode,
+                                            fontFamily: 'MaterialIcons'),
+                                        color: Color(category.color),
+                                      ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          category.name.tr,
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        ),
-                                      ],
+                                    Expanded(
+                                      flex:2,
+                                      child: Text(
+                                        category.name.tr,
+                                        style: Theme.of(context).textTheme.bodySmall,
+                                      ),
                                     ),
-                                    Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Obx(
-                                          ()=> Text(
-                                            formatBalance(category.totalAmount),
-                                            style: Theme.of(context).textTheme.bodySmall,
+                                    Expanded(
+                                      flex:2,
+                                      child: Column(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Obx(
+                                            ()=> Text(
+                                              formatBalance(category.totalAmount),
+                                              style: Theme.of(context).textTheme.bodySmall,
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '${category.percentage.toStringAsFixed(1)}%',
-                                          style: Theme.of(context).textTheme.bodySmall,
-                                        )
-                                      ],
+                                          Text(
+                                            '${category.percentage.toStringAsFixed(1)}%',
+                                          )
+                                        ],
+                                      ),
                                     ),
                                     IconButton(
                                       onPressed: () {

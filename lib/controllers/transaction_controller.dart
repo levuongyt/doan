@@ -3,6 +3,7 @@ import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Models/category_model.dart';
+import '../config/notifications/notifications.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
 import 'home_controller.dart';
 
@@ -85,30 +86,9 @@ class TransactionController extends GetxController {
       await homeController.getUserTransactions();
       homeController.update();
       //Get.snackbar('Success', 'Thành công');
-      Get.snackbar(
-        'Thành công',
-        'Giao dịch đã được thêm thành công',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.green.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.check_circle, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
+      showSnackbar('Thành công'.tr, 'Giao dịch đã được thêm thành công'.tr, true);
     } catch (e) {
-      Get.snackbar(
-        'Thất bại',
-        'Bạn vui lòng kiểm tra lại thông tin!',
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.red.shade600,
-        colorText: Colors.white,
-        icon: const Icon(Icons.error, color: Colors.white),
-        duration: const Duration(seconds: 3),
-        margin: const EdgeInsets.all(16),
-        borderRadius: 8,
-      );
-      //  print('loi khi add transaction la: $e');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     } finally {
       isLoading.value = false;
     }
@@ -124,38 +104,38 @@ class TransactionController extends GetxController {
     if (value == null || value.isEmpty) {
       return null;
     } else if (value.length > 100) {
-      return 'Độ dài không được quá 100 ký tự';
+      return 'Độ dài không được quá 100 ký tự'.tr;
     }
     return null;
   }
 
-  String? ktSoTien(String? value) {
-    if (value == null || value.isEmpty) {
-      return 'Vui lòng nhập số tiền';
-    } else if (value.length > 11) {
-      return 'Độ dài không được quá 11 ký tự';
-    } else if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
-      return 'Số tiền phải là số hợp lệ';
-    } else if (double.tryParse(value)! <= 0) {
-      return 'Số tiền phải lớn hơn 0';
-    }
-    return null;
-  }
+  // String? ktSoTien(String? value) {
+  //   if (value == null || value.isEmpty) {
+  //     return 'Vui lòng nhập số tiền';
+  //   } else if (value.length > 11) {
+  //     return 'Độ dài không được quá 11 ký tự';
+  //   } else if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
+  //     return 'Số tiền phải là số hợp lệ';
+  //   } else if (double.tryParse(value)! <= 0) {
+  //     return 'Số tiền phải lớn hơn 0';
+  //   }
+  //   return null;
+  // }
 
   String? validateMoney(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Số tiền không được để trống';
+      return 'Số tiền không được để trống'.tr;
     }
     try {
       final parsedValue = int.parse(value.replaceAll(',', ''));
       if (parsedValue <= 0) {
-        return 'Số tiền phải lớn hơn 0';
+        return 'Số tiền phải lớn hơn 0'.tr;
       }
       if (value.replaceAll(',', '').length > 12) {
-        return 'Số tiền phải nhỏ hơn 12 chữ số';
+        return 'Số tiền phải nhỏ hơn 12 chữ số'.tr;
       }
     } catch (e) {
-      return 'Số tiền không hợp lệ';
+      return 'Số tiền không hợp lệ'.tr;
     }
     return null;
   }

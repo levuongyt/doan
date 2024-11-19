@@ -5,6 +5,7 @@ import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:doan_ql_thu_chi/views/setting.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -85,7 +86,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    ever(controller.isLoading, (callback) {
+    ever(controller.isUpdateLoading, (callback) {
       if (callback) {
         context.loaderOverlay.show();
       } else {
@@ -99,6 +100,8 @@ class _HomePageState extends State<HomePage> {
         ? '${NumberFormat('#,##0').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}'
         : '${NumberFormat('#,##0.00').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}';
   }
+
+  final NumberFormat currencyFormatter = NumberFormat('#,##0');
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +162,26 @@ class _HomePageState extends State<HomePage> {
                                   content: TextFormField(
                                     controller: totalBalanceController,
                                     keyboardType: TextInputType.number,
+                                    validator: controller.validateTotalBalance,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    onChanged: (value) {
+                                      value = value.replaceAll(',', '');
+                                      totalBalanceController.value =
+                                          TextEditingValue(
+                                        text: currencyFormatter
+                                            .format(int.tryParse(value) ?? 0),
+                                        selection: TextSelection.collapsed(
+                                            offset: currencyFormatter
+                                                .format(
+                                                    int.tryParse(value) ?? 0)
+                                                .length),
+                                      );
+                                      if (formKey.currentState != null) {
+                                        formKey.currentState!.validate();
+                                      }
+                                    },
                                     decoration: InputDecoration(
                                         hintText: 'Nhập số dư'.tr,
                                         hintStyle: TextStyle(
@@ -173,10 +196,16 @@ class _HomePageState extends State<HomePage> {
                                         child: Text('Hủy'.tr)),
                                     TextButton(
                                         onPressed: () async {
-                                          Get.back();
-                                          await controller.updateTotalBalance(
-                                              double.parse(
-                                                  totalBalanceController.text));
+                                          if (formKey.currentState!
+                                              .validate()) {
+                                            Get.back();
+                                            await controller.updateTotalBalance(
+                                                // double.parse(
+                                                //     totalBalanceController
+                                                //         .text)
+                                                double.parse(totalBalanceController.text.replaceAll(',', ''))
+                                            );
+                                          }
                                         },
                                         child: Text('Lưu'.tr)),
                                   ],
@@ -259,189 +288,179 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Obx buildOverview(double doubleWidth, double doubleHeight, BuildContext context) {
+  Obx buildOverview(
+      double doubleWidth, double doubleHeight, BuildContext context) {
     return Obx(
-                () => Container(
-                  width: doubleWidth * (324 / 360),
-                  height: doubleHeight * (205 / 800),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).focusColor,
-                    borderRadius: BorderRadius.circular(15),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 7,
-                        offset: const Offset(0, 1),
+      () => Container(
+        width: doubleWidth * (324 / 360),
+        height: doubleHeight * (205 / 800),
+        decoration: BoxDecoration(
+          color: Theme.of(context).focusColor,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 2,
+              blurRadius: 7,
+              offset: const Offset(0, 1),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        DateTime backMonth = DateTime(
+                          controller.selectedMonth.value.year,
+                          controller.selectedMonth.value.month - 1,
+                        );
+                        controller.updateSelectedMonth(backMonth);
+                      },
+                      icon: const Icon(
+                        Icons.navigate_before,
+                        color: Colors.grey,
+                        size: 30,
+                      )),
+                  TextButton(
+                    onPressed: () async {
+                      DateTime? chonNgay = await showMonthYearPicker(
+                        context: context,
+                        initialDate: controller.selectedMonth.value,
+                        firstDate: DateTime(2019),
+                        lastDate: DateTime(2100),
+                        locale: Get.locale,
+                      );
+                      if (chonNgay != null) {
+                        controller.updateSelectedMonth(
+                          DateTime(chonNgay.year, chonNgay.month, 1),
+                        );
+                      }
+                    },
+                    child: Center(
+                      child: Text(
+                        DateFormat('MM/yyyy')
+                            .format(controller.selectedMonth.value),
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                  ),
+                  IconButton(
+                      onPressed: () {
+                        DateTime nextMonth = DateTime(
+                          controller.selectedMonth.value.year,
+                          controller.selectedMonth.value.month + 1,
+                        );
+                        controller.updateSelectedMonth(nextMonth);
+                      },
+                      icon: const Icon(
+                        Icons.navigate_next,
+                        color: Colors.grey,
+                        size: 30,
+                      ))
+                ],
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Obx(
+                    () => Container(
+                        height: 130,
+                        width: 190,
+                        decoration: BoxDecoration(
+                          color: Colors.blueAccent.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: SfCartesianChart(
+                          primaryXAxis: const CategoryAxis(
+                            labelStyle: TextStyle(fontSize: 13),
+                          ),
+                          primaryYAxis: const NumericAxis(
+                            isVisible: false,
+                          ),
+                          series: [
+                            ColumnSeries<ChartData, String>(
+                              dataSource: [
+                                ChartData(
+                                    'Thu'.tr,
+                                    controller.convertAmount(
+                                        controller.report.value?.totalIncome ??
+                                            0),
+                                    Colors.green),
+                                ChartData(
+                                    'Chi'.tr,
+                                    controller.convertAmount(
+                                        controller.report.value?.totalExpense ??
+                                            0),
+                                    Colors.red),
+                              ],
+                              xValueMapper: (ChartData data, _) => data.x,
+                              yValueMapper: (ChartData data, _) => data.y,
+                              pointColorMapper: (ChartData data, _) =>
+                                  data.color,
+                            ),
+                          ],
+                          tooltipBehavior: TooltipBehavior(enable: true),
+                        )),
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Obx(
+                        () => Text(
+                          formatBalance(
+                              controller.report.value?.totalIncome ?? 0),
+                          style: const TextStyle(
+                            color: Colors.green,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Obx(
+                        () => Text(
+                          formatBalance(
+                              controller.report.value?.totalExpense ?? 0),
+                          style: const TextStyle(
+                            color: Colors.red,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      Container(
+                        height: 2,
+                        width: doubleWidth * (100 / 360),
+                        color: Colors.black,
+                      ),
+                      const SizedBox(height: 10),
+                      Obx(
+                        () => Text(
+                          formatBalance(
+                              controller.report.value?.soDuThang ?? 0),
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
                       ),
                     ],
                   ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            IconButton(
-                                onPressed: () {
-                                  DateTime backMonth = DateTime(
-                                    controller.selectedMonth.value.year,
-                                    controller.selectedMonth.value.month - 1,
-                                  );
-                                  controller.updateSelectedMonth(backMonth);
-                                },
-                                icon: const Icon(
-                                  Icons.navigate_before,
-                                  color: Colors.grey,
-                                  size: 30,
-                                )),
-                            TextButton(
-                              onPressed: () async {
-                                DateTime? chonNgay =
-                                    await showMonthYearPicker(
-                                  context: context,
-                                  initialDate: controller.selectedMonth.value,
-                                  firstDate: DateTime(2019),
-                                  lastDate: DateTime(2100),
-                                  locale: Get.locale,
-                                );
-                                if (chonNgay != null) {
-                                  controller.updateSelectedMonth(
-                                    DateTime(
-                                        chonNgay.year, chonNgay.month, 1),
-                                  );
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  DateFormat('MM/yyyy')
-                                      .format(controller.selectedMonth.value),
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                                onPressed: () {
-                                  DateTime nextMonth = DateTime(
-                                    controller.selectedMonth.value.year,
-                                    controller.selectedMonth.value.month + 1,
-                                  );
-                                  controller.updateSelectedMonth(nextMonth);
-                                },
-                                icon: const Icon(
-                                  Icons.navigate_next,
-                                  color: Colors.grey,
-                                  size: 30,
-                                ))
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Obx(
-                              () => Container(
-                                  height: 130,
-                                  width: 190,
-                                  decoration: BoxDecoration(
-                                    color: Colors.blueAccent.withOpacity(0.1),
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: SfCartesianChart(
-                                    primaryXAxis: const CategoryAxis(
-                                      labelStyle: TextStyle(fontSize: 13),
-                                    ),
-                                    primaryYAxis: const NumericAxis(
-                                      isVisible: false,
-                                    ),
-                                    series: [
-                                      ColumnSeries<ChartData, String>(
-                                        dataSource: [
-                                          ChartData(
-                                              'Thu'.tr,
-                                              controller.convertAmount(
-                                                  controller.report.value
-                                                          ?.totalIncome ??
-                                                      0),
-                                              Colors.green),
-                                          ChartData(
-                                              'Chi'.tr,
-                                              controller.convertAmount(
-                                                  controller.report.value
-                                                          ?.totalExpense ??
-                                                      0),
-                                              Colors.red),
-                                        ],
-                                        xValueMapper: (ChartData data, _) =>
-                                            data.x,
-                                        yValueMapper: (ChartData data, _) =>
-                                            data.y,
-                                        pointColorMapper:
-                                            (ChartData data, _) => data.color,
-                                      ),
-                                    ],
-                                    tooltipBehavior:
-                                        TooltipBehavior(enable: true),
-                                  )),
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Obx(
-                                  () => Text(
-                                    formatBalance(controller
-                                            .report.value?.totalIncome ??
-                                        0),
-                                    style: const TextStyle(
-                                      color: Colors.green,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                Obx(
-                                  () => Text(
-                                    formatBalance(controller
-                                            .report.value?.totalExpense ??
-                                        0),
-                                    style: const TextStyle(
-                                      color: Colors.red,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Container(
-                                  height: 2,
-                                  width: doubleWidth * (100 / 360),
-                                  color: Colors.black,
-                                ),
-                                const SizedBox(height: 10),
-                                Obx(
-                                  () => Text(
-                                    formatBalance(
-                                        controller.report.value?.soDuThang ??
-                                            0),
-                                    style:
-                                        Theme.of(context).textTheme.bodySmall,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   Obx buildListTransaction(double doubleHeight) {
@@ -486,7 +505,8 @@ class _HomePageState extends State<HomePage> {
                             : const SizedBox());
                       }
                       final transaction = controller.listResultTK[index];
-                      CategoryModel? category=controller.categoryIdToDetails[transaction.categoryId];
+                      CategoryModel? category = controller
+                          .categoryIdToDetails[transaction.categoryId];
                       String formatDate =
                           DateFormat('dd/MM/yyyy').format(transaction.date);
                       return Column(
@@ -513,17 +533,20 @@ class _HomePageState extends State<HomePage> {
                                   children: [
                                     Icon(
                                       IconData(
-                                        category?.iconCode ?? Icons.category.codePoint,
+                                        category?.iconCode ??
+                                            Icons.category.codePoint,
                                         fontFamily: 'MaterialIcons',
                                       ),
                                       color: Color(
-                                          category?.colorIcon ?? Colors.grey.value,
+                                        category?.colorIcon ??
+                                            Colors.grey.value,
                                       ),
                                       size: 24,
                                     ),
                                     const SizedBox(width: 10),
                                     Text(
-                                      (category?.name??'Không có danh mục').tr,
+                                      (category?.name ?? 'Không có danh mục')
+                                          .tr,
                                       style:
                                           Theme.of(context).textTheme.bodySmall,
                                     ),

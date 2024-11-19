@@ -1,7 +1,12 @@
+import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
+import 'package:doan_ql_thu_chi/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../config/notifications/notifications.dart';
 import '../utils/firebase/login/authentication.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
+import 'home_controller.dart';
+import 'transaction_controller.dart';
 
 class SignUpController extends GetxController {
 
@@ -21,13 +26,11 @@ class SignUpController extends GetxController {
 
   String? ktEmail(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Email không được bỏ trống';
-    } else if (value.length < 6) {
-      return 'Độ dài email phải từ 6 ký tự trở lên';
+      return 'Email không được bỏ trống'.tr;
     } else if (!RegExp(
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value)) {
-      return 'Email không đúng định dạng';
+      return 'Email không đúng định dạng'.tr;
     }
     // else if (!RegExp(
     //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
@@ -45,9 +48,9 @@ class SignUpController extends GetxController {
 
   String? ktPassWord(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Password không được bỏ trống';
+      return 'Mật khẩu không được bỏ trống'.tr;
     } else if (value.length < 6) {
-      return 'Độ dài Password phải từ 6 ký tự trở lên';
+      return 'Độ dài mật khẩu phải lớn hơn 6 ký tự'.tr;
     }
     //else if(!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$').hasMatch(value)){
     //  return 'Password chưa đúng định dạng';
@@ -57,9 +60,9 @@ class SignUpController extends GetxController {
 
   String? ktUserName(String? value) {
     if (value == null || value.isEmpty) {
-      return 'Tên tài khoản không được bỏ trống';
+      return 'Tên tài khoản không được bỏ trống'.tr;
     } else if (value.length < 6) {
-      return 'Tên tài khoản phải từ 6 ký tự trở lên';
+      return 'Tên tài khoản phải lớn hơn 6 ký tự'.tr;
     }
     return null;
   }
@@ -96,10 +99,14 @@ class SignUpController extends GetxController {
     bool result = await fireBaseUtil.register(email, name, pass, soDu);
     if (result == true) {
       // await storageUtil.addUsers(Email: email, name: name, ngayTao: DateTime.now(), tongSoDu: soDu, uid: );
-      Get.snackbar('Success', 'Đăng ký tài khoản thành công');
+     // Get.snackbar('Success', 'Đăng ký tài khoản thành công');
+      Get.lazyPut(() => HomeController());
+      Get.lazyPut(() => TransactionController());
+      Get.lazyPut(() => ReportController());
       //  print('${isLoading.value}');
+      Get.off(const Home());
     } else {
-      Get.snackbar('Error', 'Mời thử lại');
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value = false;
   }

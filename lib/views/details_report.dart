@@ -28,11 +28,13 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
     super.initState();
     reportController.fetchCategoryTransactions(widget.categoryId);
   }
-  String formatBalance(double amount ) {
+
+  String formatBalance(double amount) {
     return reportController.donViTienTe.value == 'đ'
         ? '${NumberFormat('#,##0').format(reportController.convertAmount(amount))} ${reportController.donViTienTe.value}'
         : '${NumberFormat('#,##0.00').format(reportController.convertAmount(amount))} ${reportController.donViTienTe.value}';
   }
+
   @override
   Widget build(BuildContext context) {
     final double doubleHeight = MediaQuery.of(context).size.height;
@@ -52,16 +54,15 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
         padding: const EdgeInsets.all(10),
         child: Column(
           children: [
-            Text('Giao dịch trong tháng'.tr,
+            Text(
+              'Giao dịch trong tháng'.tr,
               style: Theme.of(context).textTheme.titleMedium,
             ),
-            SizedBox(
-              height: 10,
-            ),
+            SizedBox(height: 10),
             Obx(() {
               if (reportController.categoryTransactions.isEmpty) {
-                return const Center(
-                  child: Text('Không có giao dịch'),
+                return Center(
+                  child: Text('Không có giao dịch'.tr),
                 );
               }
               return Expanded(
@@ -71,10 +72,14 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
                   itemBuilder: (BuildContext context, int index) {
                     TransactionModel transaction =
                         reportController.categoryTransactions[index];
-                    String tienGD=transaction.type=='Thu Nhập'? '+${formatBalance(transaction.amount)}' : '-${formatBalance(transaction.amount)}';
+                    String tienGD = transaction.type == 'Thu Nhập'
+                        ? '+${formatBalance(transaction.amount)}'
+                        : '-${formatBalance(transaction.amount)}';
                     return Column(
                       children: [
-                        SizedBox(height: 5,),
+                        SizedBox(
+                          height: 5,
+                        ),
                         Container(
                           padding: EdgeInsets.all(10),
                           decoration: BoxDecoration(
@@ -98,8 +103,10 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
                                   SizedBox(
                                     width: 10,
                                   ),
-                                  Text(widget.categoryName.tr,
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                  Text(
+                                    widget.categoryName.tr,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
                                   SizedBox(
                                     width: 10,
@@ -119,25 +126,36 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
                               ),
                               Row(
                                 children: [
-                                  Text('Số dư cuối : '.tr,
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                  Text(
+                                    'Số dư cuối : '.tr,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
-                                  SizedBox(width: 10,),
+                                  SizedBox(
+                                    width: 10,
+                                  ),
                                   Text(
                                     formatBalance(transaction.finalBalance),
-                                   // '${NumberFormat('#,##0').format(transaction.finalBalance)} ${reportController.donViTienTe.value}',
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                    // '${NumberFormat('#,##0').format(transaction.finalBalance)} ${reportController.donViTienTe.value}',
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   )
                                 ],
                               ),
                               Row(
                                 children: [
-                                  Text('Nội dung : '.tr,
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                  Text(
+                                    'Nội dung : '.tr,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   ),
-                                  SizedBox(width: 10,),
-                                  Text(transaction.description,
-                                    style: Theme.of(context).textTheme.bodySmall,
+                                  SizedBox(
+                                    width: 10,
+                                  ),
+                                  Text(
+                                    transaction.description,
+                                    style:
+                                        Theme.of(context).textTheme.bodySmall,
                                   )
                                 ],
                               )

@@ -24,7 +24,7 @@ class _AccountState extends State<Account> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'ACCOUNT',
+          'ACCOUNT'.tr,
           style: Theme.of(context).textTheme.displayLarge,
         ),
         centerTitle: true,
@@ -55,7 +55,7 @@ class _AccountState extends State<Account> {
                         usernameController.text =
                             accountController.userModel.value?.name ?? '';
                         Get.dialog(AlertDialog(
-                          title: const Text('Mời nhập tên tài khoản mới'),
+                          title:  Text('Mời nhập tên tài khoản mới'.tr),
                           content: Form(
                             key: formKey,
                             autovalidateMode:
@@ -75,7 +75,7 @@ class _AccountState extends State<Account> {
                                 onPressed: () {
                                   Get.back();
                                 },
-                                child: const Text('Hủy')),
+                                child:  Text('Hủy'.tr)),
                             TextButton(
                                 onPressed: () async {
                                   if (formKey.currentState!.validate()) {
@@ -84,7 +84,7 @@ class _AccountState extends State<Account> {
                                         usernameController.text);
                                   }
                                 },
-                                child: const Text('Lưu'))
+                                child:  Text('Lưu'.tr))
                           ],
                         ));
                       },
@@ -107,8 +107,9 @@ class _AccountState extends State<Account> {
                 color: Colors.blueAccent,
               ),
               trailing: const Icon(Icons.navigate_next),
-              title: const Text('Đặt lại mật khẩu'),
+              title:  Text('Đặt lại mật khẩu'.tr),
               onTap: () {
+                emailResetController.text= accountController.userModel.value?.email ?? "";
                 Get.dialog(
                   AlertDialog(
                     title: Text('Vui lòng nhập email để đặt lại mật khẩu'.tr),
@@ -145,16 +146,16 @@ class _AccountState extends State<Account> {
             ListTile(
               leading: const Icon(Icons.logout,
               color: Colors.blueAccent,),
-              title: const Text('Đăng xuất'),
+              title: Text('Đăng xuất'.tr),
               onTap: (){
                 Get.dialog(AlertDialog(
-                  title: const Text('Bạn có chắc chắn muốn đăng xuất không?'),
+                  title:  Text('Bạn có chắc chắn muốn đăng xuất không?'.tr),
                   actions: [
                     TextButton(
                         onPressed: () {
                           Get.back();
                         },
-                        child: const Text('Hủy')),
+                        child:  Text('Hủy'.tr)),
                     TextButton(
                         onPressed: () {
                           Get.delete<HomeController>();
@@ -162,7 +163,7 @@ class _AccountState extends State<Account> {
                           Get.delete<ReportController>();
                           Get.offAll(() => const SignIn());
                         },
-                        child: const Text('Xác nhận')),
+                        child:  Text('Xác nhận'.tr)),
                   ],
                 ));
               },

@@ -10,7 +10,6 @@ class ReportController extends GetxController {
   final FirebaseStorageUtil firebaseStorageUtil = FirebaseStorageUtil();
   final SettingController settingController=Get.find();
   Rxn<ReportModel> report = Rxn<ReportModel>();
- // var reportData={}.obs;
   Rx<DateTime> selectedMonth = DateTime.now().obs;
   RxList<TransactionModel> categoryTransactions = <TransactionModel>[].obs;
   RxString donViTienTe=''.obs;
