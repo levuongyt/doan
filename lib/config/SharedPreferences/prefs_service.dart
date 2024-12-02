@@ -8,7 +8,7 @@ class PrefsService{
       await prefs.setBool(key, ischeckBook);
       result = true;
     } catch (e) {
-      print('error$e');
+      result=false;
     }
     return result;
   }
@@ -17,9 +17,9 @@ class PrefsService{
     bool? result;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      result = await prefs.getBool(key);
+      result = prefs.getBool(key);
     } catch (e) {
-      print('error$e');
+      result=false;
     }
     return result ?? false;
   }
@@ -31,7 +31,7 @@ class PrefsService{
       await prefs.setString(key, value);
       result = true;
     } catch (e) {
-      print('error$e');
+      result=false;
     }
     return result;
   }
@@ -40,9 +40,9 @@ class PrefsService{
     String? result;
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
-      result = await prefs.getString(key);
+      result = prefs.getString(key);
     } catch (e) {
-      print('error$e');
+
     }
     return result;
   }

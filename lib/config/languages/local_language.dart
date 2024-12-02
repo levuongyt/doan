@@ -34,6 +34,7 @@ class LocalStringLanguage extends Translations {
           'Chào mừng ': 'Welcome ',
           'Số dư tài khoản': 'Account balance',
           'Thiết lập tổng số dư': 'Set total balance',
+          'TÀI KHOẢN': 'ACCOUNT',
           'Mời nhập tên tài khoản mới': 'Please enter a new account name',
           'Tên tài khoản không được bỏ trống':
               'Account name cannot be left blank',
@@ -90,8 +91,8 @@ class LocalStringLanguage extends Translations {
               'Are you sure you want to delete ?',
           'Xác nhận': 'Confirm',
           'Lưu Danh Mục': 'Save Category',
-          'Tổng thu nhập :': 'Total income:',
-          'Tổng chi tiêu :': 'Total expenses:',
+          'Tổng thu nhập:': 'Total income:',
+          'Tổng chi tiêu:': 'Total expenses:',
           'Trung bình thu/ngày:': 'Average income/day:',
           'Trung bình chi/ngày:': 'Average expense/day:',
           'Chi tiết': 'Details',
@@ -115,18 +116,27 @@ class LocalStringLanguage extends Translations {
           'Đổi chế độ sáng/tối': 'Switch light/dark mode',
           'Thiết lập số dư ban đầu': 'Set initial balance',
           'Đăng xuất': 'Log out',
-          'Thất bại':'Error',
-          'Thành công':'Success',
-          'Vui lòng kiểm tra lại thông tin!':'Please check the information again!',
-          'Thông báo đã được gửi tới email của bạn':'Notification sent to your email',
-          'Thiết lập số dư ban đầu thành công':'Initial balance setup successful',
-          'Tên tài khoản đã được cập nhật thành công':'Account name has been updated successfully',
-          'Danh mục đã được thêm thành công':'The category has been added successfully',
-          'Danh mục đã được xóa thành công':'The category has been successfully deleted',
-          'Danh mục đã được sửa thành công':'The directory has been successfully edited',
-          'Số tiền phải nhỏ hơn 14 chữ số': 'Amount must be less than 14 digits',
-          'Số tiền không hợp lệ':'Invalid amount',
-          'Giao dịch đã được thêm thành công':'The transaction has been added successfully',
+          'Thất bại': 'Error',
+          'Thành công': 'Success',
+          'Vui lòng kiểm tra lại thông tin!':
+              'Please check the information again!',
+          'Thông báo đã được gửi tới email của bạn':
+              'Notification sent to your email',
+          'Thiết lập số dư ban đầu thành công':
+              'Initial balance setup successful',
+          'Tên tài khoản đã được cập nhật thành công':
+              'Account name has been updated successfully',
+          'Danh mục đã được thêm thành công':
+              'The category has been added successfully',
+          'Danh mục đã được xóa thành công':
+              'The category has been successfully deleted',
+          'Danh mục đã được sửa thành công':
+              'The directory has been successfully edited',
+          'Số tiền phải nhỏ hơn 14 chữ số':
+              'Amount must be less than 14 digits',
+          'Số tiền không hợp lệ': 'Invalid amount',
+          'Giao dịch đã được thêm thành công':
+              'The transaction has been added successfully',
         },
         "vi_VI": {
           'LOGIN': 'ĐĂNG NHẬP',
@@ -159,6 +169,7 @@ class LocalStringLanguage extends Translations {
           'Welcome ': 'Chào mừng ',
           'Account balance': 'Số dư tài khoản',
           'Set total balance': 'Thiết lập tổng số dư',
+          'ACCOUNT': 'TÀI KHOẢN',
           'Please enter a new account name': 'Mời nhập tên tài khoản mới',
           'Account name cannot be left blank':
               'Tên tài khoản không được bỏ trống',
@@ -215,8 +226,8 @@ class LocalStringLanguage extends Translations {
               'Bạn có chắc chắn muốn xóa không ?',
           'Confirm': 'Xác nhận',
           'Save Category': 'Lưu Danh Mục',
-          'Total income:': 'Tổng thu nhập :',
-          'Total expenses:': 'Tổng chi tiêu :',
+          'Total income:': 'Tổng thu nhập:',
+          'Total expenses:': 'Tổng chi tiêu:',
           'Average income/day:': 'Trung bình thu/ngày:',
           'Average expense/day:': 'Trung bình chi/ngày:',
           'Details': 'Chi tiết',
@@ -240,18 +251,27 @@ class LocalStringLanguage extends Translations {
           'Switch light/dark mode': 'Đổi chế độ sáng/tối',
           'Set initial balance': 'Thiết lập số dư ban đầu',
           'Log out': 'Đăng xuất',
-          'Error':'Thất bại',
-          'Success':'Thành công',
-          'Please check the information again!':'Vui lòng kiểm tra lại thông tin!',
-          'Notification sent to your email':'Thông báo đã được gửi tới email của bạn',
-          'Initial balance setup successful':'Thiết lập số dư ban đầu thành công',
-          'Account name has been updated successfully':'Tên tài khoản đã được cập nhật thành công',
-          'The category has been added successfully':'Danh mục đã được thêm thành công',
-          'The category has been successfully deleted':'Danh mục đã được xóa thành công',
-          'The directory has been successfully edited':'Danh mục đã được sửa thành công',
-          'Amount must be less than 14 digits': 'Số tiền phải nhỏ hơn 14 chữ số',
-          'Invalid amount':'Số tiền không hợp lệ',
-          'The transaction has been added successfully':'Giao dịch đã được thêm thành công',
+          'Error': 'Thất bại',
+          'Success': 'Thành công',
+          'Please check the information again!':
+              'Vui lòng kiểm tra lại thông tin!',
+          'Notification sent to your email':
+              'Thông báo đã được gửi tới email của bạn',
+          'Initial balance setup successful':
+              'Thiết lập số dư ban đầu thành công',
+          'Account name has been updated successfully':
+              'Tên tài khoản đã được cập nhật thành công',
+          'The category has been added successfully':
+              'Danh mục đã được thêm thành công',
+          'The category has been successfully deleted':
+              'Danh mục đã được xóa thành công',
+          'The directory has been successfully edited':
+              'Danh mục đã được sửa thành công',
+          'Amount must be less than 14 digits':
+              'Số tiền phải nhỏ hơn 14 chữ số',
+          'Invalid amount': 'Số tiền không hợp lệ',
+          'The transaction has been added successfully':
+              'Giao dịch đã được thêm thành công',
         },
       };
 }

@@ -53,22 +53,6 @@ class _UpdateCategoryState extends State<UpdateCategory> {
     return Form(
       key: formKey,
       child: Scaffold(
-        // floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-        // floatingActionButton: Container(
-        //   padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-        //   width: double.infinity,
-        //   child: ElevatedButton(
-        //       style:
-        //           ElevatedButton.styleFrom(backgroundColor: Colors.blueAccent),
-        //       onPressed: () async {
-        //         await controller.addCategory(nameDMThuNhapController.text,
-        //             controller.selectedIconCode.value, 'Thu Nhập');
-        //       },
-        //       child: Text(
-        //         'Lưu danh mục',
-        //         style: TextStyle(color: Colors.white),
-        //       )),
-        // ),
         appBar: AppBar(
           title: Text(
             widget.name.tr,
@@ -93,8 +77,6 @@ class _UpdateCategoryState extends State<UpdateCategory> {
                             onPressed: () async {
                               await controller.deleteCategory(widget.id);
                               Get.back();
-                              // Get.back();
-                              //Get.off(Category());
                               Get.until((route) =>
                                   route.settings.name == '/Category');
                             },

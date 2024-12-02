@@ -1,4 +1,5 @@
 import 'package:doan_ql_thu_chi/Models/category_model.dart';
+import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:doan_ql_thu_chi/config/images/image_app.dart';
 import 'package:doan_ql_thu_chi/config/themes/themes_app.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
@@ -81,6 +82,7 @@ class _HomePageState extends State<HomePage> {
   final TextEditingController timKiemController = TextEditingController();
   final TextEditingController totalBalanceController = TextEditingController();
   final formKey = GlobalKey<FormState>();
+  final formKeyBalance = GlobalKey<FormState>();
   final FocusNode dayFocus = FocusNode();
   @override
   void initState() {
@@ -95,10 +97,15 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  // String formatBalance(double amount) {
+  //   return controller.donViTienTe.value == 'đ'
+  //       ? '${NumberFormat('#,##0').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}'
+  //       : '${NumberFormat('#,##0.00').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}';
+  // }
   String formatBalance(double amount) {
     return controller.donViTienTe.value == 'đ'
-        ? '${NumberFormat('#,##0').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}'
-        : '${NumberFormat('#,##0.00').format(controller.convertAmount(amount))} ${controller.donViTienTe.value}';
+        ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${controller.donViTienTe.value}'
+        : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${controller.donViTienTe.value}';
   }
 
   final NumberFormat currencyFormatter = NumberFormat('#,##0');
@@ -157,58 +164,109 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               Get.dialog(
-                                AlertDialog(
-                                  title: Text('Thiết lập tổng số dư'.tr),
-                                  content: TextFormField(
-                                    controller: totalBalanceController,
-                                    keyboardType: TextInputType.number,
-                                    validator: controller.validateTotalBalance,
-                                    inputFormatters: [
-                                      FilteringTextInputFormatter.digitsOnly
-                                    ],
-                                    onChanged: (value) {
-                                      value = value.replaceAll(',', '');
-                                      totalBalanceController.value =
-                                          TextEditingValue(
-                                        text: currencyFormatter
-                                            .format(int.tryParse(value) ?? 0),
-                                        selection: TextSelection.collapsed(
-                                            offset: currencyFormatter
-                                                .format(
-                                                    int.tryParse(value) ?? 0)
-                                                .length),
-                                      );
-                                      if (formKey.currentState != null) {
-                                        formKey.currentState!.validate();
-                                      }
-                                    },
-                                    decoration: InputDecoration(
-                                        hintText: 'Nhập số dư'.tr,
-                                        hintStyle: TextStyle(
-                                          color: Theme.of(context).hintColor,
-                                        )),
-                                  ),
-                                  actions: [
-                                    TextButton(
-                                        onPressed: () {
-                                          Get.back();
-                                        },
-                                        child: Text('Hủy'.tr)),
-                                    TextButton(
-                                        onPressed: () async {
-                                          if (formKey.currentState!
-                                              .validate()) {
-                                            Get.back();
-                                            await controller.updateTotalBalance(
-                                                // double.parse(
-                                                //     totalBalanceController
-                                                //         .text)
-                                                double.parse(totalBalanceController.text.replaceAll(',', ''))
-                                            );
+                                Form(
+                                  key: formKeyBalance,
+                                  child: AlertDialog(
+                                    title: Text('Thiết lập tổng số dư'.tr),
+                                    content: TextFormField(
+                                      controller: totalBalanceController,
+                                      keyboardType: TextInputType.number,
+                                      validator:
+                                          controller.validateTotalBalance,
+                                      inputFormatters: controller
+                                                  .donViTienTe.value ==
+                                              'đ'
+                                          ? [
+                                              FilteringTextInputFormatter
+                                                  .digitsOnly
+                                            ]
+                                          : [
+                                              FilteringTextInputFormatter.allow(
+                                                RegExp(r'^\d+\.?\d{0,2}'),
+                                              ),
+                                            ],
+                                      onChanged: (value) {
+                                        value = value.replaceAll(',', '');
+                                        if(controller.donViTienTe.value=='đ'){
+                                          totalBalanceController.value =
+                                              TextEditingValue(
+                                                text: currencyFormatter
+                                                    .format(int.tryParse(value) ?? 0),
+                                                selection: TextSelection.collapsed(
+                                                    offset: currencyFormatter
+                                                        .format(
+                                                        int.tryParse(value) ?? 0)
+                                                        .length),
+                                              );
+                                        }else {
+                                          if (value.isEmpty || value == '0') {
+                                            totalBalanceController.value =
+                                                TextEditingValue(
+                                                  text: '0',
+                                                  selection: TextSelection
+                                                      .collapsed(offset: 1),
+                                                );
+                                          } else {
+                                            final newValue = value.replaceFirst(
+                                                RegExp(r'^0'), '');
+                                            if (totalBalanceController.text !=
+                                                newValue) {
+                                              totalBalanceController.value =
+                                                  TextEditingValue(
+                                                    text: newValue,
+                                                    selection: TextSelection
+                                                        .collapsed(
+                                                        offset: newValue
+                                                            .length),
+                                                  );
+                                            }
                                           }
-                                        },
-                                        child: Text('Lưu'.tr)),
-                                  ],
+                                        }
+
+                                        if (formKeyBalance.currentState !=
+                                            null) {
+                                          formKeyBalance.currentState!
+                                              .validate();
+                                        }
+                                      },
+                                      decoration: InputDecoration(
+                                          hintText: 'Nhập số dư'.tr,
+                                          hintStyle: TextStyle(
+                                            color: Theme.of(context).hintColor,
+                                          )),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                            Get.back();
+                                          },
+                                          child: Text('Hủy'.tr)),
+                                      TextButton(
+                                          onPressed: () async {
+                                            if (formKeyBalance.currentState!
+                                                .validate()) {
+                                              double amountCT;
+                                              if (controller
+                                                      .donViTienTe.value ==
+                                                  "đ") {
+                                                amountCT = double.parse(
+                                                    totalBalanceController.text
+                                                        .replaceAll(',', ''));
+                                              } else {
+                                                amountCT = double.parse(
+                                                        totalBalanceController
+                                                            .text
+                                                            .replaceAll(
+                                                                ',', ''))
+                                                    .toVND();
+                                              }
+                                              Get.back();
+                                              await controller.updateTotalBalance(amountCT);
+                                            }
+                                          },
+                                          child: Text('Lưu'.tr)),
+                                    ],
+                                  ),
                                 ),
                               );
                             },
@@ -329,13 +387,28 @@ class _HomePageState extends State<HomePage> {
                       )),
                   TextButton(
                     onPressed: () async {
-                      DateTime? chonNgay = await showMonthYearPicker(
+                      DateTime? chonNgay = await showDialog<DateTime>(
                         context: context,
-                        initialDate: controller.selectedMonth.value,
-                        firstDate: DateTime(2019),
-                        lastDate: DateTime(2100),
-                        locale: Get.locale,
+                        builder: (BuildContext context) {
+                          return Localizations.override(
+                            context: context,
+                            locale: Get.locale,
+                            child: Dialog(
+                              child: Container(
+                                height: doubleHeight * 0.65,
+                                child: MonthYearPickerDialog(
+                                  initialDate: controller.selectedMonth.value,
+                                  firstDate: DateTime(2019),
+                                  lastDate: DateTime(2100),
+                                  initialMonthYearPickerMode:
+                                      MonthYearPickerMode.month,
+                                ),
+                              ),
+                            ),
+                          );
+                        },
                       );
+
                       if (chonNgay != null) {
                         controller.updateSelectedMonth(
                           DateTime(chonNgay.year, chonNgay.month, 1),
@@ -372,44 +445,47 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(
-                    () => Container(
-                        height: 130,
-                        width: 190,
-                        decoration: BoxDecoration(
-                          color: Colors.blueAccent.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: SfCartesianChart(
-                          primaryXAxis: const CategoryAxis(
-                            labelStyle: TextStyle(fontSize: 13),
+                    () => Flexible(
+                      child: Container(
+                          height: doubleHeight * (130 / 800),
+                          width: doubleWidth * (170 / 360),
+                          decoration: BoxDecoration(
+                            color: Colors.blueAccent.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(10),
                           ),
-                          primaryYAxis: const NumericAxis(
-                            isVisible: false,
-                          ),
-                          series: [
-                            ColumnSeries<ChartData, String>(
-                              dataSource: [
-                                ChartData(
-                                    'Thu'.tr,
-                                    controller.convertAmount(
-                                        controller.report.value?.totalIncome ??
-                                            0),
-                                    Colors.green),
-                                ChartData(
-                                    'Chi'.tr,
-                                    controller.convertAmount(
-                                        controller.report.value?.totalExpense ??
-                                            0),
-                                    Colors.red),
-                              ],
-                              xValueMapper: (ChartData data, _) => data.x,
-                              yValueMapper: (ChartData data, _) => data.y,
-                              pointColorMapper: (ChartData data, _) =>
-                                  data.color,
+                          child: SfCartesianChart(
+                            primaryXAxis: const CategoryAxis(
+                              labelStyle: TextStyle(fontSize: 13),
                             ),
-                          ],
-                          tooltipBehavior: TooltipBehavior(enable: true),
-                        )),
+                            primaryYAxis: const NumericAxis(
+                              isVisible: false,
+                            ),
+                            series: [
+                              ColumnSeries<ChartData, String>(
+                                dataSource: [
+                                  ChartData(
+                                      'Thu'.tr,
+                                      (controller.report.value?.totalIncome ??
+                                              0)
+                                          .toCurrency(),
+                                      Colors.green),
+                                  ChartData(
+                                      'Chi'.tr,
+                                      (controller.report.value?.totalExpense ??
+                                              0)
+                                          .toCurrency(),
+                                      Colors.red),
+                                ],
+                                xValueMapper: (ChartData data, _) => data.x,
+                                yValueMapper: (ChartData data, _) => data.y,
+                                pointColorMapper: (ChartData data, _) =>
+                                    data.color,
+                              ),
+                            ],
+                            tooltipBehavior: TooltipBehavior(
+                                enable: true, format: 'point.y'),
+                          )),
+                    ),
                   ),
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.end,

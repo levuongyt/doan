@@ -26,7 +26,6 @@ class Welcome extends StatelessWidget {
                 child: PageView(
                   controller: pageController,
                   children: [
-                    //_buildPageContent(ImageApp.imageWelcome),
                     buildPage(
                         context,
                         ImageApp.imageWelcome,

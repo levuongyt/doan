@@ -28,7 +28,7 @@ class SignUpController extends GetxController {
     if (value == null || value.isEmpty) {
       return 'Email không được bỏ trống'.tr;
     } else if (!RegExp(
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+        r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value)) {
       return 'Email không đúng định dạng'.tr;
     }
@@ -67,43 +67,17 @@ class SignUpController extends GetxController {
     return null;
   }
 
-  // String? ktNhapLaiPass(String? value){
-  //   if(value == null || value.isEmpty){
-  //     return 'Password Không được bỏ trống';
-  //   }else if(value != passwordController.text){
-  //     return 'Password không trùng khớp';
-  //   }
-  //   return null;
-  // }
-
   void xuLiVisibility() {
     isVisibility.value = !isVisibility.value;
   }
-
-  ///Dang kY
-  // Future<void> signUp(String email, String pass) async {
-  //   isLoading.value = true;
-  //   bool result = await fireBaseUtil.register(email, pass);
-  //   if (result == true) {
-  //     Get.snackbar('Success', 'Đăng ký tài khoản thành công');
-  //   //  print('${isLoading.value}');
-  //   } else {
-  //     Get.snackbar('Error', 'Mời thử lại');
-  //   }
-  //   isLoading.value = false;
-  // }
-
 
   Future<void> signUp(String email, String name, String pass, double soDu) async {
     isLoading.value = true;
     bool result = await fireBaseUtil.register(email, name, pass, soDu);
     if (result == true) {
-      // await storageUtil.addUsers(Email: email, name: name, ngayTao: DateTime.now(), tongSoDu: soDu, uid: );
-     // Get.snackbar('Success', 'Đăng ký tài khoản thành công');
       Get.lazyPut(() => HomeController());
       Get.lazyPut(() => TransactionController());
       Get.lazyPut(() => ReportController());
-      //  print('${isLoading.value}');
       Get.off(const Home());
     } else {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);

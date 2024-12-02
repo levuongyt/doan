@@ -1,6 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
-import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../storage/firebase_storage.dart';
@@ -19,7 +17,7 @@ class FireBaseUtil {
   Future<bool> login(String email, String password) async {
     bool result = false;
     try {
-      final credential = await FirebaseAuth.instance
+      await FirebaseAuth.instance
           .signInWithEmailAndPassword(email: email, password: password);
       result = true;
     } on FirebaseAuthException catch (e) {
@@ -32,19 +30,23 @@ class FireBaseUtil {
     return result;
   }
 
-
-
-  Future<bool> register(String email,String name, String password,double tongSoDu) async {
+  Future<bool> register(
+      String email, String name, String password, double tongSoDu) async {
     bool result = false;
     try {
       final UserCredential credential =
-      await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      String uid=credential.user?.uid ?? '';
-      await FirebaseStorageUtil().addUsers(uid: uid, email: email, name: name, ngayTao: DateTime.now(), tongSoDu: tongSoDu);
+      String uid = credential.user?.uid ?? '';
+      await FirebaseStorageUtil().addUsers(
+          uid: uid,
+          email: email,
+          name: name,
+          ngayTao: DateTime.now(),
+          tongSoDu: tongSoDu);
 
       result = true;
     } on FirebaseAuthException catch (e) {
@@ -59,37 +61,10 @@ class FireBaseUtil {
     return result;
   }
 
-  ///fb
-  Future<bool> signInWithFacebook() async {
+  ///Đăng nhập Google
+  Future<bool> signInWithGoogle() async {
     bool result = false;
     try {
-      // await FirebaseAuth.instance.signOut();
-      // await FacebookAuth.instance.logOut();
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      // Create a credential from the access token
-      if (loginResult.status == LoginStatus.success) {
-        final OAuthCredential facebookAuthCredential =
-        FacebookAuthProvider.credential(
-            '${loginResult.accessToken?.tokenString}');
-        await FirebaseAuth.instance
-            .signInWithCredential(facebookAuthCredential);
-        result = true;
-      } else {
-        print('Lỗi:  ');
-        Get.snackbar('Lỗi', 'Moi thu lai');
-      }
-    } catch (e) {
-      Get.snackbar('Lỗi', 'Moi thu lai12');
-      print('Looix : $e');
-      //isLoading.value=false;
-    }
-    return result;
-  }
-
-  ///Đăng nhập Google
-  Future<bool> signInWithGoogle() async{
-    bool result=false;
-    try{
       final GoogleSignIn googleSignIn = GoogleSignIn();
 
       ///dangxuat
@@ -98,27 +73,30 @@ class FireBaseUtil {
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
-      // Obtain the auth details from the request
       final GoogleSignInAuthentication? googleAuth =
-      await googleUser?.authentication;
+          await googleUser?.authentication;
 
-      // Create a new credential
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
 
-      // Once signed in, return the UserCredential
-     // await FirebaseAuth.instance.signInWithCredential(credential);
-      final UserCredential userCredential = await FirebaseAuth.instance.signInWithCredential(credential);
+      // await FirebaseAuth.instance.signInWithCredential(credential);
+      final UserCredential userCredential =
+          await FirebaseAuth.instance.signInWithCredential(credential);
 
-      final String uid=userCredential.user?.uid??'';
-      final  String name = googleUser?.displayName ?? '';
+      final String uid = userCredential.user?.uid ?? '';
+      final String name = googleUser?.displayName ?? '';
       final String email = googleUser?.email ?? '';
-      await FirebaseStorageUtil().addUsers(uid: uid, email: email, name: name, ngayTao: DateTime.now(), tongSoDu: 0.0);
-      result=true;
-    }catch(e){
-      result=false;
+      await FirebaseStorageUtil().addUsers(
+          uid: uid,
+          email: email,
+          name: name,
+          ngayTao: DateTime.now(),
+          tongSoDu: 0.0);
+      result = true;
+    } catch (e) {
+      result = false;
     }
     return result;
   }
@@ -126,14 +104,13 @@ class FireBaseUtil {
   ///Reset mk(quen mat khau)
 
   Future<bool> sendPasswordResetEmail(String emailReset) async {
-    bool result=false;
-    try{
+    bool result = false;
+    try {
       await FirebaseAuth.instance.sendPasswordResetEmail(email: emailReset);
-      result=true;
-    }catch(e){
-
+      result = true;
+    } catch (e) {
+      result = false;
     }
     return result;
   }
-
 }

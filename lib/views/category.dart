@@ -2,6 +2,7 @@ import 'package:doan_ql_thu_chi/views/add_category.dart';
 import 'package:doan_ql_thu_chi/views/add_transactions.dart';
 import 'package:doan_ql_thu_chi/views/home.dart';
 import 'package:doan_ql_thu_chi/views/update_category.dart';
+import 'package:doan_ql_thu_chi/widget_common/tabBar_CT_content.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -50,23 +51,7 @@ class _CategoryState extends State<Category> {
                     height: 10,
                     color: Theme.of(context).dividerColor,
                   ),
-                  TabBar(
-                    tabs: <Widget>[
-                      Tab(
-                        text: 'Thu nhập'.tr,
-                      ),
-                      Tab(
-                        text: 'Chi tiêu'.tr,
-                      ),
-                    ],
-                    labelColor: Colors.white,
-                    unselectedLabelColor: Colors.blue,
-                    indicator: BoxDecoration(
-                      color: Theme.of(context).indicatorColor,
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    indicatorSize: TabBarIndicatorSize.tab,
-                  ),
+                  TabbarCtContent()
                 ],
               ),
             ),

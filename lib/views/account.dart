@@ -92,85 +92,97 @@ class _AccountState extends State<Account> {
                 ],
               ),
             ),
-            ListTile(
-              leading: const Icon(Icons.email_outlined,
-              color: Colors.blueAccent,),
-              title: Row(
-                children: [
-                  const Text('Email : '),
-                  Obx(() => Text(accountController.userModel.value?.email ?? ""))
-                ],),
+            buildEmail(),
+            buildResetPass(context),
+            buildLogout(),
+          ],
+        ),
+      )),
+    );
+  }
+
+  ListTile buildLogout() {
+    return ListTile(
+            leading: const Icon(Icons.logout,
+            color: Colors.blueAccent,),
+            title: Text('Đăng xuất'.tr),
+            onTap: (){
+              Get.dialog(AlertDialog(
+                title:  Text('Bạn có chắc chắn muốn đăng xuất không?'.tr),
+                actions: [
+                  TextButton(
+                      onPressed: () {
+                        Get.back();
+                      },
+                      child:  Text('Hủy'.tr)),
+                  TextButton(
+                      onPressed: () {
+                        Get.delete<HomeController>();
+                        Get.delete<TransactionController>();
+                        Get.delete<ReportController>();
+                        Get.offAll(() => const SignIn());
+                      },
+                      child:  Text('Xác nhận'.tr)),
+                ],
+              ));
+            },
+          );
+  }
+
+  ListTile buildResetPass(BuildContext context) {
+    return ListTile(
+            leading: const Icon(
+              Icons.lock_reset,
+              color: Colors.blueAccent,
             ),
-            ListTile(
-              leading: const Icon(
-                Icons.lock_reset,
-                color: Colors.blueAccent,
-              ),
-              trailing: const Icon(Icons.navigate_next),
-              title:  Text('Đặt lại mật khẩu'.tr),
-              onTap: () {
-                emailResetController.text= accountController.userModel.value?.email ?? "";
-                Get.dialog(
-                  AlertDialog(
-                    title: Text('Vui lòng nhập email để đặt lại mật khẩu'.tr),
-                    content: TextFormField(
-                      controller: emailResetController,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(
-                          hintText: 'Nhập email'.tr,
-                          hintStyle: TextStyle(
-                            color: Theme.of(context).hintColor,
-                          ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(10),
-                          )),
-                    ),
-                    actions: [
-                      TextButton(
-                          onPressed: () {
-                            Get.back();
-                          },
-                          child: Text('Hủy'.tr)),
-                      TextButton(
-                          onPressed: () async {
-                            Get.back();
-                            await accountController
-                                .resetPass(emailResetController.text);
-                          },
-                          child: Text('Gửi'.tr)),
-                    ],
+            trailing: const Icon(Icons.navigate_next),
+            title:  Text('Đặt lại mật khẩu'.tr),
+            onTap: () {
+              emailResetController.text= accountController.userModel.value?.email ?? "";
+              Get.dialog(
+                AlertDialog(
+                  title: Text('Vui lòng nhập email để đặt lại mật khẩu'.tr),
+                  content: TextFormField(
+                    controller: emailResetController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                        hintText: 'Nhập email'.tr,
+                        hintStyle: TextStyle(
+                          color: Theme.of(context).hintColor,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        )),
                   ),
-                );
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.logout,
-              color: Colors.blueAccent,),
-              title: Text('Đăng xuất'.tr),
-              onTap: (){
-                Get.dialog(AlertDialog(
-                  title:  Text('Bạn có chắc chắn muốn đăng xuất không?'.tr),
                   actions: [
                     TextButton(
                         onPressed: () {
                           Get.back();
                         },
-                        child:  Text('Hủy'.tr)),
+                        child: Text('Hủy'.tr)),
                     TextButton(
-                        onPressed: () {
-                          Get.delete<HomeController>();
-                          Get.delete<TransactionController>();
-                          Get.delete<ReportController>();
-                          Get.offAll(() => const SignIn());
+                        onPressed: () async {
+                          Get.back();
+                          await accountController
+                              .resetPass(emailResetController.text);
                         },
-                        child:  Text('Xác nhận'.tr)),
+                        child: Text('Gửi'.tr)),
                   ],
-                ));
-              },
-            ),
-          ],
-        ),
-      )),
-    );
+                ),
+              );
+            },
+          );
+  }
+
+  ListTile buildEmail() {
+    return ListTile(
+            leading: const Icon(Icons.email_outlined,
+            color: Colors.blueAccent,),
+            title: Row(
+              children: [
+                const Text('Email : '),
+                Obx(() => Text(accountController.userModel.value?.email ?? ""))
+              ],),
+          );
   }
 }

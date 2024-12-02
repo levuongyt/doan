@@ -133,13 +133,11 @@ class FirebaseStorageUtil {
       required colorIcon,
       required type}) async {
     try {
-     // String? uid = FirebaseAuth.instance.currentUser?.uid;
       await storage.collection('Categories').doc(const Uuid().v1()).set({
         'name': name,
         'iconCode': iconCode,
         'colorIcon': colorIcon,
         'type': type,
-      //  'userId': uid,
       });
 
     } catch (e) {
@@ -178,11 +176,9 @@ class FirebaseStorageUtil {
 
   Future<List<CategoryModel>> getCategories({required String type}) async {
     try {
-     // String? uid = FirebaseAuth.instance.currentUser?.uid;
       QuerySnapshot snapshot = await storage
           .collection('Categories')
           .where('type', isEqualTo: type)
-          //.where('userId', isEqualTo: uid)
           .get();
       List<CategoryModel> categories =
           snapshot.docs.map((doc) => CategoryModel.fromDocument(doc)).toList();
@@ -314,14 +310,12 @@ class FirebaseStorageUtil {
           'iconCode': categorySnapshot['iconCode'],
           'color': categorySnapshot['colorIcon'],
           'totalAmount': 0.0,
-         // 'transactionCount': 0,
           'type': categorySnapshot['type'],
           'percentage': 0.0,
         };
       }
 
       categoryReport[categoryId]?['totalAmount'] += amount;
-    //  categoryReport[categoryId]?['transactionCount'] += 1;
     }
 
     ///chi tieeu
@@ -348,7 +342,6 @@ class FirebaseStorageUtil {
       }
 
       categoryReport[categoryId]?['totalAmount'] += amount;
-     // categoryReport[categoryId]?['transactionCount'] += 1;
     }
 
     categoryReport.forEach((id, data) {
@@ -374,6 +367,5 @@ class FirebaseStorageUtil {
       'categories':categoryReport
     });
   }
-
 
 }

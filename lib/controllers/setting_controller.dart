@@ -38,15 +38,16 @@ class SettingController extends GetxController {
   ///testnn
   final List<Map<String, dynamic>> localizations = [
     {
-      "name": "Tiếng anh",
-      "Local": const Locale('en', 'EN'),
-      "image": ImageApp.imageFlagEN,
-    },
-    {
       "name": "Tiếng việt",
       "Local": const Locale('vi', 'VI'),
       "image": ImageApp.imageFlagVN,
     },
+    {
+      "name": "Tiếng anh",
+      "Local": const Locale('en', 'EN'),
+      "image": ImageApp.imageFlagEN,
+    },
+
   ];
 
 

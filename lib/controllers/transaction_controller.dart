@@ -1,6 +1,5 @@
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../Models/category_model.dart';
 import '../config/notifications/notifications.dart';
@@ -53,7 +52,6 @@ class TransactionController extends GetxController {
     listExpenseCategory.clear();
     listExpenseCategory.value =
         await firebaseStorageUtil.getCategories(type: 'Chi Tiêu');
-    // listExpenseCategory.addAll(danhMuc.dsDMChiTieuMacDinh);
     if (listExpenseCategory.isNotEmpty && selectedExpenseCategory.isEmpty) {
       selectedExpenseCategory.value = listExpenseCategory[0].id ?? "";
     }
@@ -109,29 +107,17 @@ class TransactionController extends GetxController {
     return null;
   }
 
-  // String? ktSoTien(String? value) {
-  //   if (value == null || value.isEmpty) {
-  //     return 'Vui lòng nhập số tiền';
-  //   } else if (value.length > 11) {
-  //     return 'Độ dài không được quá 11 ký tự';
-  //   } else if (!RegExp(r'^\d+(\.\d+)?$').hasMatch(value)) {
-  //     return 'Số tiền phải là số hợp lệ';
-  //   } else if (double.tryParse(value)! <= 0) {
-  //     return 'Số tiền phải lớn hơn 0';
-  //   }
-  //   return null;
-  // }
 
   String? validateMoney(String? value) {
     if (value == null || value.isEmpty) {
       return 'Số tiền không được để trống'.tr;
     }
     try {
-      final parsedValue = int.parse(value.replaceAll(',', ''));
+      final parsedValue = double.parse(value.replaceAll(',', ''));
       if (parsedValue <= 0) {
         return 'Số tiền phải lớn hơn 0'.tr;
       }
-      if (value.replaceAll(',', '').length > 12) {
+      if (value.replaceAll(',', '').replaceAll('.', '').length > 12) {
         return 'Số tiền phải nhỏ hơn 12 chữ số'.tr;
       }
     } catch (e) {
@@ -140,13 +126,10 @@ class TransactionController extends GetxController {
     return null;
   }
 
+
 //Dơn vị tiền tệ
   void getCurrency() {
     donViTienTe.value = settingController.getCurrencySymbol();
-  }
-
-  double amountToVND(double amount) {
-    return settingController.amountToVND(amount);
   }
 
   void updateCurrency() {

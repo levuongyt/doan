@@ -46,21 +46,10 @@ class SignInController extends GetxController {
     if (value == null || value.isEmpty) {
       return 'Email không được bỏ trống'.tr;
     }else if (!RegExp(
-            r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
+            r'^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
         .hasMatch(value)) {
       return 'Email không đúng định dạng'.tr;
     }
-    // else if (!RegExp(
-    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-    //     .hasMatch(value)) {
-    //   return 'Email không đúng định dạng';
-    // }
-    // else if(!isEmail(value)){
-    //   return 'Email không đúng định dạng';
-    // }
-    // else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
-    //   return 'Username không được chứa ký tự đặc biệt';
-    // }
     return null;
   }
 
@@ -82,7 +71,6 @@ class SignInController extends GetxController {
       isLoading.value = true;
       bool result = await fireBaseUtil.login(email, pass);
       if (result) {
-       // Get.snackbar('Thành công', 'Chào mừng '.tr);
         await saveLoginData();
         Get.lazyPut(() => HomeController());
         Get.lazyPut(() => TransactionController());
@@ -103,7 +91,6 @@ class SignInController extends GetxController {
       isLoading.value = true;
       bool result = await fireBaseUtil.signInWithGoogle();
       if (result) {
-       // Get.snackbar('Success', 'Welcome');
         Get.lazyPut(() => HomeController());
         Get.lazyPut(() => TransactionController());
         Get.lazyPut(() => ReportController());

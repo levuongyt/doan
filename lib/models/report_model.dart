@@ -65,7 +65,6 @@ class CategoryReportModel {
   int iconCode;
   int color;
   double totalAmount;
- // int transactionCount;
   String type;
   double percentage;
 
@@ -75,7 +74,6 @@ class CategoryReportModel {
     required this.iconCode,
     required this.color,
     required this.totalAmount,
-   // required this.transactionCount,
     required this.type,
     required this.percentage,
   });
@@ -87,7 +85,6 @@ class CategoryReportModel {
       iconCode: map['iconCode'],
       color: map['color'],
       totalAmount: map['totalAmount'],
-     // transactionCount: map['transactionCount'],
       type: map['type'],
       percentage: map['percentage'],
     );
@@ -100,7 +97,6 @@ class CategoryReportModel {
       'iconCode': iconCode,
       'color': color,
       'totalAmount': totalAmount,
-      //'transactionCount': transactionCount,
       'type': type,
       'percentage': percentage,
     };

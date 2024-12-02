@@ -1,3 +1,4 @@
+import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
 import 'package:doan_ql_thu_chi/models/transaction_model.dart';
 import 'package:flutter/material.dart';
@@ -31,8 +32,8 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
 
   String formatBalance(double amount) {
     return reportController.donViTienTe.value == 'đ'
-        ? '${NumberFormat('#,##0').format(reportController.convertAmount(amount))} ${reportController.donViTienTe.value}'
-        : '${NumberFormat('#,##0.00').format(reportController.convertAmount(amount))} ${reportController.donViTienTe.value}';
+        ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${reportController.donViTienTe.value}'
+        : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${reportController.donViTienTe.value}';
   }
 
   @override

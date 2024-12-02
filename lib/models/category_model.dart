@@ -6,14 +6,12 @@ class CategoryModel {
   int iconCode;
   int colorIcon;
   String type;
-  //String? userId;
   CategoryModel({
     this.id,
     required this.name,
     required this.iconCode,
     required this.colorIcon,
     required this.type,
-   // this.userId,
   });
 
   factory CategoryModel.fromDocument(DocumentSnapshot doc) {
@@ -24,7 +22,6 @@ class CategoryModel {
       iconCode: doc.get('iconCode'),
       colorIcon: doc.get('colorIcon'),
       type: doc.get('type'),
-     // userId: doc.get('userId'),
     );
   }
 
@@ -34,7 +31,6 @@ class CategoryModel {
       'iconCode': iconCode,
       'colorIcon': colorIcon,
       'type': type,
-     // 'userId': userId,
     };
   }
 }

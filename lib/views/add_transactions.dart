@@ -1,5 +1,7 @@
+import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:doan_ql_thu_chi/views/category.dart';
+import 'package:doan_ql_thu_chi/widget_common/tabBar_CT_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -32,10 +34,11 @@ class _NhapLieuState extends State<NhapLieu> {
   DateTime? pickedDate = DateTime.now();
   String idDanhMucTN = '';
   String idDanhMucCT = '';
-  final NumberFormat currencyFormatter = NumberFormat('#,##0');
+  final NumberFormat currencyFormatterVN = NumberFormat('#,##0');
+  final NumberFormat currencyFormatter = NumberFormat('#,##0.##');
 
   void reset() {
-    pickedDate=DateTime.now();
+    pickedDate = DateTime.now();
     noiDungController.clear();
     tienController.text = "0";
     noiDungChiController.clear();
@@ -45,12 +48,12 @@ class _NhapLieuState extends State<NhapLieu> {
     if (controller.listIncomeCategory.isNotEmpty) {
       controller.selectedIncomeCategory.value =
           controller.listIncomeCategory[0].id ?? "";
-      idDanhMucTN='';
+      idDanhMucTN = '';
     }
     if (controller.listExpenseCategory.isNotEmpty) {
       controller.selectedExpenseCategory.value =
           controller.listExpenseCategory[0].id ?? "";
-      idDanhMucCT='';
+      idDanhMucCT = '';
     }
   }
 
@@ -91,7 +94,6 @@ class _NhapLieuState extends State<NhapLieu> {
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(50.0),
               child: Container(
-                // color: Colors.grey[300],
                 color: Theme.of(context).cardColor,
                 child: Column(
                   children: [
@@ -99,23 +101,7 @@ class _NhapLieuState extends State<NhapLieu> {
                       height: 10,
                       color: Theme.of(context).dividerColor,
                     ),
-                    TabBar(
-                      tabs: <Widget>[
-                        Tab(
-                          text: 'Thu nhập'.tr,
-                        ),
-                        Tab(
-                          text: 'Chi tiêu'.tr,
-                        ),
-                      ],
-                      labelColor: Colors.white,
-                      unselectedLabelColor: Colors.blue,
-                      indicator: BoxDecoration(
-                        color: Theme.of(context).indicatorColor,
-                        borderRadius: BorderRadius.circular(5),
-                      ),
-                      indicatorSize: TabBarIndicatorSize.tab,
-                    ),
+                    const TabbarCtContent(),
                   ],
                 ),
               ),
@@ -125,6 +111,7 @@ class _NhapLieuState extends State<NhapLieu> {
               child: TabBarView(children: [
             ///TAB 1
             buildTabIncome(context, doubleWidth, doubleHeight),
+
             ///TAB 2 CHI TIÊU
             buildTabExpense(context, doubleWidth, doubleHeight),
           ])),
@@ -168,21 +155,25 @@ class _NhapLieuState extends State<NhapLieu> {
           onPressed: () async {
             if (formKey.currentState!.validate()) {
               double amountCT;
-              if(controller.donViTienTe.value=="đ"){
-                amountCT=double.parse(tienChiController.text.replaceAll(',', ''));
-              }
-              else{
-                amountCT=controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', '')));
+              if (controller.donViTienTe.value == "đ") {
+                amountCT =
+                    double.parse(tienChiController.text.replaceAll(',', ''));
+              } else {
+                amountCT =
+                    double.parse(tienChiController.text.replaceAll(',', ''))
+                        .toVND();
+                // amountCT=controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', '')));
               }
               await controller.addTransaction(
-                 // amount:controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', ''))),
+                  // amount:controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', ''))),
                   amount: amountCT,
                   description: noiDungChiController.text,
                   categoryId: idDanhMucCT,
                   type: 'Chi Tiêu',
                   date: pickedDate ?? DateTime.now());
-              await controller.saveMonthlyReport(pickedDate ?? DateTime.now());
               reset();
+              await controller.saveMonthlyReport(pickedDate ?? DateTime.now());
+
             }
           },
           child: Text(
@@ -195,7 +186,7 @@ class _NhapLieuState extends State<NhapLieu> {
   Obx buildListCategoryCT(double doubleHeight, double doubleWidth) {
     return Obx(
       () => Container(
-        height: doubleHeight * (260 / 800),
+        height: doubleHeight * (250 / 800),
         child: GridView.builder(
             shrinkWrap: true,
             itemCount: controller.listExpenseCategory.length,
@@ -212,7 +203,7 @@ class _NhapLieuState extends State<NhapLieu> {
                     () => Container(
                       width: doubleWidth * (85 / 360),
                       height: doubleHeight * (62 / 800),
-                      padding: const EdgeInsets.all(7),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: controller.selectedExpenseCategory.value ==
@@ -221,8 +212,8 @@ class _NhapLieuState extends State<NhapLieu> {
                                 : Colors.grey,
                             width: controller.selectedExpenseCategory.value ==
                                     category.id
-                                ? 1.5
-                                : 1.0,
+                                ? 3
+                                : 2,
                           ),
                           borderRadius: BorderRadius.circular(10)),
                       child: Column(
@@ -246,43 +237,77 @@ class _NhapLieuState extends State<NhapLieu> {
   Row buildRowAmountCT(double doubleWidth) {
     return Row(
       children: [
-        Expanded(flex: 1, child: Text('Số tiền'.tr)),
+        Expanded(
+            flex: 1,
+            child: Text(
+              'Số tiền'.tr,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
         const SizedBox(
           width: 8,
         ),
         Expanded(
           flex: 4,
-          child: SizedBox(
-            width: doubleWidth * (177 / 360),
-            child: TextFormField(
+          child: Obx(() {
+            return TextFormField(
               controller: tienChiController,
               validator: controller.validateMoney,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              inputFormatters: controller.donViTienTe.value == 'đ'
+                  ? [FilteringTextInputFormatter.digitsOnly]
+                  : [
+                      FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d*\.?\d{0,2}')),
+                    ],
               onChanged: (value) {
-                value = value.replaceAll(',', '');
-                tienChiController.value = TextEditingValue(
-                  text: currencyFormatter.format(int.tryParse(value) ?? 0),
-                  selection: TextSelection.collapsed(
-                      offset: currencyFormatter
-                          .format(int.tryParse(value) ?? 0)
-                          .length),
-                );
+                String valueT = value.replaceAll(',', '');
+                if (controller.donViTienTe.value == 'đ') {
+                  final formattedValue =
+                      currencyFormatterVN.format(int.tryParse(valueT) ?? 0);
+                  tienChiController.value = TextEditingValue(
+                      text: formattedValue,
+                      selection: TextSelection.collapsed(
+                          offset: formattedValue.length));
+                }else{
+                  if (value.isEmpty || value == '0') {
+                    tienChiController.value = TextEditingValue(
+                      text: '0',
+                      selection: TextSelection.collapsed(offset: 1),
+                    );
+                  } else {
+                    final newValue = value.replaceFirst(RegExp(r'^0'), '');
+                    if (tienChiController.text != newValue) {
+                      tienChiController.value = TextEditingValue(
+                        text: newValue,
+                        selection: TextSelection.collapsed(offset: newValue.length),
+                      );
+                    }
+                  }
+                }
                 if (formKey.currentState != null) {
                   formKey.currentState!.validate();
                 }
               },
               keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
+              style: TextStyle(
+                fontSize: 20,
+                color: Colors.blueAccent,
+                fontWeight: FontWeight.bold,
               ),
-            ),
-          ),
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+            );
+          }),
         ),
         const SizedBox(
           width: 20,
         ),
-        Obx(() => Text(controller.donViTienTe.value)),
+        Obx(() => Text(
+              controller.donViTienTe.value,
+              style: Theme.of(context).textTheme.titleMedium,
+            )),
       ],
     );
   }
@@ -290,12 +315,18 @@ class _NhapLieuState extends State<NhapLieu> {
   Row buildRowContentCT() {
     return Row(
       children: [
-        Expanded(flex: 1, child: Text('Nội dung : '.tr)),
+        Expanded(
+            flex: 1,
+            child: Text(
+              'Nội dung '.tr,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
         Expanded(
           flex: 4,
           child: TextFormField(
             controller: noiDungChiController,
             validator: controller.ktNoiDung,
+            inputFormatters: [LengthLimitingTextInputFormatter(100)],
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10))),
@@ -308,7 +339,12 @@ class _NhapLieuState extends State<NhapLieu> {
   Row buildRowDayCT(BuildContext context) {
     return Row(
       children: [
-        Expanded(flex: 1, child: Text('Ngày'.tr)),
+        Expanded(
+            flex: 1,
+            child: Text(
+              'Ngày'.tr,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            )),
         IconButton(
             onPressed: () {
               DateTime currentDate =
@@ -396,21 +432,23 @@ class _NhapLieuState extends State<NhapLieu> {
           onPressed: () async {
             if (formKey.currentState!.validate()) {
               double amountTN;
-              if(controller.donViTienTe.value=="đ"){
-                amountTN=double.parse(tienController.text.replaceAll(',', ''));
-              }
-              else{
-                amountTN=controller.amountToVND(double.parse(tienController.text.replaceAll(',', '')));
+              if (controller.donViTienTe.value == "đ") {
+                amountTN =
+                    double.parse(tienController.text.replaceAll(',', ''));
+              } else {
+                amountTN = double.parse(tienController.text.replaceAll(',', ''))
+                    .toVND();
+
               }
               await controller.addTransaction(
-                 // amount: controller.amountToVND(double.parse(tienController.text.replaceAll(',', ''))),
                   amount: amountTN,
                   description: noiDungController.text,
                   categoryId: idDanhMucTN,
                   type: 'Thu Nhập',
                   date: pickedDate ?? DateTime.now());
-              await controller.saveMonthlyReport(pickedDate ?? DateTime.now());
               reset();
+              await controller.saveMonthlyReport(pickedDate ?? DateTime.now());
+
             }
           },
           child: Text(
@@ -423,7 +461,7 @@ class _NhapLieuState extends State<NhapLieu> {
   Obx buildListCategory(double doubleHeight, double doubleWidth) {
     return Obx(
       () => Container(
-        height: doubleHeight * (260 / 800),
+        height: doubleHeight * (250 / 800),
         child: GridView.builder(
             shrinkWrap: true,
             itemCount: controller.listIncomeCategory.length,
@@ -440,7 +478,7 @@ class _NhapLieuState extends State<NhapLieu> {
                     () => Container(
                       width: doubleWidth * (85 / 360),
                       height: doubleHeight * (62 / 800),
-                      padding: const EdgeInsets.all(7),
+                      padding: const EdgeInsets.all(5),
                       decoration: BoxDecoration(
                           border: Border.all(
                             color: controller.selectedIncomeCategory.value ==
@@ -449,8 +487,8 @@ class _NhapLieuState extends State<NhapLieu> {
                                 : Colors.grey,
                             width: controller.selectedIncomeCategory.value ==
                                     category.id
-                                ? 1.5
-                                : 1.0,
+                                ? 3
+                                : 2,
                           ),
                           borderRadius: BorderRadius.circular(10)),
                       child: Column(
@@ -473,19 +511,31 @@ class _NhapLieuState extends State<NhapLieu> {
 
   Row buildRowCategory() {
     return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text('Danh mục'.tr),
+      Text(
+        'Danh mục'.tr,
+        style: TextStyle(fontWeight: FontWeight.bold),
+      ),
       TextButton(
           onPressed: () {
             Get.to(() => const Category(), routeName: '/Category');
           },
-          child: Text('Tùy chỉnh danh mục'.tr))
+          child: Text(
+            'Tùy chỉnh danh mục'.tr,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ))
     ]);
   }
 
   Row buildRowAmount(double doubleWidth) {
     return Row(
       children: [
-        Expanded(flex: 1, child: Text('Số tiền'.tr)),
+        Expanded(
+          flex: 1,
+          child: Text(
+            'Số tiền'.tr,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
         const SizedBox(
           width: 8,
         ),
@@ -493,34 +543,69 @@ class _NhapLieuState extends State<NhapLieu> {
           flex: 4,
           child: SizedBox(
             width: doubleWidth * (177 / 360),
-            child: TextFormField(
-              controller: tienController,
-              validator: controller.validateMoney,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              onChanged: (value) {
-                value = value.replaceAll(',', '');
-                tienController.value = TextEditingValue(
-                    text: currencyFormatter.format(int.tryParse(value) ?? 0),
-                    selection: TextSelection.collapsed(
-                        offset: currencyFormatter
-                            .format(int.tryParse(value) ?? 0)
-                            .length));
-                if (formKey.currentState != null) {
-                  formKey.currentState!.validate();
-                }
-              },
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                border:
-                    OutlineInputBorder(borderRadius: BorderRadius.circular(10)),
-              ),
-            ),
+            child: Obx(() {
+              return TextFormField(
+                controller: tienController,
+                validator: controller.validateMoney,
+                inputFormatters: controller.donViTienTe.value == 'đ'
+                    ? [FilteringTextInputFormatter.digitsOnly]
+                    : [
+                        FilteringTextInputFormatter.allow(
+                          RegExp(r'^\d+\.?\d{0,2}'),
+                        ),
+                      ],
+                onChanged: (value) {
+                  if (controller.donViTienTe.value == 'đ') {
+                    value = value.replaceAll(',', '');
+                    final formattedValue =
+                        currencyFormatterVN.format(int.tryParse(value) ?? 0);
+                    tienController.value = TextEditingValue(
+                        text: formattedValue,
+                        selection: TextSelection.collapsed(
+                            offset: formattedValue.length));
+                  } else {
+                    if (value.isEmpty || value == '0') {
+                      tienController.value = TextEditingValue(
+                        text: '0',
+                        selection: TextSelection.collapsed(offset: 1),
+                      );
+                    } else {
+                      final newValue = value.replaceFirst(RegExp(r'^0'), '');
+                      if (tienController.text != newValue) {
+                        tienController.value = TextEditingValue(
+                          text: newValue,
+                          selection: TextSelection.collapsed(offset: newValue.length),
+                        );
+                      }
+                    }
+                  }
+                  if (formKey.currentState != null) {
+                    formKey.currentState!.validate();
+                  }
+                },
+                keyboardType: TextInputType.numberWithOptions(
+                    decimal: controller.donViTienTe.value != 'đ'),
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.blueAccent,
+                  fontWeight: FontWeight.bold,
+                ),
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              );
+            }),
           ),
         ),
         const SizedBox(
           width: 20,
         ),
-        Obx(() => Text(controller.donViTienTe.value)),
+        Obx(() => Text(
+              controller.donViTienTe.value,
+              style: Theme.of(context).textTheme.titleMedium,
+            )),
       ],
     );
   }
@@ -532,12 +617,14 @@ class _NhapLieuState extends State<NhapLieu> {
             flex: 1,
             child: Text(
               'Nội dung '.tr,
+              style: TextStyle(fontWeight: FontWeight.bold),
             )),
         Expanded(
           flex: 4,
           child: TextFormField(
             controller: noiDungController,
             validator: controller.ktNoiDung,
+            inputFormatters: [LengthLimitingTextInputFormatter(100)],
             decoration: InputDecoration(
                 border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10))),
@@ -554,6 +641,7 @@ class _NhapLieuState extends State<NhapLieu> {
             flex: 1,
             child: Text(
               'Ngày'.tr,
+              style: TextStyle(fontWeight: FontWeight.bold),
             )),
         IconButton(
             onPressed: () {
@@ -606,3 +694,5 @@ class _NhapLieuState extends State<NhapLieu> {
     );
   }
 }
+
+

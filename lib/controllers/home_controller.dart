@@ -1,10 +1,8 @@
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../Models/category_model.dart';
 import '../Models/report_model.dart';
-import '../config/category/category_app.dart';
 import '../config/notifications/notifications.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
@@ -13,7 +11,6 @@ import '../utils/firebase/storage/firebase_storage.dart';
 class HomeController extends GetxController {
   final FirebaseStorageUtil firebaseStorageUtil = FirebaseStorageUtil();
   final SettingController settingController = Get.find();
-  final DanhMuc danhMuc = DanhMuc();
   List<TransactionModel> transactions = <TransactionModel>[].obs;
   List<TransactionModel> listResultTK = <TransactionModel>[].obs;
   Rx<UserModel?> userModel = Rx<UserModel?>(null);
@@ -38,10 +35,6 @@ class HomeController extends GetxController {
 
   void getCurrency() {
     donViTienTe.value = settingController.getCurrencySymbol();
-  }
-
-  double convertAmount(double amount) {
-    return settingController.convertAmount(amount);
   }
 
   Future<void> getUserTransactions() async {
@@ -86,7 +79,6 @@ class HomeController extends GetxController {
         await firebaseStorageUtil.updateTotalBalance(newTotalBalance);
     if (resultUpdate == true) {
       await getUser();
-     // print('123: ${isLoading.value}');
       showSnackbar('Thành công'.tr, 'Thiết lập số dư ban đầu thành công'.tr, true);
     } else {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
@@ -96,16 +88,13 @@ class HomeController extends GetxController {
   }
 
   Future<void> getUser() async {
-   // isLoading.value = true;
     userModel.value = null;
     userModel.value = await firebaseStorageUtil.getUser();
-   // print('321: ${isLoading.value}');
     if (userModel.value == null) {
       Get.snackbar('ERROR1', 'Lỗi');
     } else {
 
     }
-   // isLoading.value = false;
   }
 
   String? validateTotalBalance(String? value) {
@@ -113,10 +102,6 @@ class HomeController extends GetxController {
       return 'Số tiền không được để trống'.tr;
     }
     try {
-      // final parsedValue = int.parse(value.replaceAll(',', ''));
-      // if (parsedValue <= 0) {
-      //   return 'Số tiền phải lớn hơn 0'.tr;
-      // }
       if (value.replaceAll(',', '').length > 13) {
         return 'Số tiền phải nhỏ hơn 14 chữ số'.tr;
       }

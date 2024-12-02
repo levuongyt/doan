@@ -99,9 +99,7 @@ class ReportController extends GetxController {
   void getCurrency(){
     donViTienTe.value=settingController.getCurrencySymbol();
   }
-  double convertAmount(double amount) {
-    return settingController.convertAmount(amount);
-  }
+
   void updateCurrency() {
     settingController.selectedCurrency.listen((newCurrency) {
       getCurrency();
