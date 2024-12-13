@@ -1,10 +1,10 @@
-import 'package:doan_ql_thu_chi/views/sign_in.dart';
+import 'package:doan_ql_thu_chi/views/login/sign_in.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-import '../config/images/image_app.dart';
-import '../controllers/sign_up_controller.dart';
+import '../../config/images/image_app.dart';
+import '../../controllers/sign_up_controller.dart';
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -116,7 +116,7 @@ class _SignUpState extends State<SignUp> {
 
   Obx buildPasswordField(BuildContext context) {
     return Obx(
-      () => TextFormField(
+          () => TextFormField(
         controller: signUpController.passwordController,
         obscureText: !signUpController.isVisibility.value,
         validator: signUpController.ktPassWord,
@@ -161,9 +161,9 @@ class _SignUpState extends State<SignUp> {
           ),
           child: Center(
               child: Text(
-            'ĐĂNG KÝ'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
-          ))),
+                'ĐĂNG KÝ'.tr,
+                style: Theme.of(context).textTheme.displayLarge,
+              ))),
     );
   }
 
@@ -173,7 +173,7 @@ class _SignUpState extends State<SignUp> {
       children: [
         Text(
           'Bạn đã có tài khoản?'.tr,
-          style: TextStyle(fontSize: 15),
+          style: const TextStyle(fontSize: 15),
         ),
         TextButton(
             onPressed: () {
@@ -181,7 +181,7 @@ class _SignUpState extends State<SignUp> {
             },
             child: Text(
               'Đăng nhập ngay'.tr,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             )),
       ],
     );

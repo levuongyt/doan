@@ -55,6 +55,7 @@ class LocalStringLanguage extends Translations {
           'Chưa có giao dịch': 'No transactions yet',
           'Số dư cuối : ': 'Final balance : ',
           'Nội dung ': 'Content ',
+          'Nội dung : ':'Content : ',
           'Độ dài không được quá 100 ký tự':
               'Length must not exceed 100 characters',
           'Lương': 'Wage',
@@ -190,6 +191,7 @@ class LocalStringLanguage extends Translations {
           'No transactions yet': 'Chưa có giao dịch',
           'Final balance : ': 'Số dư cuối : ',
           'Content ': 'Nội dung ',
+          'Content : ':'Nội dung : ',
           'Length must not exceed 100 characters':
               'Độ dài không được quá 100 ký tự',
           'Wage': 'Lương',

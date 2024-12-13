@@ -1,21 +1,18 @@
-import 'package:doan_ql_thu_chi/views/sign_in.dart';
-import 'package:doan_ql_thu_chi/views/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
-import '../config/images/image_app.dart';
-
+import '../../config/images/image_app.dart';
+import '../login/sign_in.dart';
+import '../login/sign_up.dart';
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
 
   @override
   Widget build(BuildContext context) {
     final PageController pageController = PageController();
-    final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      //backgroundColor: Colors.white,
       body: SafeArea(
         child: Center(
           child: Column(
@@ -69,47 +66,47 @@ class Welcome extends StatelessWidget {
 
   SizedBox buildSignInButton(double doubleWidth, BuildContext context) {
     return SizedBox(
-              width: doubleWidth * (250 / 360),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).indicatorColor,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                onPressed: () {
-                  // Get.to(const SignIn());
-                  Get.off(SignIn());
-                },
-                child: const Text(
-                  'Đăng nhập',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            );
+      width: doubleWidth * (250 / 360),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).indicatorColor,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: () {
+          // Get.to(const SignIn());
+          Get.off(const SignIn());
+        },
+        child: const Text(
+          'Đăng nhập',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
   }
 
   SizedBox buildSignUpButton(double doubleWidth, BuildContext context) {
     return SizedBox(
-              width: doubleWidth * (250 / 360),
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Theme.of(context).indicatorColor,
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                ),
-                onPressed: () {
-                  Get.off(const SignUp());
-                },
-                child: const Text(
-                  'Đăng ký',
-                  style: TextStyle(color: Colors.white, fontSize: 16),
-                ),
-              ),
-            );
+      width: doubleWidth * (250 / 360),
+      child: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).indicatorColor,
+          padding: const EdgeInsets.symmetric(vertical: 14),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(30),
+          ),
+        ),
+        onPressed: () {
+          Get.off(const SignUp());
+        },
+        child: const Text(
+          'Đăng ký',
+          style: TextStyle(color: Colors.white, fontSize: 16),
+        ),
+      ),
+    );
   }
 
   Padding buildPage(BuildContext context, String imagePath, String titleText,

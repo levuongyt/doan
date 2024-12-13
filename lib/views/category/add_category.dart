@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-import '../controllers/add_category_controller.dart';
+import '../../controllers/add_category_controller.dart';
 
 class AddCategory extends StatefulWidget {
   const AddCategory({super.key});
@@ -44,7 +44,6 @@ class _AddCategoryState extends State<AddCategory> {
   @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
-    final doubleWidth = MediaQuery.of(context).size.width;
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -69,7 +68,7 @@ class _AddCategoryState extends State<AddCategory> {
                       height: 10,
                       color: Theme.of(context).dividerColor,
                     ),
-                    TabbarCtContent()
+                    const TabbarCtContent()
                   ],
                 ),
               ),
@@ -77,11 +76,11 @@ class _AddCategoryState extends State<AddCategory> {
           ),
           body: SafeArea(
               child: TabBarView(
-            children: [
-              buildTabIncome(doubleHeight, context),
-              buildTabExpense(doubleHeight, context),
-            ],
-          )),
+                children: [
+                  buildTabIncome(doubleHeight, context),
+                  buildTabExpense(doubleHeight, context),
+                ],
+              )),
         ),
       ),
     );
@@ -119,7 +118,7 @@ class _AddCategoryState extends State<AddCategory> {
             const SizedBox(
               height: 5,
             ),
-            Container(
+            SizedBox(
               height: doubleHeight * (220 / 800),
               child: GridView.builder(
                 shrinkWrap: true,
@@ -135,15 +134,15 @@ class _AddCategoryState extends State<AddCategory> {
                       controller.selectedIconCTCode.value = iconCode;
                     },
                     child: Obx(
-                      () => Container(
+                          () => Container(
                         decoration: BoxDecoration(
                             border: Border.all(
                               color: controller.selectedIconCTCode.value ==
-                                      iconCode
+                                  iconCode
                                   ? Colors.blueAccent
                                   : Colors.grey,
                               width: controller.selectedIconCTCode.value ==
-                                      iconCode
+                                  iconCode
                                   ? 2
                                   : 1,
                             ),
@@ -165,7 +164,7 @@ class _AddCategoryState extends State<AddCategory> {
               ],
             ),
             const SizedBox(height: 5),
-            Container(
+            SizedBox(
               height: doubleHeight * (220 / 800),
               child: GridView.builder(
                 shrinkWrap: true,
@@ -182,17 +181,17 @@ class _AddCategoryState extends State<AddCategory> {
                       controller.selectedCTColor.value = color.value;
                     },
                     child: Obx(
-                      () => Container(
+                          () => Container(
                         decoration: BoxDecoration(
                           border: Border.all(
                             color:
-                                controller.selectedCTColor.value == color.value
-                                    ? Colors.yellow
-                                    : Colors.grey,
+                            controller.selectedCTColor.value == color.value
+                                ? Colors.yellow
+                                : Colors.grey,
                             width:
-                                controller.selectedCTColor.value == color.value
-                                    ? 4
-                                    : 2,
+                            controller.selectedCTColor.value == color.value
+                                ? 4
+                                : 2,
                           ),
                           color: color,
                           borderRadius: BorderRadius.circular(10),
@@ -268,7 +267,7 @@ class _AddCategoryState extends State<AddCategory> {
             const SizedBox(
               height: 5,
             ),
-            Container(
+            SizedBox(
               height: doubleHeight * (220 / 800),
               child: GridView.builder(
                 shrinkWrap: true,
@@ -284,15 +283,15 @@ class _AddCategoryState extends State<AddCategory> {
                       controller.selectedIconTNCode.value = iconCode;
                     },
                     child: Obx(
-                      () => Container(
+                          () => Container(
                         decoration: BoxDecoration(
                             border: Border.all(
                               color: controller.selectedIconTNCode.value ==
-                                      iconCode
+                                  iconCode
                                   ? Colors.blueAccent
                                   : Colors.grey,
                               width: controller.selectedIconTNCode.value ==
-                                      iconCode
+                                  iconCode
                                   ? 2
                                   : 1,
                             ),
@@ -314,7 +313,7 @@ class _AddCategoryState extends State<AddCategory> {
               ],
             ),
             const SizedBox(height: 5),
-            Container(
+            SizedBox(
               height: doubleHeight * (220 / 800),
               child: GridView.builder(
                 shrinkWrap: true,
@@ -331,17 +330,17 @@ class _AddCategoryState extends State<AddCategory> {
                       controller.selectedTNColor.value = color.value;
                     },
                     child: Obx(
-                      () => Container(
+                          () => Container(
                         decoration: BoxDecoration(
                           border: Border.all(
                             color:
-                                controller.selectedTNColor.value == color.value
-                                    ? Colors.yellow
-                                    : Colors.grey,
+                            controller.selectedTNColor.value == color.value
+                                ? Colors.yellow
+                                : Colors.grey,
                             width:
-                                controller.selectedTNColor.value == color.value
-                                    ? 4
-                                    : 2,
+                            controller.selectedTNColor.value == color.value
+                                ? 4
+                                : 2,
                           ),
                           color: color,
                           borderRadius: BorderRadius.circular(10),

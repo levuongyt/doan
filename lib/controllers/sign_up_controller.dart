@@ -1,10 +1,10 @@
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
-import 'package:doan_ql_thu_chi/views/home.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../config/notifications/notifications.dart';
 import '../utils/firebase/login/authentication.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
+import '../views/home/home.dart';
 import 'home_controller.dart';
 import 'transaction_controller.dart';
 
@@ -32,17 +32,6 @@ class SignUpController extends GetxController {
         .hasMatch(value)) {
       return 'Email không đúng định dạng'.tr;
     }
-    // else if (!RegExp(
-    //         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
-    //     .hasMatch(value)) {
-    //   return 'Email không đúng định dạng';
-    // }
-    // else if(!isEmail(value)){
-    //   return 'Email không đúng định dạng';
-    // }
-    // else if(!RegExp(r'^[a-zA-Z0-9]+$').hasMatch(value)){
-    //   return 'Username không được chứa ký tự đặc biệt';
-    // }
     return null;
   }
 
@@ -52,9 +41,6 @@ class SignUpController extends GetxController {
     } else if (value.length < 6) {
       return 'Độ dài mật khẩu phải lớn hơn 6 ký tự'.tr;
     }
-    //else if(!RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#$&*~]).{8,}$').hasMatch(value)){
-    //  return 'Password chưa đúng định dạng';
-    //}
     return null;
   }
 

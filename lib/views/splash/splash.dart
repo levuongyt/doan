@@ -1,8 +1,9 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
-import 'package:doan_ql_thu_chi/views/welcome.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+
+import '../welcome/welcome.dart';
 class SpalshScreen extends StatelessWidget {
   const SpalshScreen({super.key});
 
@@ -10,14 +11,14 @@ class SpalshScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
       splash: Column(
-      children: [
-        Expanded(
-          child: Center(
-            child: LottieBuilder.asset('assets/Lottie/Animation.json'),
-          ),
-        )
-      ],
-    ), nextScreen: const Welcome(),
+        children: [
+          Expanded(
+            child: Center(
+              child: LottieBuilder.asset('assets/Lottie/Animation.json'),
+            ),
+          )
+        ],
+      ), nextScreen: const Welcome(),
       splashIconSize: 400,
     );
   }

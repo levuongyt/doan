@@ -4,7 +4,7 @@ import 'package:doan_ql_thu_chi/controllers/home_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
-import 'package:doan_ql_thu_chi/views/splash.dart';
+import 'package:doan_ql_thu_chi/views/splash/splash.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

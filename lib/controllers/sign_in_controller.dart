@@ -5,7 +5,7 @@ import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/firebase/login/authentication.dart';
-import '../views/home.dart';
+import '../views/home/home.dart';
 import 'home_controller.dart';
 
 class SignInController extends GetxController {
@@ -104,23 +104,6 @@ class SignInController extends GetxController {
       isLoading.value = false;
     }
   }
-
-  // Future<void> signInWithAccountFacebook() async {
-  //   try {
-  //     isLoading.value = true;
-  //     bool result = await fireBaseUtil.signInWithFacebook();
-  //     if (result) {
-  //       Get.snackbar('Success', 'Welcome');
-  //       Get.off(() => const Home());
-  //     } else {
-  //       Get.snackbar('Error', 'Mời thử lại');
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar('Error', 'Mời thử lại');
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 
   @override
   void onInit() {

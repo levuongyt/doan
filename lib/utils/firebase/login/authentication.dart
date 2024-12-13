@@ -22,9 +22,7 @@ class FireBaseUtil {
       result = true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('No user found for that email.');
       } else if (e.code == 'wrong-password') {
-        print('Wrong password provided for that user.');
       }
     }
     return result;
@@ -51,12 +49,9 @@ class FireBaseUtil {
       result = true;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        print('The password provided is too weak.');
       } else if (e.code == 'email-already-in-use') {
-        print('The account already exists for that email.');
       }
     } catch (e) {
-      print(e);
     }
     return result;
   }
@@ -71,8 +66,6 @@ class FireBaseUtil {
       await googleSignIn.signOut();
 
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
       final GoogleSignInAuthentication? googleAuth =
           await googleUser?.authentication;
 
@@ -80,8 +73,6 @@ class FireBaseUtil {
         accessToken: googleAuth?.accessToken,
         idToken: googleAuth?.idToken,
       );
-
-      // await FirebaseAuth.instance.signInWithCredential(credential);
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 

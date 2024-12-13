@@ -83,7 +83,6 @@ class TransactionController extends GetxController {
       await homeController.getUser();
       await homeController.getUserTransactions();
       homeController.update();
-      //Get.snackbar('Success', 'Thành công');
       showSnackbar('Thành công'.tr, 'Giao dịch đã được thêm thành công'.tr, true);
     } catch (e) {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);

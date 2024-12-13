@@ -73,7 +73,6 @@ class HomeController extends GetxController {
   }
 
   Future<void> updateTotalBalance(double newTotalBalance) async {
-   // isLoading.value = true;
    isUpdateLoading.value=true;
     bool resultUpdate =
         await firebaseStorageUtil.updateTotalBalance(newTotalBalance);
@@ -83,7 +82,6 @@ class HomeController extends GetxController {
     } else {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
-   // isLoading.value = false;
     isUpdateLoading.value=false;
   }
 

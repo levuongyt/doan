@@ -12,11 +12,11 @@ class UpdateCategory extends StatefulWidget {
   final String type;
   const UpdateCategory(
       {super.key,
-      required this.id,
-      required this.name,
-      required this.iconDM,
-      required this.colorDM,
-      required this.type});
+        required this.id,
+        required this.name,
+        required this.iconDM,
+        required this.colorDM,
+        required this.type});
 
   @override
   State<UpdateCategory> createState() => _UpdateCategoryState();
@@ -24,7 +24,7 @@ class UpdateCategory extends StatefulWidget {
 
 class _UpdateCategoryState extends State<UpdateCategory> {
   final UpdateCategoryController controller =
-      Get.put(UpdateCategoryController());
+  Get.put(UpdateCategoryController());
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameDMController = TextEditingController();
 
@@ -49,7 +49,6 @@ class _UpdateCategoryState extends State<UpdateCategory> {
   @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
-    final doubleWidth = MediaQuery.of(context).size.width;
     return Form(
       key: formKey,
       child: Scaffold(
@@ -78,7 +77,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
                               await controller.deleteCategory(widget.id);
                               Get.back();
                               Get.until((route) =>
-                                  route.settings.name == '/Category');
+                              route.settings.name == '/Category');
                             },
                             child: Text('Xác nhận'.tr)),
                       ],
@@ -90,34 +89,34 @@ class _UpdateCategoryState extends State<UpdateCategory> {
         ),
         body: SafeArea(
             child: SingleChildScrollView(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: Column(
-              children: [
-                buildRowNameCategory(),
-                const SizedBox(height: 10),
-                buildTitleSection('Biểu tượng'),
-                const SizedBox(height: 5),
-                buildListIcon(doubleHeight),
-                const SizedBox(height: 10),
-                buildTitleSection('Màu sắc'),
-                const SizedBox(height: 5),
-                buildListColor(doubleHeight),
-                const SizedBox(height: 20),
-                buildButtonSave(doubleHeight, context),
-              ],
-            ),
-          ),
-        )),
+              child: Container(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    buildRowNameCategory(),
+                    const SizedBox(height: 10),
+                    buildTitleSection('Biểu tượng'),
+                    const SizedBox(height: 5),
+                    buildListIcon(doubleHeight),
+                    const SizedBox(height: 10),
+                    buildTitleSection('Màu sắc'),
+                    const SizedBox(height: 5),
+                    buildListColor(doubleHeight),
+                    const SizedBox(height: 20),
+                    buildButtonSave(doubleHeight, context),
+                  ],
+                ),
+              ),
+            )),
       ),
     );
   }
 
   Row buildTitleSection(String title) {
     return Row(
-                children: [
-                  Text(title.tr)],
-              );
+      children: [
+        Text(title.tr)],
+    );
   }
 
   SizedBox buildButtonSave(double doubleHeight, BuildContext context) {
@@ -147,8 +146,8 @@ class _UpdateCategoryState extends State<UpdateCategory> {
     );
   }
 
-  Container buildListColor(double doubleHeight) {
-    return Container(
+  SizedBox buildListColor(double doubleHeight) {
+    return SizedBox(
       height: doubleHeight * (245 / 800),
       child: GridView.builder(
         shrinkWrap: true,
@@ -165,7 +164,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
               controller.selectedTNColor.value = color.value;
             },
             child: Obx(
-              () => Container(
+                  () => Container(
                 // padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(
@@ -173,7 +172,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
                         ? Colors.yellow
                         : Colors.grey,
                     width:
-                        controller.selectedTNColor.value == color.value ? 4 : 2,
+                    controller.selectedTNColor.value == color.value ? 4 : 2,
                   ),
                   color: color,
                   borderRadius: BorderRadius.circular(10),
@@ -186,8 +185,8 @@ class _UpdateCategoryState extends State<UpdateCategory> {
     );
   }
 
-  Container buildListIcon(double doubleHeight) {
-    return Container(
+  SizedBox buildListIcon(double doubleHeight) {
+    return SizedBox(
       height: doubleHeight * (245 / 800),
       child: GridView.builder(
         shrinkWrap: true,
@@ -201,7 +200,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
               controller.selectedIconTNCode.value = iconCode;
             },
             child: Obx(
-              () => Container(
+                  () => Container(
                 decoration: BoxDecoration(
                     border: Border.all(
                       color: controller.selectedIconTNCode.value == iconCode

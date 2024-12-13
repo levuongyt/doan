@@ -1,11 +1,11 @@
-import 'package:doan_ql_thu_chi/views/sign_up.dart';
+import 'package:doan_ql_thu_chi/views/login/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 
-import '../config/images/image_app.dart';
-import '../controllers/sign_in_controller.dart';
-import 'forgot_password.dart';
+import '../../config/images/image_app.dart';
+import '../../controllers/sign_in_controller.dart';
+import '../forgot_password/forgot_password.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
@@ -101,7 +101,7 @@ class _SignInState extends State<SignIn> {
 
   Obx buildPasswordField(BuildContext context) {
     return Obx(
-      () => TextFormField(
+          () => TextFormField(
         controller: signInController.passwordController,
         obscureText: !signInController.isVisibility.value,
         focusNode: signInController.passwordFocusNode,
@@ -130,7 +130,7 @@ class _SignInState extends State<SignIn> {
 
   Obx buildRememberCheckbox() {
     return Obx(
-      () => Row(
+          () => Row(
         children: [
           Checkbox(
               value: signInController.isCheckBok.value,
@@ -159,9 +159,9 @@ class _SignInState extends State<SignIn> {
           ),
           child: Center(
               child: Text(
-            'LOGIN'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
-          ))),
+                'LOGIN'.tr,
+                style: Theme.of(context).textTheme.displayLarge,
+              ))),
     );
   }
 
@@ -175,7 +175,7 @@ class _SignInState extends State<SignIn> {
             },
             child: Text(
               'Quên mật khẩu'.tr,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             )),
         TextButton(
             onPressed: () {
@@ -183,7 +183,7 @@ class _SignInState extends State<SignIn> {
             },
             child: Text(
               'Đăng ký'.tr,
-              style: TextStyle(fontSize: 15),
+              style: const TextStyle(fontSize: 15),
             )),
       ],
     );
@@ -200,7 +200,7 @@ class _SignInState extends State<SignIn> {
         ),
         Text(
           'Hoặc đăng nhập bằng'.tr,
-          style: TextStyle(fontSize: 15),
+          style: const TextStyle(fontSize: 15),
         ),
         Container(
           height: doubleHeight * (2 / 800),
@@ -215,18 +215,6 @@ class _SignInState extends State<SignIn> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        // Container(
-        //     padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
-        //     decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-        //     child: IconButton(
-        //         onPressed: () async {
-        //           await signInController.signInWithAccountFacebook();
-        //         },
-        //         icon: const Icon(
-        //           Icons.facebook,
-        //           size: 79,
-        //           color: Colors.blueAccent,
-        //         ))),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
           decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),

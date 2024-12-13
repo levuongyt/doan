@@ -227,7 +227,7 @@ class FirebaseStorageUtil {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentReference reportRef = FirebaseFirestore.instance
         .collection('Reports')
-        .doc('${uid}-${DateFormat('yyyy-MM').format(month)}');
+        .doc('$uid-${DateFormat('yyyy-MM').format(month)}');
 
     try {
       DocumentSnapshot reportSnapshot = await reportRef.get();
@@ -274,12 +274,6 @@ class FirebaseStorageUtil {
         .where('ngayGD', isGreaterThanOrEqualTo: startOfMonth)
         .where('ngayGD', isLessThanOrEqualTo: endOfMonth)
         .get();
-
-    // double totalIncome = 0.0;
-    // for (var doc in incomeSnapshot.docs) {
-    //   double tienGD = doc['tienGD'];
-    //   totalIncome += tienGD;
-    // }
 
     double totalIncome =
         incomeSnapshot.docs.fold(0.0, (double sum, doc) => sum + doc['tienGD']);
@@ -354,7 +348,7 @@ class FirebaseStorageUtil {
 
     DocumentReference reportRef = FirebaseFirestore.instance
         .collection('Reports')
-        .doc(userId + '-' + DateFormat('yyyy-MM').format(month));
+        .doc('$userId-${DateFormat('yyyy-MM').format(month)}');
 
     await reportRef.set({
       'userId': userId,

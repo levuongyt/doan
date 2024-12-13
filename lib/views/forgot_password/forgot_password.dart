@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-
-import '../controllers/forgot_pass_controller.dart';
-
+import '../../controllers/forgot_pass_controller.dart';
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 
@@ -49,16 +47,16 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               const SizedBox(height: 40),
-               Text(
+              Text(
                 'Bạn quên mật khẩu?'.tr,
-                    // 'Forgot Your Password?',
-                style: TextStyle(
+                // 'Forgot Your Password?',
+                style: const TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
                 ),
               ),
               const SizedBox(height: 10),
-               Text(
+              Text(
                 'Vui lòng nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu của bạn.'.tr,
                 style: TextStyle(
                   fontSize: 16,
@@ -95,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     if(formKey.currentState!.validate()){
                       await controller.sendEmaiAndResetPass(emailController.text);
                     }
-                    },
+                  },
                   child: Text(
                     'GỬI LIÊN KẾT ĐẶT LẠI'.tr,
                     style: Theme.of(context).textTheme.displayLarge,
