@@ -38,7 +38,7 @@ class SignUpController extends GetxController {
   String? ktPassWord(String? value) {
     if (value == null || value.isEmpty) {
       return 'Mật khẩu không được bỏ trống'.tr;
-    } else if (value.length < 6) {
+    } else if (value.length < 7) {
       return 'Độ dài mật khẩu phải lớn hơn 6 ký tự'.tr;
     }
     return null;
@@ -47,7 +47,7 @@ class SignUpController extends GetxController {
   String? ktUserName(String? value) {
     if (value == null || value.isEmpty) {
       return 'Tên tài khoản không được bỏ trống'.tr;
-    } else if (value.length < 6) {
+    } else if (value.length < 7) {
       return 'Tên tài khoản phải lớn hơn 6 ký tự'.tr;
     }
     return null;

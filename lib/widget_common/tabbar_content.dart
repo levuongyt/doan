@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class TabbarCtContent extends StatelessWidget {
-  const TabbarCtContent({super.key});
+class TabBarContent extends StatelessWidget {
+  const TabBarContent({super.key});
 
   @override
   Widget build(BuildContext context) {

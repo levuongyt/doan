@@ -53,7 +53,6 @@ class ReportController extends GetxController {
     fetchReport();
   }
 
-  ///Chi tiết baos cáo
   Future<void> fetchCategoryTransactions(String categoryId) async {
     List<TransactionModel> transactions = await firebaseStorageUtil.getCategoryTransactions(selectedMonth.value, categoryId);
     categoryTransactions.value = transactions;
@@ -95,7 +94,6 @@ class ReportController extends GetxController {
     return sections;
   }
 
-  ///Tiền tệ
   void getCurrency(){
     donViTienTe.value=settingController.getCurrencySymbol();
   }

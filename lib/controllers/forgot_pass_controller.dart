@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-
 import '../config/notifications/notifications.dart';
 import '../utils/firebase/login/authentication.dart';
 

@@ -46,7 +46,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(height: 40),
+              const SizedBox(height: 60),
               Text(
                 'Bạn quên mật khẩu?'.tr,
                 // 'Forgot Your Password?',

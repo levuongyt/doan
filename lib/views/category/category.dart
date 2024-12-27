@@ -1,8 +1,7 @@
 import 'package:doan_ql_thu_chi/views/category/update_category.dart';
-import 'package:doan_ql_thu_chi/widget_common/tabBar_CT_content.dart';
+import 'package:doan_ql_thu_chi/widget_common/tabbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../Models/category_model.dart';
 import '../../controllers/transaction_controller.dart';
 import 'add_category.dart';
@@ -47,7 +46,7 @@ class _CategoryState extends State<Category> {
                     height: 10,
                     color: Theme.of(context).dividerColor,
                   ),
-                  const TabbarCtContent()
+                  const TabBarContent()
                 ],
               ),
             ),

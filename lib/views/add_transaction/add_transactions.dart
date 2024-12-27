@@ -1,12 +1,11 @@
 import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
-import 'package:doan_ql_thu_chi/widget_common/tabBar_CT_content.dart';
+import 'package:doan_ql_thu_chi/widget_common/tabbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-
 import '../../controllers/transaction_controller.dart';
 import '../category/category.dart';
 
@@ -21,16 +20,12 @@ class _NhapLieuState extends State<NhapLieu> {
   final TransactionController controller = Get.find();
   final SettingController settingController = Get.find();
   final formKey = GlobalKey<FormState>();
-
   final TextEditingController ngayController = TextEditingController();
   final TextEditingController noiDungController = TextEditingController();
   final TextEditingController tienController = TextEditingController(text: "0");
-
   final TextEditingController ngayChiController = TextEditingController();
   final TextEditingController noiDungChiController = TextEditingController();
-  final TextEditingController tienChiController =
-  TextEditingController(text: "0");
-
+  final TextEditingController tienChiController = TextEditingController(text: "0");
   DateTime? pickedDate = DateTime.now();
   String idDanhMucTN = '';
   String idDanhMucCT = '';
@@ -101,7 +96,7 @@ class _NhapLieuState extends State<NhapLieu> {
                       height: 10,
                       color: Theme.of(context).dividerColor,
                     ),
-                    const TabbarCtContent(),
+                    const TabBarContent(),
                   ],
                 ),
               ),
@@ -109,12 +104,33 @@ class _NhapLieuState extends State<NhapLieu> {
           ),
           body: SafeArea(
               child: TabBarView(children: [
-                ///TAB 1
                 buildTabIncome(context, doubleWidth, doubleHeight),
-
-                ///TAB 2 CHI TIÊU
                 buildTabExpense(context, doubleWidth, doubleHeight),
               ])),
+        ),
+      ),
+    );
+  }
+
+  Padding buildTabIncome(
+      BuildContext context, double doubleWidth, double doubleHeight) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            buildRowDay(context),
+            const SizedBox(height: 10),
+            buildRowContent(),
+            const SizedBox(height: 10),
+            buildRowAmount(doubleWidth),
+            const SizedBox(height: 10),
+            buildRowCategory(),
+            const SizedBox(height: 10),
+            buildListCategory(doubleHeight, doubleWidth),
+            const SizedBox(height: 5),
+            buildButtonSave(doubleHeight, context)
+          ],
         ),
       ),
     );
@@ -162,10 +178,8 @@ class _NhapLieuState extends State<NhapLieu> {
                 amountCT =
                     double.parse(tienChiController.text.replaceAll(',', ''))
                         .toVND();
-                // amountCT=controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', '')));
               }
               await controller.addTransaction(
-                // amount:controller.amountToVND(double.parse(tienChiController.text.replaceAll(',', ''))),
                   amount: amountCT,
                   description: noiDungChiController.text,
                   categoryId: idDanhMucCT,
@@ -186,7 +200,7 @@ class _NhapLieuState extends State<NhapLieu> {
   Obx buildListCategoryCT(double doubleHeight, double doubleWidth) {
     return Obx(
           () => SizedBox(
-        height: doubleHeight * (250 / 800),
+        height: doubleHeight * (270 / 800),
         child: GridView.builder(
             shrinkWrap: true,
             itemCount: controller.listExpenseCategory.length,
@@ -397,29 +411,7 @@ class _NhapLieuState extends State<NhapLieu> {
     );
   }
 
-  Padding buildTabIncome(
-      BuildContext context, double doubleWidth, double doubleHeight) {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            buildRowDay(context),
-            const SizedBox(height: 10),
-            buildRowContent(),
-            const SizedBox(height: 10),
-            buildRowAmount(doubleWidth),
-            const SizedBox(height: 10),
-            buildRowCategory(),
-            const SizedBox(height: 10),
-            buildListCategory(doubleHeight, doubleWidth),
-            const SizedBox(height: 5),
-            buildButtonSave(doubleHeight, context)
-          ],
-        ),
-      ),
-    );
-  }
+
 
   SizedBox buildButtonSave(double doubleHeight, BuildContext context) {
     return SizedBox(
@@ -461,7 +453,7 @@ class _NhapLieuState extends State<NhapLieu> {
   Obx buildListCategory(double doubleHeight, double doubleWidth) {
     return Obx(
           () => SizedBox(
-        height: doubleHeight * (250 / 800),
+        height: doubleHeight * (270 / 800),
         child: GridView.builder(
             shrinkWrap: true,
             itemCount: controller.listIncomeCategory.length,

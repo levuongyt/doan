@@ -19,23 +19,6 @@ class SettingController extends GetxController {
   RxString selectedCurrency = 'VND'.obs;
   RxDouble exchangeRate = 1.0.obs;
   final ApiService apiService = ApiService();
-
-  void toggleTheme() {
-    isDarkMode.value = !isDarkMode.value;
-  }
-
-  Future<void> saveThemeToPreferences(bool isDarkMode) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isDarkMode', isDarkMode);
-  }
-
-  Future<void> loadThemeFromPreferences() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
-    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
-  }
-
-  ///testnn
   final List<Map<String, dynamic>> localizations = [
     {
       "name": "Tiếng việt",
@@ -49,41 +32,6 @@ class SettingController extends GetxController {
     },
 
   ];
-
-
-
-  Future<void> saveLanguage(Locale locale) async {
-    await prefsService.saveStringData('languageValue', locale.languageCode);
-    await prefsService.saveStringData('localValue', locale.countryCode ?? 'VI');
-  }
-
-  Future<void> readLanguage() async {
-    String? valueLanguage =
-        await prefsService.readStringData('languageValue') ?? 'vi';
-    String? valueLocal =
-        await prefsService.readStringData('localValue') ?? 'VI';
-
-    selectedLanguage.value = Locale(valueLanguage, valueLocal);
-    Get.updateLocale(selectedLanguage.value);
-  }
-
-  ///Lưu tiền tệ
-  Future<void> saveCurrency(String currency) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('currency', currency);
-    selectedCurrency.value = currency;
-
-    ///
-     await updateExchangeRate();
-  }
-
-  Future<void> readCurrency() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    selectedCurrency.value = prefs.getString('currency') ?? 'VND';
-
-    ///
-     await updateExchangeRate();
-  }
 
   final List<Map<String, dynamic>> listCurrency = [
     {
@@ -105,6 +53,50 @@ class SettingController extends GetxController {
       "image": ImageApp.imageFlagEURO,
     },
   ];
+
+  void toggleTheme() {
+    isDarkMode.value = !isDarkMode.value;
+  }
+
+  Future<void> saveThemeToPreferences(bool isDarkMode) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isDarkMode', isDarkMode);
+  }
+
+  Future<void> loadThemeFromPreferences() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
+    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  Future<void> saveLanguage(Locale locale) async {
+    await prefsService.saveStringData('languageValue', locale.languageCode);
+    await prefsService.saveStringData('localValue', locale.countryCode ?? 'VI');
+  }
+
+  Future<void> readLanguage() async {
+    String? valueLanguage =
+        await prefsService.readStringData('languageValue') ?? 'vi';
+    String? valueLocal =
+        await prefsService.readStringData('localValue') ?? 'VI';
+
+    selectedLanguage.value = Locale(valueLanguage, valueLocal);
+    Get.updateLocale(selectedLanguage.value);
+  }
+
+  Future<void> saveCurrency(String currency) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('currency', currency);
+    selectedCurrency.value = currency;
+     await updateExchangeRate();
+  }
+
+  Future<void> readCurrency() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    selectedCurrency.value = prefs.getString('currency') ?? 'VND';
+     await updateExchangeRate();
+  }
+
 
   Future<void> updateExchangeRate() async {
     RatesCurrencyModel? rateModel =

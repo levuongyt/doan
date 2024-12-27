@@ -13,10 +13,6 @@ class AccountController extends GetxController{
   final FireBaseUtil fireBaseUtil=FireBaseUtil();
   final FirebaseStorageUtil firebaseStorageUtil=FirebaseStorageUtil();
 
-  void resetController(){
-    Get.delete<HomeController>();
-  }
-
   Future<void> getUser() async {
     isLoading.value = true;
     userModel.value = null;

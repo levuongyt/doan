@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-
 import '../../../Models/category_model.dart';
 import '../../../Models/report_model.dart';
 import '../../../models/transaction_model.dart';
@@ -33,19 +32,16 @@ class FirebaseStorageUtil {
     }
   }
 
-  ///Lấy user
   Future<UserModel?> getUser() async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     try {
       final snapshot = await storage.collection('Users').doc(uid).get();
       return UserModel.fromDocument(snapshot);
     } catch (e) {
-
       return null;
     }
   }
 
-  ///Cập nhật tổng số dư
   Future<bool> updateTotalBalance(double newTotalBalance) async {
     String uid=FirebaseAuth.instance.currentUser?.uid??'';
     bool result=false;
@@ -55,12 +51,9 @@ class FirebaseStorageUtil {
     }catch(e){
       result=false;
     }
-
     return result;
-
   }
 
-  ///Cập nhật tên user
   Future<bool> updateNameUser(String newName) async {
     String uid=FirebaseAuth.instance.currentUser?.uid??'';
     bool result=false;
@@ -80,7 +73,6 @@ class FirebaseStorageUtil {
     required String type,
     required DateTime date,
   }) async {
-    try {
       String? uid = FirebaseAuth.instance.currentUser?.uid;
       DocumentSnapshot snapshot =
           await storage.collection('Users').doc(uid).get();
@@ -98,15 +90,9 @@ class FirebaseStorageUtil {
         'loaiGD': type,
         'ngayGD': Timestamp.fromDate(date),
         'soDuCuoi':
-            soDuMoi, // Chuyển đổi DateTime thành Timestamp cho Firestore
+            soDuMoi,
       });
-
       await storage.collection('Users').doc(uid).update({'tongSoDu': soDuMoi});
-
-
-    } catch (e) {
-
-    }
   }
 
   Future<List<TransactionModel>> getUserTransactions() async {
@@ -116,17 +102,14 @@ class FirebaseStorageUtil {
           .collection('Transactions')
           .where('userId', isEqualTo: uid)
           .get();
-
       final List<TransactionModel> result =
           snapshot.docs.map((e) => TransactionModel.fromDocument(e)).toList();
       return result;
     } catch (e) {
-
       return [];
     }
   }
 
-  ///them danh muc
   Future<void> addCategory(
       {required name,
       required iconCode,
@@ -139,13 +122,10 @@ class FirebaseStorageUtil {
         'colorIcon': colorIcon,
         'type': type,
       });
-
     } catch (e) {
-
     }
   }
-  
-  ///sửa danh mục
+
   Future<bool> updateCategory({required String id, required String name, required int icon,required int color, required String type}) async{
     bool result=false;
     try{
@@ -162,7 +142,7 @@ class FirebaseStorageUtil {
     return result;
   }
 
-  ///Xóa danh mục
+
   Future<bool> deleteCategory({required String id})async{
     bool result=false;
     try{
@@ -189,7 +169,7 @@ class FirebaseStorageUtil {
     }
   }
 
-  ///Lấy danh mục theo giao dịch
+
   Future<CategoryModel?> getCategoriesTransaction(String uid) async {
     try {
       DocumentSnapshot snapshot =
@@ -201,11 +181,10 @@ class FirebaseStorageUtil {
     }
   }
 
-  ///chi tiết báo cáo
+
   Future<List<TransactionModel>> getCategoryTransactions(DateTime month, String categoryId) async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     if (uid == null) return [];
-
     DateTime startOfMonth = DateTime(month.year, month.month, 1);
     DateTime endOfMonth = DateTime(month.year, month.month + 1, 1).subtract(const Duration(seconds: 1));
 
@@ -221,14 +200,11 @@ class FirebaseStorageUtil {
     return transactions;
   }
 
-  ///Báo cáo
-
   Future<ReportModel?> getReport(DateTime month) async {
     String? uid = FirebaseAuth.instance.currentUser?.uid;
     DocumentReference reportRef = FirebaseFirestore.instance
         .collection('Reports')
         .doc('$uid-${DateFormat('yyyy-MM').format(month)}');
-
     try {
       DocumentSnapshot reportSnapshot = await reportRef.get();
       if (!reportSnapshot.exists) {
@@ -239,7 +215,6 @@ class FirebaseStorageUtil {
       return null;
     }
   }
-
 
   int daysInMonth(DateTime date) {
     DateTime firstDayOfNextMonth = (date.month < 12)
@@ -257,7 +232,6 @@ class FirebaseStorageUtil {
     DateTime endOfMonth =
         DateTime(month.year, month.month + 1, 1).subtract(const Duration(seconds: 1));
 
-    /// Lấy giao dịch thu nhập
     QuerySnapshot incomeSnapshot = await FirebaseFirestore.instance
         .collection('Transactions')
         .where('userId', isEqualTo: userId)
@@ -266,7 +240,6 @@ class FirebaseStorageUtil {
         .where('ngayGD', isLessThanOrEqualTo: endOfMonth)
         .get();
 
-    /// Lấy giao dịch chi tiêu
     QuerySnapshot expenseSnapshot = await FirebaseFirestore.instance
         .collection('Transactions')
         .where('userId', isEqualTo: userId)
@@ -285,19 +258,15 @@ class FirebaseStorageUtil {
     double totalExpenseDay = totalExpense / soNgayTrongThang;
     double soDuThang = totalIncome - totalExpense;
 
-    ///bao cao moi
     Map<String, Map<String, dynamic>> categoryReport = {};
-
     for (var doc in incomeSnapshot.docs) {
       String categoryId = doc['categoryId'];
       double amount = doc['tienGD'];
-
       if (!categoryReport.containsKey(categoryId)) {
         DocumentSnapshot categorySnapshot = await storage
             .collection('Categories')
             .doc(categoryId)
             .get();
-
         categoryReport[categoryId] = {
           'id': categoryId,
           'name': categorySnapshot['name'],
@@ -308,36 +277,29 @@ class FirebaseStorageUtil {
           'percentage': 0.0,
         };
       }
-
       categoryReport[categoryId]?['totalAmount'] += amount;
     }
 
-    ///chi tieeu
     for (var doc in expenseSnapshot.docs) {
       String categoryId = doc['categoryId'];
       double amount = doc['tienGD'];
-
       if (!categoryReport.containsKey(categoryId)) {
         DocumentSnapshot categorySnapshot = await storage
             .collection('Categories')
             .doc(categoryId)
             .get();
-
         categoryReport[categoryId] = {
           'id': categoryId,
           'name': categorySnapshot['name'],
           'iconCode': categorySnapshot['iconCode'],
           'color': categorySnapshot['colorIcon'],
           'totalAmount': 0.0,
-         // 'transactionCount': 0,
           'type': categorySnapshot['type'],
           'percentage': 0.0,
         };
       }
-
       categoryReport[categoryId]?['totalAmount'] += amount;
     }
-
     categoryReport.forEach((id, data) {
       if (data['type'] == 'Chi Tiêu') {
         data['percentage'] = (data['totalAmount'] / totalExpense) * 100;

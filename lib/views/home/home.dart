@@ -23,7 +23,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final NavigationController navigationController =
-  Get.put(NavigationController());
+      Get.put(NavigationController());
 
   final List<Widget> pages = [
     const HomePage(),
@@ -36,32 +36,32 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(() => IndexedStack(
-        index: navigationController.selectedIndex.value,
-        children: pages,
-      )),
+            index: navigationController.selectedIndex.value,
+            children: pages,
+          )),
       bottomNavigationBar: Obx(() => BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-              icon: const Icon(Icons.home), label: 'Tổng quan'.tr),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.edit_note),
-            label: 'Nhập vào'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.bar_chart),
-            label: 'Báo cáo'.tr,
-          ),
-          BottomNavigationBarItem(
-            icon: const Icon(Icons.settings),
-            label: 'Cài đặt'.tr,
-          ),
-        ],
-        currentIndex: navigationController.selectedIndex.value,
-        onTap: (index) => navigationController.changeIndex(index),
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Theme.of(context).cardColor,
-        selectedItemColor: Colors.blueAccent,
-      )),
+            items: <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                  icon: const Icon(Icons.home), label: 'Tổng quan'.tr),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.edit_note),
+                label: 'Nhập vào'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.bar_chart),
+                label: 'Báo cáo'.tr,
+              ),
+              BottomNavigationBarItem(
+                icon: const Icon(Icons.settings),
+                label: 'Cài đặt'.tr,
+              ),
+            ],
+            currentIndex: navigationController.selectedIndex.value,
+            onTap: (index) => navigationController.changeIndex(index),
+            type: BottomNavigationBarType.fixed,
+            backgroundColor: Theme.of(context).cardColor,
+            selectedItemColor: Colors.blueAccent,
+          )),
     );
   }
 }
@@ -80,6 +80,7 @@ class _HomePageState extends State<HomePage> {
   final formKey = GlobalKey<FormState>();
   final formKeyBalance = GlobalKey<FormState>();
   final FocusNode dayFocus = FocusNode();
+  final NumberFormat currencyFormatter = NumberFormat('#,##0');
   @override
   void initState() {
     super.initState();
@@ -97,8 +98,6 @@ class _HomePageState extends State<HomePage> {
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${controller.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${controller.donViTienTe.value}';
   }
-
-  final NumberFormat currencyFormatter = NumberFormat('#,##0');
 
   @override
   Widget build(BuildContext context) {
@@ -118,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                 style: Theme.of(context).textTheme.displayLarge,
               ),
               Obx(
-                    () => Text(
+                () => Text(
                   controller.userModel.value?.name ?? " ",
                   style: Theme.of(context).textTheme.displayLarge,
                 ),
@@ -126,14 +125,17 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           actions: [
-            IconButton(
-                onPressed: () {
-                  Get.to(const Account());
-                },
-                icon: const Icon(
-                  Icons.account_circle,
-                  color: Colors.white,
-                ))
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: IconButton(
+                  onPressed: () {
+                    Get.to(const Account());
+                  },
+                  icon: const Icon(
+                    Icons.account_circle,
+                    color: Colors.white,
+                  )),
+            ),
           ],
           bottom: PreferredSize(
               preferredSize: const Size.fromHeight(80),
@@ -144,7 +146,7 @@ class _HomePageState extends State<HomePage> {
                     return Container(
                       padding: const EdgeInsets.all(10),
                       width: doubleWidth * (324 / 360),
-                      height: doubleHeight * (82 / 800),
+                      height: doubleHeight * (80 / 800),
                       decoration: BoxDecoration(
                           color: Theme.of(context).canvasColor,
                           borderRadius: BorderRadius.circular(10)),
@@ -154,114 +156,7 @@ class _HomePageState extends State<HomePage> {
                           InkWell(
                             onTap: () {
                               Get.dialog(
-                                Form(
-                                  key: formKeyBalance,
-                                  child: AlertDialog(
-                                    title: Text('Thiết lập tổng số dư'.tr),
-                                    content: TextFormField(
-                                      controller: totalBalanceController,
-                                      keyboardType: TextInputType.number,
-                                      validator:
-                                      controller.validateTotalBalance,
-                                      inputFormatters: controller
-                                          .donViTienTe.value ==
-                                          'đ'
-                                          ? [
-                                        FilteringTextInputFormatter
-                                            .digitsOnly
-                                      ]
-                                          : [
-                                        FilteringTextInputFormatter.allow(
-                                          RegExp(r'^\d+\.?\d{0,2}'),
-                                        ),
-                                      ],
-                                      onChanged: (value) {
-                                        value = value.replaceAll(',', '');
-                                        if (controller.donViTienTe.value ==
-                                            'đ') {
-                                          totalBalanceController.value =
-                                              TextEditingValue(
-                                                text: currencyFormatter.format(
-                                                    int.tryParse(value) ?? 0),
-                                                selection: TextSelection.collapsed(
-                                                    offset: currencyFormatter
-                                                        .format(
-                                                        int.tryParse(value) ??
-                                                            0)
-                                                        .length),
-                                              );
-                                        } else {
-                                          if (value.isEmpty || value == '0') {
-                                            totalBalanceController.value =
-                                            const TextEditingValue(
-                                              text: '0',
-                                              selection:
-                                              TextSelection.collapsed(
-                                                  offset: 1),
-                                            );
-                                          } else {
-                                            final newValue = value.replaceFirst(
-                                                RegExp(r'^0'), '');
-                                            if (totalBalanceController.text !=
-                                                newValue) {
-                                              totalBalanceController.value =
-                                                  TextEditingValue(
-                                                    text: newValue,
-                                                    selection:
-                                                    TextSelection.collapsed(
-                                                        offset:
-                                                        newValue.length),
-                                                  );
-                                            }
-                                          }
-                                        }
-
-                                        if (formKeyBalance.currentState !=
-                                            null) {
-                                          formKeyBalance.currentState!
-                                              .validate();
-                                        }
-                                      },
-                                      decoration: InputDecoration(
-                                          hintText: 'Nhập số dư'.tr,
-                                          hintStyle: TextStyle(
-                                            color: Theme.of(context).hintColor,
-                                          )),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Get.back();
-                                          },
-                                          child: Text('Hủy'.tr)),
-                                      TextButton(
-                                          onPressed: () async {
-                                            if (formKeyBalance.currentState!
-                                                .validate()) {
-                                              double amountCT;
-                                              if (controller
-                                                  .donViTienTe.value ==
-                                                  "đ") {
-                                                amountCT = double.parse(
-                                                    totalBalanceController.text
-                                                        .replaceAll(',', ''));
-                                              } else {
-                                                amountCT = double.parse(
-                                                    totalBalanceController
-                                                        .text
-                                                        .replaceAll(
-                                                        ',', ''))
-                                                    .toVND();
-                                              }
-                                              Get.back();
-                                              await controller
-                                                  .updateTotalBalance(amountCT);
-                                            }
-                                          },
-                                          child: Text('Lưu'.tr)),
-                                    ],
-                                  ),
-                                ),
+                                buildFormUpdateBalance(context),
                               );
                             },
                             child: Column(
@@ -284,21 +179,21 @@ class _HomePageState extends State<HomePage> {
                                 ),
                                 controller.isVisibility.value == false
                                     ? Text(
-                                  formatBalance(controller
-                                      .userModel.value?.tongSoDu ??
-                                      0),
-                                  style: const TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                )
+                                        formatBalance(controller
+                                                .userModel.value?.tongSoDu ??
+                                            0),
+                                        style: const TextStyle(
+                                          fontSize: 25,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
                                     : const Text(
-                                  '*******',
-                                  style: TextStyle(
-                                    // color: Colors.blueAccent,
-                                      fontSize: 25,
-                                      fontWeight: FontWeight.bold),
-                                ),
+                                        '*******',
+                                        style: TextStyle(
+                                            // color: Colors.blueAccent,
+                                            fontSize: 25,
+                                            fontWeight: FontWeight.bold),
+                                      ),
                               ],
                             ),
                           ),
@@ -340,10 +235,107 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  Form buildFormUpdateBalance(BuildContext context) {
+    return Form(
+      key: formKeyBalance,
+      child: AlertDialog(
+        title: Center(child: Text('Thiết lập tổng số dư'.tr)),
+        content: TextFormField(
+          controller: totalBalanceController,
+          keyboardType: TextInputType.number,
+          validator: controller.validateTotalBalance,
+          inputFormatters: controller.donViTienTe.value == 'đ'
+              ? [FilteringTextInputFormatter.digitsOnly]
+              : [
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'^\d+\.?\d{0,2}'),
+                  ),
+                ],
+          onChanged: (value) {
+            value = value.replaceAll(',', '');
+            if (controller.donViTienTe.value == 'đ') {
+              totalBalanceController.value = TextEditingValue(
+                text: currencyFormatter.format(int.tryParse(value) ?? 0),
+                selection: TextSelection.collapsed(
+                    offset: currencyFormatter
+                        .format(int.tryParse(value) ?? 0)
+                        .length),
+              );
+            } else {
+              if (value.isEmpty || value == '0') {
+                totalBalanceController.value = const TextEditingValue(
+                  text: '0',
+                  selection: TextSelection.collapsed(offset: 1),
+                );
+              } else {
+                final newValue = value.replaceFirst(RegExp(r'^0'), '');
+                if (totalBalanceController.text != newValue) {
+                  totalBalanceController.value = TextEditingValue(
+                    text: newValue,
+                    selection: TextSelection.collapsed(offset: newValue.length),
+                  );
+                }
+              }
+            }
+
+            if (formKeyBalance.currentState != null) {
+              formKeyBalance.currentState!.validate();
+            }
+          },
+          decoration: InputDecoration(
+              hintText: 'Nhập số dư'.tr,
+              hintStyle: TextStyle(
+                color: Theme.of(context).hintColor,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+              )),
+        ),
+        actionsAlignment: MainAxisAlignment.spaceEvenly,
+        actions: [
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+              ),
+              onPressed: () {
+                Get.back();
+              },
+              child: Text(
+                'Hủy'.tr,
+                style: const TextStyle(color: Colors.white),
+              )),
+          ElevatedButton(
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+              ),
+              onPressed: () async {
+                if (formKeyBalance.currentState!.validate()) {
+                  double amountCT;
+                  if (controller.donViTienTe.value == "đ") {
+                    amountCT = double.parse(
+                        totalBalanceController.text.replaceAll(',', ''));
+                  } else {
+                    amountCT = double.parse(
+                            totalBalanceController.text.replaceAll(',', ''))
+                        .toVND();
+                  }
+                  Get.back();
+                  await controller.updateTotalBalance(amountCT);
+                }
+              },
+              child: Text(
+                'Lưu'.tr,
+                style: const TextStyle(color: Colors.white),
+              )),
+        ],
+      ),
+    );
+  }
+
   Obx buildOverview(
       double doubleWidth, double doubleHeight, BuildContext context) {
     return Obx(
-          () => Container(
+      () => Container(
         width: doubleWidth * (324 / 360),
         height: doubleHeight * (205 / 800),
         decoration: BoxDecoration(
@@ -389,13 +381,13 @@ class _HomePageState extends State<HomePage> {
                             locale: Get.locale,
                             child: Dialog(
                               child: SizedBox(
-                                height: doubleHeight * 0.65,
+                                height: doubleHeight * 0.56,
                                 child: MonthYearPickerDialog(
                                   initialDate: controller.selectedMonth.value,
                                   firstDate: DateTime(2019),
                                   lastDate: DateTime(2100),
                                   initialMonthYearPickerMode:
-                                  MonthYearPickerMode.month,
+                                      MonthYearPickerMode.month,
                                 ),
                               ),
                             ),
@@ -439,7 +431,7 @@ class _HomePageState extends State<HomePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Obx(
-                        () => Flexible(
+                    () => Flexible(
                       child: Container(
                           height: doubleHeight * (130 / 800),
                           width: doubleWidth * (170 / 360),
@@ -460,20 +452,20 @@ class _HomePageState extends State<HomePage> {
                                   ChartData(
                                       'Thu'.tr,
                                       (controller.report.value?.totalIncome ??
-                                          0)
+                                              0)
                                           .toCurrency(),
                                       Colors.green),
                                   ChartData(
                                       'Chi'.tr,
                                       (controller.report.value?.totalExpense ??
-                                          0)
+                                              0)
                                           .toCurrency(),
                                       Colors.red),
                                 ],
                                 xValueMapper: (ChartData data, _) => data.x,
                                 yValueMapper: (ChartData data, _) => data.y,
                                 pointColorMapper: (ChartData data, _) =>
-                                data.color,
+                                    data.color,
                               ),
                             ],
                             tooltipBehavior: TooltipBehavior(
@@ -485,7 +477,7 @@ class _HomePageState extends State<HomePage> {
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: [
                       Obx(
-                            () => Text(
+                        () => Text(
                           formatBalance(
                               controller.report.value?.totalIncome ?? 0),
                           style: const TextStyle(
@@ -496,7 +488,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                       ),
                       Obx(
-                            () => Text(
+                        () => Text(
                           formatBalance(
                               controller.report.value?.totalExpense ?? 0),
                           style: const TextStyle(
@@ -516,7 +508,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       const SizedBox(height: 10),
                       Obx(
-                            () => Text(
+                        () => Text(
                           formatBalance(
                               controller.report.value?.soDuThang ?? 0),
                           style: Theme.of(context).textTheme.bodySmall,
@@ -551,7 +543,7 @@ class _HomePageState extends State<HomePage> {
             padding: const EdgeInsets.all(20),
             height: doubleHeight * (245 / 800),
             child: Obx(
-                  () {
+              () {
                 if (controller.listResultTK.isEmpty) {
                   return Center(
                     child: Text(
@@ -568,17 +560,17 @@ class _HomePageState extends State<HomePage> {
                       if (index == controller.listResultTK.length) {
                         return Obx(() => controller.isLoadingMore.value
                             ? const Padding(
-                          padding: EdgeInsets.symmetric(vertical: 10),
-                          child:
-                          Center(child: CircularProgressIndicator()),
-                        )
+                                padding: EdgeInsets.symmetric(vertical: 10),
+                                child:
+                                    Center(child: CircularProgressIndicator()),
+                              )
                             : const SizedBox());
                       }
                       final transaction = controller.listResultTK[index];
                       CategoryModel? category = controller
                           .categoryIdToDetails[transaction.categoryId];
                       String formatDate =
-                      DateFormat('dd/MM/yyyy').format(transaction.date);
+                          DateFormat('dd/MM/yyyy').format(transaction.date);
                       return Column(
                         children: [
                           Container(
@@ -596,7 +588,7 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       formatDate,
                                       style:
-                                      Theme.of(context).textTheme.bodySmall,
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                   ],
                                 ),
@@ -619,11 +611,11 @@ class _HomePageState extends State<HomePage> {
                                       (category?.name ?? 'Không có danh mục')
                                           .tr,
                                       style:
-                                      Theme.of(context).textTheme.bodySmall,
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                     const SizedBox(width: 10),
                                     Obx(
-                                          () => Text(
+                                      () => Text(
                                         transaction.type == 'Thu Nhập'
                                             ? '+${formatBalance(transaction.amount)}'
                                             : '-${formatBalance(transaction.amount)}',
@@ -644,10 +636,10 @@ class _HomePageState extends State<HomePage> {
                                     Text(
                                       'Số dư cuối : '.tr,
                                       style:
-                                      Theme.of(context).textTheme.bodySmall,
+                                          Theme.of(context).textTheme.bodySmall,
                                     ),
                                     Obx(
-                                          () => Text(
+                                      () => Text(
                                         formatBalance(transaction.finalBalance),
                                         style: Theme.of(context)
                                             .textTheme
@@ -740,7 +732,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 icon: const Icon(Icons.search)),
             border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(10))),
       ),
     );
   }

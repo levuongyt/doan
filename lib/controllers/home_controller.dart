@@ -38,7 +38,6 @@ class HomeController extends GetxController {
   }
 
   Future<void> getUserTransactions() async {
-   // isLoading.value = true;
     List<TransactionModel> response =
         await firebaseStorageUtil.getUserTransactions();
     if (response.isEmpty) {
@@ -50,8 +49,6 @@ class HomeController extends GetxController {
       listResultTK
           .addAll(transactions.take(itemsPerPage * currentPage).toList());
     }
-
-  //  isLoading.value = false;
   }
 
   Future<void> loadMoreTransactions() async {
@@ -180,11 +177,5 @@ class HomeController extends GetxController {
     getReport();
     getCurrency();
     updateCurrency();
-  }
-
-  @override
-  void onClose() {
-    // TODO: implement onClose
-    super.onClose();
   }
 }

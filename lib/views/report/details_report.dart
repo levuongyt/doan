@@ -5,23 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
-class ChiTietThuNhap extends StatefulWidget {
+class DetailsReport extends StatefulWidget {
   final String categoryId;
   final String categoryName;
   final int iconCode;
   final int colorIcon;
-  const ChiTietThuNhap(
-      {super.key,
-        required this.categoryId,
-        required this.categoryName,
-        required this.iconCode,
-        required this.colorIcon});
+  const DetailsReport({super.key, required this.categoryId, required this.categoryName, required this.iconCode, required this.colorIcon});
 
   @override
-  State<ChiTietThuNhap> createState() => _ChiTietThuNhapState();
+  State<DetailsReport> createState() => _DetailsReportState();
 }
 
-class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
+class _DetailsReportState extends State<DetailsReport> {
   final ReportController reportController = Get.find();
   @override
   void initState() {
@@ -29,13 +24,11 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
     super.initState();
     reportController.fetchCategoryTransactions(widget.categoryId);
   }
-
   String formatBalance(double amount) {
     return reportController.donViTienTe.value == 'đ'
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${reportController.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${reportController.donViTienTe.value}';
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,3 +174,4 @@ class _ChiTietThuNhapState extends State<ChiTietThuNhap> {
     );
   }
 }
+

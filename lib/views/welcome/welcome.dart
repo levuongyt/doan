@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-
 import '../../config/images/image_app.dart';
 import '../login/sign_in.dart';
 import '../login/sign_up.dart';

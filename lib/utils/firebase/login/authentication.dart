@@ -52,17 +52,15 @@ class FireBaseUtil {
       } else if (e.code == 'email-already-in-use') {
       }
     } catch (e) {
+      result=false;
     }
     return result;
   }
 
-  ///Đăng nhập Google
   Future<bool> signInWithGoogle() async {
     bool result = false;
     try {
       final GoogleSignIn googleSignIn = GoogleSignIn();
-
-      ///dangxuat
       await googleSignIn.signOut();
 
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
@@ -92,7 +90,6 @@ class FireBaseUtil {
     return result;
   }
 
-  ///Reset mk(quen mat khau)
 
   Future<bool> sendPasswordResetEmail(String emailReset) async {
     bool result = false;

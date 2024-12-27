@@ -11,7 +11,6 @@ class ThemesApp {
       focusColor: Colors.grey[100],
       hintColor: Colors.grey,
 
-      ///tabar, button
       indicatorColor: Colors.blueAccent,
       dividerColor: Colors.white,
       textTheme: const TextTheme(

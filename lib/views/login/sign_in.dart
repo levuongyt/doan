@@ -2,7 +2,6 @@ import 'package:doan_ql_thu_chi/views/login/sign_up.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-
 import '../../config/images/image_app.dart';
 import '../../controllers/sign_in_controller.dart';
 import '../forgot_password/forgot_password.dart';

@@ -11,8 +11,6 @@ class TransactionController extends GetxController {
   final ReportController reportController = Get.find();
   final SettingController settingController = Get.find();
   final FirebaseStorageUtil firebaseStorageUtil = FirebaseStorageUtil();
-
-  // RxString selectedCategory = ''.obs;
   RxString selectedIncomeCategory = ''.obs;
   RxString selectedExpenseCategory = ''.obs;
   RxString select = ''.obs;
@@ -22,7 +20,6 @@ class TransactionController extends GetxController {
   RxDouble totalBalance = 0.0.obs;
   Rx<String> donViTienTe = ''.obs;
 
-  ///So du moi
   double calculateNewBalance(double amount, String type) {
     if (type == 'Thu Nhập') {
       return totalBalance.value + amount;
@@ -125,8 +122,6 @@ class TransactionController extends GetxController {
     return null;
   }
 
-
-//Dơn vị tiền tệ
   void getCurrency() {
     donViTienTe.value = settingController.getCurrencySymbol();
   }

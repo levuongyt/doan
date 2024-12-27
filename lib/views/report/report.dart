@@ -1,7 +1,7 @@
 import 'package:doan_ql_thu_chi/Models/report_model.dart';
 import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
-import 'package:doan_ql_thu_chi/widget_common/tabBar_CT_content.dart';
+import 'package:doan_ql_thu_chi/widget_common/tabbar_content.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -71,7 +71,7 @@ class _BaoCaoState extends State<BaoCao> {
                                   locale: Get.locale,
                                   child: Dialog(
                                     child: SizedBox(
-                                      height: doubleHeight * 0.65,
+                                      height: doubleHeight * 0.56,
                                       child: MonthYearPickerDialog(
                                         initialDate: reportController.selectedMonth.value,
                                         firstDate: DateTime(2019),
@@ -118,7 +118,7 @@ class _BaoCaoState extends State<BaoCao> {
                 Container(
                     color: Theme.of(context).cardColor,
                     child:
-                    const TabbarCtContent()
+                    const TabBarContent(),
                 ),
               ],
             ),
@@ -280,7 +280,7 @@ class _BaoCaoState extends State<BaoCao> {
                           ),
                           IconButton(
                             onPressed: () {
-                              Get.to(ChiTietThuNhap(
+                              Get.to(DetailsReport(
                                 categoryId: category.id,
                                 categoryName: category.name,
                                 iconCode: category.iconCode,
@@ -453,7 +453,7 @@ class _BaoCaoState extends State<BaoCao> {
                           ),
                           IconButton(
                             onPressed: () {
-                              Get.to(ChiTietThuNhap(
+                              Get.to(DetailsReport(
                                 categoryId: category.id,
                                 categoryName: category.name,
                                 iconCode: category.iconCode,
