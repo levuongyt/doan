@@ -1,4 +1,4 @@
-import 'package:doan_ql_thu_chi/Models/category_model.dart';
+import 'package:doan_ql_thu_chi/models/category_model.dart';
 import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

@@ -29,43 +29,215 @@ class _SignInState extends State<SignIn> {
 
   @override
   Widget build(BuildContext context) {
-    final doubleHeight = MediaQuery.of(context).size.height;
-    final doubleWidth = MediaQuery.of(context).size.width;
+    final screenHeight = MediaQuery.of(context).size.height;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenHeight < 600;
+    
     return Form(
       key: signInController.formKey,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
           title: Text(
             'ĐĂNG NHẬP'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.blue.shade300.withOpacity(0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
           automaticallyImplyLeading: false,
         ),
         body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  buildWelcomeImage(doubleWidth, doubleHeight),
-                  const SizedBox(height: 15),
-                  buildEmailField(context),
-                  const SizedBox(height: 10),
-                  buildPasswordField(context),
-                  buildRememberCheckbox(),
-                  const SizedBox(height: 5),
-                  buildSignInButton(doubleHeight, context),
-                  const SizedBox(height: 10),
-                  buildFGPassAndSignUp(),
-                  buildRowDivider(doubleHeight, doubleWidth),
-                  const SizedBox(height: 10),
-                  buildGGLogin(),
-                ],
-              ),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              final availableHeight = constraints.maxHeight;
+              
+              return SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Container(
+                  constraints: BoxConstraints(minHeight: availableHeight),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: screenWidth * 0.05,
+                    vertical: isSmallScreen ? 10 : 15
+                  ),
+                  child: Column(
+                    children: [
+                      // Main content wrapper with proper spacing
+                      buildMainContent(screenWidth, screenHeight, isSmallScreen, availableHeight),
+                      
+                      // Social login section at bottom
+                      buildSocialLoginSection(context, screenWidth),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+        ),
+      ),
+    );
+  }
+  
+  Widget buildMainContent(double width, double height, bool isSmallScreen, double availableHeight) {
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: availableHeight * 0.8, // 80% of available height
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          // Image section - about 25% of content height
+          buildWelcomeImage(width, isSmallScreen ? height * 0.15 : height * 0.2),
+          
+          // Form section with proper spacing
+          Column(
+            children: [
+              buildEmailField(context),
+              const SizedBox(height: 12),
+              buildPasswordField(context),
+              buildRememberCheckbox(),
+              const SizedBox(height: 8),
+              buildSignInButton(height * 0.055, context),
+              buildFGPassAndSignUp(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildWelcomeImage(double width, double height) {
+    return Container(
+      alignment: Alignment.center,
+      child: Image.asset(
+        ImageApp.imageWelcome,
+        width: width * 0.65,
+        height: height,
+        fit: BoxFit.contain,
+      ),
+    );
+  }
+
+  Widget buildEmailField(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      child: TextFormField(
+        controller: signInController.emailController,
+        keyboardType: TextInputType.emailAddress,
+        validator: signInController.ktEmail,
+        focusNode: signInController.emailFocusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: const TextStyle(fontSize: 16),
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          prefixIcon: const Icon(Icons.email, color: Colors.grey),
+          hintText: "Email",
+          hintStyle: TextStyle(color: Colors.grey.shade500),
+          fillColor: Colors.white,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildPasswordField(BuildContext context) {
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+        child: TextFormField(
+          controller: signInController.passwordController,
+          obscureText: !signInController.isVisibility.value,
+          focusNode: signInController.passwordFocusNode,
+          validator: signInController.ktPassWord,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          style: const TextStyle(fontSize: 16),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+            suffixIcon: IconButton(
+              onPressed: () {
+                signInController.xuLiVisibility();
+              },
+              icon: signInController.isVisibility.value
+                  ? const Icon(Icons.visibility, color: Colors.grey)
+                  : const Icon(Icons.visibility_off, color: Colors.grey),
+            ),
+            hintText: " Password".tr,
+            hintStyle: TextStyle(color: Colors.grey.shade500),
+            fillColor: Colors.white,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1.5),
             ),
           ),
         ),
@@ -73,78 +245,49 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  Image buildWelcomeImage(double doubleWidth, double doubleHeight) {
-    return Image.asset(
-      ImageApp.imageWelcome,
-      width: doubleWidth * (316 / 360),
-      height: doubleHeight * (215 / 800),
-    );
-  }
-
-  TextFormField buildEmailField(BuildContext context) {
-    return TextFormField(
-      controller: signInController.emailController,
-      keyboardType: TextInputType.emailAddress,
-      validator: signInController.ktEmail,
-      focusNode: signInController.emailFocusNode,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.email),
-          hintText: "Email",
-          hintStyle: TextStyle(color: Theme.of(context).hintColor),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-          )),
-    );
-  }
-
-  Obx buildPasswordField(BuildContext context) {
+  Widget buildRememberCheckbox() {
     return Obx(
-          () => TextFormField(
-        controller: signInController.passwordController,
-        obscureText: !signInController.isVisibility.value,
-        focusNode: signInController.passwordFocusNode,
-        validator: signInController.ktPassWord,
-        autovalidateMode: AutovalidateMode.onUserInteraction,
-        decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock),
-            suffixIcon: IconButton(
-                onPressed: () {
-                  signInController.xuLiVisibility();
-
-                  ///c2
-                  //  signInController.isVisibility.toggle();
-                },
-                icon: signInController.isVisibility.value
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off)),
-            hintText: " Password".tr,
-            hintStyle: TextStyle(color: Theme.of(context).hintColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-            )),
+      () => Padding(
+        padding: const EdgeInsets.only(left: 8.0, top: 4.0),
+        child: Row(
+          children: [
+            Transform.scale(
+              scale: 0.9,
+              child: Checkbox(
+                  value: signInController.isCheckBok.value,
+                  activeColor: Colors.blue,
+                  onChanged: (value) {
+                    signInController.stateCheckBok();
+                  }),
+            ),
+            Text('Nhớ mật khẩu'.tr,
+                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
+          ],
+        ),
       ),
     );
   }
 
-  Obx buildRememberCheckbox() {
-    return Obx(
-          () => Row(
-        children: [
-          Checkbox(
-              value: signInController.isCheckBok.value,
-              onChanged: (value) {
-                signInController.stateCheckBok();
-              }),
-          Text('Nhớ mật khẩu'.tr)
+  Widget buildSignInButton(double height, BuildContext context) {
+    return Container(
+      height: height,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(25),
+        gradient: LinearGradient(
+          colors: [Colors.blue.shade700, Colors.blue.shade500],
+          begin: Alignment.centerLeft,
+          end: Alignment.centerRight,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.blue.withOpacity(0.3),
+            spreadRadius: 1,
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
         ],
       ),
-    );
-  }
-
-  SizedBox buildSignInButton(double doubleHeight, BuildContext context) {
-    return SizedBox(
-      height: doubleHeight * (50 / 800),
       child: ElevatedButton(
           onPressed: () async {
             if (signInController.formKey.currentState!.validate()) {
@@ -154,17 +297,26 @@ class _SignInState extends State<SignIn> {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(25),
+            ),
           ),
-          child: Center(
+          child: const Center(
               child: Text(
-                'LOGIN'.tr,
-                style: Theme.of(context).textTheme.displayLarge,
+                'LOGIN',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                  fontSize: 16,
+                  color: Colors.white,
+                ),
               ))),
     );
   }
 
-  Row buildFGPassAndSignUp() {
+  Widget buildFGPassAndSignUp() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -172,62 +324,109 @@ class _SignInState extends State<SignIn> {
             onPressed: () {
               Get.to(const ForgotPassword());
             },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            ),
             child: Text(
               'Quên mật khẩu'.tr,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.blue,
+              ),
             )),
         TextButton(
             onPressed: () {
               Get.off(const SignUp());
             },
+            style: TextButton.styleFrom(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),
+            ),
             child: Text(
               'Đăng ký'.tr,
-              style: const TextStyle(fontSize: 15),
+              style: const TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Colors.blue,
+              ),
             )),
       ],
     );
   }
 
-  Row buildRowDivider(double doubleHeight, double doubleWidth) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Container(
-          height: doubleHeight * (2 / 800),
-          width: doubleWidth * (100 / 360),
-          color: Colors.black12,
-        ),
-        Text(
-          'Hoặc đăng nhập bằng'.tr,
-          style: const TextStyle(fontSize: 15),
-        ),
-        Container(
-          height: doubleHeight * (2 / 800),
-          width: doubleWidth * (100 / 360),
-          color: Colors.black12,
-        ),
-      ],
+  Widget buildSocialLoginSection(BuildContext context, double screenWidth) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 10, bottom: 10),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.transparent, Colors.grey.shade400],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                child: Text(
+                  'Hoặc đăng nhập bằng'.tr,
+                  style: const TextStyle(fontSize: 14, color: Colors.grey),
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  height: 1,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [Colors.grey.shade400, Colors.transparent],
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 15),
+          buildGoogleSignInButton(),
+        ],
+      ),
     );
   }
 
-  Row buildGGLogin() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 15),
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(12)),
-          child: InkWell(
-            onTap: () async {
-              await signInController.signInWithEmailGoogle();
-            },
-            child: Image.asset(
-              ImageApp.imageGoogle,
-              height: 79,
+  Widget buildGoogleSignInButton() {
+    return InkWell(
+      onTap: () async {
+        await signInController.signInWithEmailGoogle();
+      },
+      child: Container(
+        width: 50,
+        height: 50,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(15),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.3),
+              blurRadius: 8,
+              offset: const Offset(0, 3),
             ),
-          ),
+          ],
         ),
-      ],
+        padding: const EdgeInsets.all(10),
+        child: Image.asset(
+          ImageApp.imageGoogle,
+          fit: BoxFit.contain,
+        ),
+      ),
     );
   }
 }

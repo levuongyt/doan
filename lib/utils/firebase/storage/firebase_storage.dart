@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
-import '../../../Models/category_model.dart';
-import '../../../Models/report_model.dart';
+import '../../../models/category_model.dart';
+import '../../../models/report_model.dart';
 import '../../../models/transaction_model.dart';
 import '../../../models/user_model.dart';
 

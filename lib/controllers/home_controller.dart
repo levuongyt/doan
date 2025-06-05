@@ -1,8 +1,8 @@
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
+import 'package:doan_ql_thu_chi/models/category_model.dart';
+import 'package:doan_ql_thu_chi/models/report_model.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../Models/category_model.dart';
-import '../Models/report_model.dart';
 import '../config/notifications/notifications.dart';
 import '../models/transaction_model.dart';
 import '../models/user_model.dart';
