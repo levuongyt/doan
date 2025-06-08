@@ -37,13 +37,23 @@ class _CategoryState extends State<Category> {
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
           bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50.0),
+            preferredSize: const Size.fromHeight(70.0),
             child: Container(
-              color: Theme.of(context).cardColor,
+              decoration: BoxDecoration(
+                color: Theme.of(context).cardColor,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.1),
+                    spreadRadius: 1,
+                    blurRadius: 3,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
               child: Column(
                 children: [
                   Container(
-                    height: 10,
+                    height: 8,
                     color: Theme.of(context).dividerColor,
                   ),
                   const TabBarContent()
@@ -85,38 +95,66 @@ class _CategoryState extends State<Category> {
                           type: category.type,
                         ));
                       },
-                      child: Column(
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(20),
-                            decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey,
-                                ),
-                                borderRadius: BorderRadius.circular(10)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Expanded(
-                                  flex: 1,
-                                  child: Icon(
-                                    IconData(category.iconCode,
-                                        fontFamily: 'MaterialIcons'),
-                                    color: Color(category.colorIcon),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 4,
-                                  child: Text(category.name.tr),
-                                ),
-                                const Icon(Icons.dehaze)
-                              ],
-                            ),
+                      child: Container(
+                        margin: const EdgeInsets.only(bottom: 12),
+                        padding: const EdgeInsets.all(16),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.3),
+                            width: 1,
                           ),
-                          const SizedBox(
-                            height: 10,
-                          )
-                        ],
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.1),
+                              spreadRadius: 1,
+                              blurRadius: 4,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(10),
+                              decoration: BoxDecoration(
+                                color: Color(category.colorIcon).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Icon(
+                                IconData(category.iconCode,
+                                    fontFamily: 'MaterialIcons'),
+                                color: Color(category.colorIcon),
+                                size: 24,
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Text(
+                                category.name.tr,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w500,
+                                  color: Colors.black87,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Container(
+                              padding: const EdgeInsets.all(6),
+                              decoration: BoxDecoration(
+                                color: Colors.grey.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
+                              child: const Icon(
+                                Icons.edit,
+                                color: Colors.grey,
+                                size: 18,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     );
                   }),

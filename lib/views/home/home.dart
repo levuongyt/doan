@@ -7,10 +7,12 @@ import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:month_year_picker/month_year_picker.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/navigation_controller.dart';
 import '../account/account.dart';
 import '../add_transaction/add_transactions.dart';
+import '../expense_analysis/expense_analysis.dart';
 import '../report/report.dart';
 import '../setting/setting.dart';
 
@@ -27,9 +29,10 @@ class _HomeState extends State<Home> {
 
   final List<Widget> pages = [
     const HomePage(),
+    const ExpenseAnalysis(),
     const NhapLieu(),
     const BaoCao(),
-    const Setting(),
+    const Account(),
   ];
 
   @override
@@ -39,28 +42,29 @@ class _HomeState extends State<Home> {
             index: navigationController.selectedIndex.value,
             children: pages,
           )),
-      bottomNavigationBar: Obx(() => BottomNavigationBar(
-            items: <BottomNavigationBarItem>[
-              BottomNavigationBarItem(
-                  icon: const Icon(Icons.home), label: 'Tổng quan'.tr),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.edit_note),
-                label: 'Nhập vào'.tr,
+      bottomNavigationBar: Obx(() => ConvexAppBar(
+            items: [
+              TabItem(icon: Icons.home_outlined, title: 'Tổng quan'.tr),
+              TabItem(icon: Icons.analytics_outlined, title: 'Đánh giá'.tr),
+              TabItem(
+                icon: Icons.add, 
+                title: 'Nhập vào'.tr,
               ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.bar_chart),
-                label: 'Báo cáo'.tr,
-              ),
-              BottomNavigationBarItem(
-                icon: const Icon(Icons.settings),
-                label: 'Cài đặt'.tr,
-              ),
+              TabItem(icon: Icons.bar_chart_outlined, title: 'Báo cáo'.tr),
+              TabItem(icon: Icons.account_circle_outlined, title: 'Tài khoản'.tr),
             ],
-            currentIndex: navigationController.selectedIndex.value,
+            initialActiveIndex: navigationController.selectedIndex.value,
             onTap: (index) => navigationController.changeIndex(index),
-            type: BottomNavigationBarType.fixed,
-            backgroundColor: Theme.of(context).cardColor,
-            selectedItemColor: Colors.blueAccent,
+            backgroundColor: Colors.white,
+            activeColor: Colors.blueAccent, // Màu xanh khi được chọn
+            color: Colors.grey, // Màu xám khi không được chọn
+            style: TabStyle.fixedCircle,
+            curveSize: 80,
+            top: -25,
+            height: 65,
+            shadowColor: Colors.grey.withOpacity(0.3),
+            elevation: 8,
+            cornerRadius: 25,
           )),
     );
   }
@@ -129,10 +133,10 @@ class _HomePageState extends State<HomePage> {
               padding: const EdgeInsets.symmetric(horizontal: 10),
               child: IconButton(
                   onPressed: () {
-                    Get.to(const Account());
+                    Get.to(const Setting());
                   },
                   icon: const Icon(
-                    Icons.account_circle,
+                    Icons.settings,
                     color: Colors.white,
                   )),
             ),

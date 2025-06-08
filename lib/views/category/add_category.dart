@@ -12,11 +12,12 @@ class AddCategory extends StatefulWidget {
   State<AddCategory> createState() => _AddCategoryState();
 }
 
-class _AddCategoryState extends State<AddCategory> {
+class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin {
   final AddCetegoryController controller = Get.put(AddCetegoryController());
   final formKey = GlobalKey<FormState>();
   final TextEditingController nameDMThuNhapController = TextEditingController();
   final TextEditingController nameDMChiTieuController = TextEditingController();
+  late TabController tabController;
 
   void reset() {
     nameDMChiTieuController.clear();
@@ -29,8 +30,8 @@ class _AddCategoryState extends State<AddCategory> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
+    tabController = TabController(length: 2, vsync: this);
     ever(controller.isLoading, (callback) {
       if (callback) {
         context.loaderOverlay.show();
@@ -41,12 +42,15 @@ class _AddCategoryState extends State<AddCategory> {
   }
 
   @override
+  void dispose() {
+    tabController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
-    return DefaultTabController(
-      initialIndex: 0,
-      length: 2,
-      child: Form(
+    return Form(
         key: formKey,
         child: Scaffold(
           appBar: AppBar(
@@ -58,16 +62,77 @@ class _AddCategoryState extends State<AddCategory> {
             centerTitle: true,
             iconTheme: const IconThemeData(color: Colors.white),
             bottom: PreferredSize(
-              preferredSize: const Size.fromHeight(50.0),
+              preferredSize: const Size.fromHeight(70.0),
               child: Container(
-                color: Theme.of(context).cardColor,
+                decoration: BoxDecoration(
+                  color: Theme.of(context).cardColor,
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.grey.withOpacity(0.1),
+                      spreadRadius: 1,
+                      blurRadius: 3,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
                 child: Column(
                   children: [
                     Container(
-                      height: 10,
+                      height: 8,
                       color: Theme.of(context).dividerColor,
                     ),
-                    const TabBarContent()
+                    Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[100],
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      child: TabBar(
+                        controller: tabController,
+                        indicator: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          gradient: const LinearGradient(
+                            colors: [Colors.blueAccent, Colors.blue],
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                          ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.blueAccent.withOpacity(0.3),
+                              spreadRadius: 1,
+                              blurRadius: 8,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        labelColor: Colors.white,
+                        unselectedLabelColor: Colors.grey[600],
+                        labelStyle: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        unselectedLabelStyle: const TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w500,
+                        ),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        dividerColor: Colors.transparent,
+                        splashFactory: NoSplash.splashFactory,
+                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        tabs: [
+                          Container(
+                            height: 45,
+                            alignment: Alignment.center,
+                            child: Text('Thu nhập'.tr),
+                          ),
+                          Container(
+                            height: 45,
+                            alignment: Alignment.center,
+                            child: Text('Chi tiêu'.tr),
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -75,15 +140,59 @@ class _AddCategoryState extends State<AddCategory> {
           ),
           body: SafeArea(
               child: TabBarView(
+            controller: tabController,
             children: [
               buildTabIncome(doubleHeight, context),
               buildTabExpense(doubleHeight, context),
             ],
           )),
+          floatingActionButton: Padding(
+            padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+            child: AnimatedBuilder(
+              animation: tabController,
+              builder: (context, child) {
+                return SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: FloatingActionButton.extended(
+                    onPressed: () async {
+                      if (formKey.currentState!.validate()) {
+                        if (tabController.index == 0) {
+                          // Tab Thu nhập
+                          await controller.addCategory(
+                            nameDMThuNhapController.text,
+                            controller.selectedIconTNCode.value,
+                            controller.selectedTNColor.value,
+                            'Thu Nhập');
+                        } else {
+                          // Tab Chi tiêu
+                          await controller.addCategory(
+                            nameDMChiTieuController.text,
+                            controller.selectedIconCTCode.value,
+                            controller.selectedCTColor.value,
+                            'Chi Tiêu');
+                        }
+                        reset();
+                      }
+                    },
+                    backgroundColor: Theme.of(context).indicatorColor,
+                    foregroundColor: Colors.white,
+                    label: Text(
+                      'Lưu danh mục'.tr,
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+                    ),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
         ),
-      ),
-    );
-  }
+      );
+    }
 
   SingleChildScrollView buildTabIncome(
       double doubleHeight, BuildContext context) {
@@ -91,17 +200,16 @@ class _AddCategoryState extends State<AddCategory> {
       child: Container(
         padding: const EdgeInsets.all(10),
         child: Column(
-          children: [
+                    children: [
+            const SizedBox(height: 5),
             buildRowNameCategoryIncome(),
+            const SizedBox(height: 5),
             buildRowTitle('Biểu tượng'),
-            const SizedBox(height: 5),
             buildListIconIncome(doubleHeight),
-            const SizedBox(height: 10),
-            buildRowTitle('Màu sắc'),
             const SizedBox(height: 5),
+            buildRowTitle('Màu sắc'),
             buildListColorIncome(doubleHeight),
-            const SizedBox(height: 15),
-            buildSaveCategoryIncome(doubleHeight, context),
+            const SizedBox(height: 10),
           ],
         ),
       ),
@@ -114,47 +222,23 @@ class _AddCategoryState extends State<AddCategory> {
       child: Container(
         padding: const EdgeInsets.all(10),
         child: Column(
-          children: [
+                    children: [
+            const SizedBox(height: 5),
             buildRowNameDM(),
+            const SizedBox(height: 5),
             buildRowTitle('Biểu tượng'),
-            const SizedBox(height: 5),
             buildListIconExpense(doubleHeight),
-            const SizedBox(height: 10),
-            buildRowTitle('Màu sắc'),
             const SizedBox(height: 5),
+            buildRowTitle('Màu sắc'),
             buildListColorExpense(doubleHeight),
-            const SizedBox(height: 15),
-            buildSaveCategoryExpense(doubleHeight, context),
+            const SizedBox(height: 10),
           ],
         ),
       ),
     );
   }
 
-  SizedBox buildSaveCategoryExpense(double doubleHeight, BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: doubleHeight * (50 / 800),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
-          ),
-          onPressed: () async {
-            if (formKey.currentState!.validate()) {
-              await controller.addCategory(
-                  nameDMChiTieuController.text,
-                  controller.selectedIconCTCode.value,
-                  controller.selectedCTColor.value,
-                  'Chi Tiêu');
-              reset();
-            }
-          },
-          child: Text(
-            'Lưu Danh Mục'.tr,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
-          )),
-    );
-  }
+
 
   SizedBox buildListColorExpense(double doubleHeight) {
     return SizedBox(
@@ -174,18 +258,42 @@ class _AddCategoryState extends State<AddCategory> {
               controller.selectedCTColor.value = color.value;
             },
             child: Obx(
-              () => Container(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: controller.selectedCTColor.value == color.value
-                        ? Colors.yellow
-                        : Colors.grey,
-                    width:
-                        controller.selectedCTColor.value == color.value ? 4 : 2,
+                        ? Colors.white
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedCTColor.value == color.value ? 3 : 1,
                   ),
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedCTColor.value == color.value
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                 ),
+                child: controller.selectedCTColor.value == color.value
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 20,
+                      )
+                    : null,
               ),
             ),
           );
@@ -209,18 +317,47 @@ class _AddCategoryState extends State<AddCategory> {
               controller.selectedIconCTCode.value = iconCode;
             },
             child: Obx(
-              () => Container(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    border: Border.all(
-                      color: controller.selectedIconCTCode.value == iconCode
-                          ? Colors.blueAccent
-                          : Colors.grey,
-                      width: controller.selectedIconCTCode.value == iconCode
-                          ? 2
-                          : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Icon(IconData(iconCode, fontFamily: 'MaterialIcons')),
+                  color: controller.selectedIconCTCode.value == iconCode
+                      ? Colors.blueAccent.withOpacity(0.1)
+                      : Colors.white,
+                  border: Border.all(
+                    color: controller.selectedIconCTCode.value == iconCode
+                        ? Colors.blueAccent
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedIconCTCode.value == iconCode
+                        ? 2
+                        : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedIconCTCode.value == iconCode
+                      ? [
+                          BoxShadow(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                ),
+                child: Icon(
+                  IconData(iconCode, fontFamily: 'MaterialIcons'),
+                  color: controller.selectedIconCTCode.value == iconCode
+                      ? Colors.blueAccent
+                      : Colors.grey[600],
+                  size: 24,
+                ),
               ),
             ),
           );
@@ -229,93 +366,143 @@ class _AddCategoryState extends State<AddCategory> {
     );
   }
 
-  Row buildRowTitle(String title) {
-    return Row(
-      children: [
-        Text(
-          title.tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        )
-      ],
+  Widget buildRowTitle(String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+      child: Row(
+        children: [
+          Text(
+            title.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  Row buildRowNameDM() {
-    return Row(
-      children: [
-        Text(
-          'Tên danh mục : '.tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Expanded(
-          child: TextFormField(
-            controller: nameDMChiTieuController,
-            validator: controller.checkNameCategory,
-            onChanged: (value) {
-              if (formKey.currentState != null) {
-                formKey.currentState!.validate();
-              }
-            },
-            decoration: InputDecoration(
+  Widget buildRowNameDM() {
+          return Container(
+        padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(
+            'Tên danh mục'.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: TextFormField(
+              controller: nameDMChiTieuController,
+              validator: controller.checkNameCategory,
+              onChanged: (value) {
+                if (formKey.currentState != null) {
+                  formKey.currentState!.validate();
+                }
+              },
+              style: const TextStyle(fontSize: 14),
+              decoration: InputDecoration(
+                hintText: 'Nhập tên...',
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                filled: true,
+                fillColor: Colors.grey[50],
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10))),
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              ),
+            ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 
 
 
-  Row buildRowNameCategoryIncome() {
-    return Row(
-      children: [
-        Text(
-          'Tên danh mục : '.tr,
-          style: const TextStyle(fontWeight: FontWeight.bold),
-        ),
-        Expanded(
-          child: TextFormField(
-            controller: nameDMThuNhapController,
-            validator: controller.checkNameCategory,
-            onChanged: (value) {
-              if (formKey.currentState != null) {
-                formKey.currentState!.validate();
-              }
-            },
-            decoration: InputDecoration(
+  Widget buildRowNameCategoryIncome() {
+          return Container(
+        padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
+          ),
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(
+            'Tên danh mục'.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: TextFormField(
+              controller: nameDMThuNhapController,
+              validator: controller.checkNameCategory,
+              onChanged: (value) {
+                if (formKey.currentState != null) {
+                  formKey.currentState!.validate();
+                }
+              },
+              style: const TextStyle(fontSize: 14),
+              decoration: InputDecoration(
+                hintText: 'Nhập tên...',
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                filled: true,
+                fillColor: Colors.grey[50],
                 border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10))),
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blue, width: 1.5),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              ),
+            ),
           ),
-        )
-      ],
+        ],
+      ),
     );
   }
 
-  SizedBox buildSaveCategoryIncome(double doubleHeight, BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: doubleHeight * (50 / 800),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
-          ),
-          onPressed: () async {
-            if (formKey.currentState!.validate()) {
-              await controller.addCategory(
-                  nameDMThuNhapController.text,
-                  controller.selectedIconTNCode.value,
-                  controller.selectedTNColor.value,
-                  'Thu Nhập');
-              reset();
-            }
-          },
-          child: Text(
-            'Lưu Danh Mục'.tr,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
-          )),
-    );
-  }
+
 
   SizedBox buildListColorIncome(double doubleHeight) {
     return SizedBox(
@@ -335,18 +522,42 @@ class _AddCategoryState extends State<AddCategory> {
               controller.selectedTNColor.value = color.value;
             },
             child: Obx(
-              () => Container(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: controller.selectedTNColor.value == color.value
-                        ? Colors.yellow
-                        : Colors.grey,
-                    width:
-                        controller.selectedTNColor.value == color.value ? 4 : 2,
+                        ? Colors.white
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedTNColor.value == color.value ? 3 : 1,
                   ),
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedTNColor.value == color.value
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                 ),
+                child: controller.selectedTNColor.value == color.value
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 20,
+                      )
+                    : null,
               ),
             ),
           );
@@ -370,18 +581,47 @@ class _AddCategoryState extends State<AddCategory> {
               controller.selectedIconTNCode.value = iconCode;
             },
             child: Obx(
-              () => Container(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    border: Border.all(
-                      color: controller.selectedIconTNCode.value == iconCode
-                          ? Colors.blueAccent
-                          : Colors.grey,
-                      width: controller.selectedIconTNCode.value == iconCode
-                          ? 2
-                          : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Icon(IconData(iconCode, fontFamily: 'MaterialIcons')),
+                  color: controller.selectedIconTNCode.value == iconCode
+                      ? Colors.blueAccent.withOpacity(0.1)
+                      : Colors.white,
+                  border: Border.all(
+                    color: controller.selectedIconTNCode.value == iconCode
+                        ? Colors.blueAccent
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedIconTNCode.value == iconCode
+                        ? 2
+                        : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedIconTNCode.value == iconCode
+                      ? [
+                          BoxShadow(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                ),
+                child: Icon(
+                  IconData(iconCode, fontFamily: 'MaterialIcons'),
+                  color: controller.selectedIconTNCode.value == iconCode
+                      ? Colors.blueAccent
+                      : Colors.grey[600],
+                  size: 24,
+                ),
               ),
             ),
           );

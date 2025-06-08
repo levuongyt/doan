@@ -33,7 +33,6 @@ class _SettingState extends State<Setting> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
         title: Text(
           'CÀI ĐẶT'.tr,
           style: Theme.of(context).textTheme.displayLarge,

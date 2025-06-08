@@ -93,62 +93,77 @@ class _UpdateCategoryState extends State<UpdateCategory> {
                 padding: const EdgeInsets.all(10),
                 child: Column(
                   children: [
+                    const SizedBox(height: 5),
                     buildRowNameCategory(),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 5),
                     buildTitleSection('Biểu tượng'),
-                    const SizedBox(height: 5),
                     buildListIcon(doubleHeight),
-                    const SizedBox(height: 10),
-                    buildTitleSection('Màu sắc'),
                     const SizedBox(height: 5),
+                    buildTitleSection('Màu sắc'),
                     buildListColor(doubleHeight),
-                    const SizedBox(height: 20),
-                    buildButtonSave(doubleHeight, context),
+                    const SizedBox(height: 120),
                   ],
                 ),
               ),
             )),
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 20),
+          child: SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: FloatingActionButton.extended(
+              onPressed: () async {
+                if (formKey.currentState!.validate()) {
+                  await controller.updateCategory(
+                    widget.id,
+                    nameDMController.text,
+                    controller.selectedIconTNCode.value,
+                    controller.selectedTNColor.value,
+                    widget.type,
+                  );
+                  Get.until((route) => route.settings.name == '/Category');
+                }
+              },
+              backgroundColor: Theme.of(context).indicatorColor,
+              foregroundColor: Colors.white,
+              label: Text(
+                'Lưu danh mục'.tr,
+                style: const TextStyle(fontSize: 15, fontWeight: FontWeight.normal),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8),
+              ),
+            ),
+          ),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       ),
     );
   }
 
-  Row buildTitleSection(String title) {
-    return Row(
-      children: [
-        Text(title.tr)],
+  Widget buildTitleSection(String title) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 5),
+      child: Row(
+        children: [
+          Text(
+            title.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  SizedBox buildButtonSave(double doubleHeight, BuildContext context) {
-    return SizedBox(
-      width: double.infinity,
-      height: doubleHeight * (50 / 800),
-      child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
-          ),
-          onPressed: () async {
-            if (formKey.currentState!.validate()) {
-              await controller.updateCategory(
-                widget.id,
-                nameDMController.text,
-                controller.selectedIconTNCode.value,
-                controller.selectedTNColor.value,
-                widget.type,
-              );
-              Get.until((route) => route.settings.name == '/Category');
-            }
-          },
-          child: Text(
-            'Lưu Danh Mục'.tr,
-            style: const TextStyle(color: Colors.white, fontSize: 15),
-          )),
-    );
-  }
+
 
   SizedBox buildListColor(double doubleHeight) {
     return SizedBox(
-      height: doubleHeight * (245 / 800),
+      height: doubleHeight * (250 / 800),
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -164,19 +179,42 @@ class _UpdateCategoryState extends State<UpdateCategory> {
               controller.selectedTNColor.value = color.value;
             },
             child: Obx(
-                  () => Container(
-                // padding: EdgeInsets.all(10),
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: controller.selectedTNColor.value == color.value
-                        ? Colors.yellow
-                        : Colors.grey,
-                    width:
-                    controller.selectedTNColor.value == color.value ? 4 : 2,
+                        ? Colors.white
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedTNColor.value == color.value ? 3 : 1,
                   ),
                   color: color,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedTNColor.value == color.value
+                      ? [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.2),
+                            spreadRadius: 2,
+                            blurRadius: 6,
+                            offset: const Offset(0, 3),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
                 ),
+                child: controller.selectedTNColor.value == color.value
+                    ? const Icon(
+                        Icons.check,
+                        color: Colors.white,
+                        size: 20,
+                      )
+                    : null,
               ),
             ),
           );
@@ -187,7 +225,7 @@ class _UpdateCategoryState extends State<UpdateCategory> {
 
   SizedBox buildListIcon(double doubleHeight) {
     return SizedBox(
-      height: doubleHeight * (245 / 800),
+      height: doubleHeight * (250 / 800),
       child: GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
@@ -200,18 +238,47 @@ class _UpdateCategoryState extends State<UpdateCategory> {
               controller.selectedIconTNCode.value = iconCode;
             },
             child: Obx(
-                  () => Container(
+              () => AnimatedContainer(
+                duration: const Duration(milliseconds: 200),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                    border: Border.all(
-                      color: controller.selectedIconTNCode.value == iconCode
-                          ? Colors.blueAccent
-                          : Colors.grey,
-                      width: controller.selectedIconTNCode.value == iconCode
-                          ? 2
-                          : 1,
-                    ),
-                    borderRadius: BorderRadius.circular(10)),
-                child: Icon(IconData(iconCode, fontFamily: 'MaterialIcons')),
+                  color: controller.selectedIconTNCode.value == iconCode
+                      ? Colors.blueAccent.withOpacity(0.1)
+                      : Colors.white,
+                  border: Border.all(
+                    color: controller.selectedIconTNCode.value == iconCode
+                        ? Colors.blueAccent
+                        : Colors.grey.withOpacity(0.3),
+                    width: controller.selectedIconTNCode.value == iconCode
+                        ? 2
+                        : 1,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: controller.selectedIconTNCode.value == iconCode
+                      ? [
+                          BoxShadow(
+                            color: Colors.blueAccent.withOpacity(0.2),
+                            spreadRadius: 1,
+                            blurRadius: 4,
+                            offset: const Offset(0, 2),
+                          ),
+                        ]
+                      : [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 0,
+                            blurRadius: 2,
+                            offset: const Offset(0, 1),
+                          ),
+                        ],
+                ),
+                child: Icon(
+                  IconData(iconCode, fontFamily: 'MaterialIcons'),
+                  color: controller.selectedIconTNCode.value == iconCode
+                      ? Colors.blueAccent
+                      : Colors.grey[600],
+                  size: 24,
+                ),
               ),
             ),
           );
@@ -220,20 +287,56 @@ class _UpdateCategoryState extends State<UpdateCategory> {
     );
   }
 
-  Row buildRowNameCategory() {
-    return Row(
-      children: [
-        Text('Tên danh mục : '.tr),
-        Expanded(
-          child: TextFormField(
-            validator: controller.checkNameDM,
-            controller: nameDMController,
-            decoration: InputDecoration(
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10))),
+  Widget buildRowNameCategory() {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.1),
+            spreadRadius: 1,
+            blurRadius: 3,
+            offset: const Offset(0, 1),
           ),
-        )
-      ],
+        ],
+      ),
+      child: Row(
+        children: [
+          Text(
+            'Tên danh mục'.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: Colors.black87,
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: TextFormField(
+              validator: controller.checkNameDM,
+              controller: nameDMController,
+              style: const TextStyle(fontSize: 14),
+              decoration: InputDecoration(
+                hintText: 'Nhập tên...',
+                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                filled: true,
+                fillColor: Colors.grey[50],
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: const BorderSide(color: Colors.blueAccent, width: 1.5),
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
