@@ -18,13 +18,14 @@ class LocalStringLanguage extends Translations {
               'Password length must be greater than 6 characters',
           'Bạn quên mật khẩu?': 'Forgot Your Password?',
           'Vui lòng nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu của bạn.':
-              'Please enter the email associated with your account, and we’ll send a link to reset your password.',
+              'Please enter the email associated with your account, and well send a link to reset your password.',
           'GỬI LIÊN KẾT ĐẶT LẠI': 'SEND RESET LINK',
           'ĐĂNG KÝ': 'REGISTER',
           'Tên tài khoản': 'Username',
           'Bạn đã có tài khoản?': 'Already have an account?',
           'Đăng nhập ngay': 'Login now',
           'Tổng quan': 'Overview',
+          'AI Chat': 'AI Chat',
           'Nhập vào': 'Input',
           'Báo cáo': 'Report',
           'Cài đặt': 'Settings',
@@ -55,7 +56,7 @@ class LocalStringLanguage extends Translations {
           'Chưa có giao dịch': 'No transactions yet',
           'Số dư cuối : ': 'Final balance : ',
           'Nội dung ': 'Content ',
-          'Nội dung : ':'Content : ',
+          'Nội dung : ': 'Content : ',
           'Độ dài không được quá 100 ký tự':
               'Length must not exceed 100 characters',
           'Lương': 'Wage',
@@ -138,6 +139,15 @@ class LocalStringLanguage extends Translations {
           'Số tiền không hợp lệ': 'Invalid amount',
           'Giao dịch đã được thêm thành công':
               'The transaction has been added successfully',
+          'Cài đặt nhắc nhở': 'Reminder Settings',
+          'Bật nhắc nhở:': 'Enable Reminder:',
+          'Thời gian:': 'Time:',
+          'Đóng': 'Close',
+          'Xong': 'Done',
+          'Nhắc nhở ghi chép': 'Recording Reminder',
+          'Nhắc nhở ghi chép thu chi hàng ngày': 'Daily transaction recording reminder',
+          'Đã bật nhắc nhở ghi chép': 'Recording reminder enabled',
+          'Đã tắt nhắc nhở ghi chép': 'Recording reminder disabled',
         },
         "vi_VI": {
           'LOGIN': 'ĐĂNG NHẬP',
@@ -153,7 +163,7 @@ class LocalStringLanguage extends Translations {
           'Password length must be greater than 6 characters':
               'Độ dài mật khẩu phải lớn hơn 6 ký tự',
           'Forgot Your Password?': 'Bạn quên mật khẩu?',
-          'Please enter the email associated with your account, and we’ll send a link to reset your password.':
+          'Please enter the email associated with your account, and well send a link to reset your password.':
               'Vui lòng nhập email được liên kết với tài khoản của bạn và chúng tôi sẽ gửi liên kết để đặt lại mật khẩu của bạn.',
           'SEND RESET LINK': 'GỬI LIÊN KẾT ĐẶT LẠI',
           'REGISTER': 'ĐĂNG KÝ',
@@ -161,6 +171,7 @@ class LocalStringLanguage extends Translations {
           'Already have an account?': 'Bạn đã có tài khoản?',
           'Login now': 'Đăng nhập ngay',
           'Overview': 'Tổng quan',
+          'AI Chat': 'AI Chat',
           'Input': 'Nhập vào',
           'Report': 'Báo cáo',
           'Settings': 'Cài đặt',
@@ -274,6 +285,15 @@ class LocalStringLanguage extends Translations {
           'Invalid amount': 'Số tiền không hợp lệ',
           'The transaction has been added successfully':
               'Giao dịch đã được thêm thành công',
+          'Reminder Settings': 'Cài đặt nhắc nhở',
+          'Enable Reminder:': 'Bật nhắc nhở:',
+          'Time:': 'Thời gian:',
+          'Close': 'Đóng',
+          'Done': 'Xong',
+          'Recording Reminder': 'Nhắc nhở ghi chép',
+          'Daily transaction recording reminder': 'Nhắc nhở ghi chép thu chi hàng ngày',
+          'Recording reminder enabled': 'Đã bật nhắc nhở ghi chép',
+          'Recording reminder disabled': 'Đã tắt nhắc nhở ghi chép',
         },
       };
 }

@@ -1,0 +1,2 @@
+/home/vuong/doan/android/app/.cxx/RelWithDebInfo/2yz1t24c/x86/CMakeFiles/edit_cache.dir
+/home/vuong/doan/android/app/.cxx/RelWithDebInfo/2yz1t24c/x86/CMakeFiles/rebuild_cache.dir

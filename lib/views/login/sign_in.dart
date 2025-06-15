@@ -337,7 +337,7 @@ class _SignInState extends State<SignIn> {
             )),
         TextButton(
             onPressed: () {
-              Get.off(const SignUp());
+              Get.off(() => const SignUp());
             },
             style: TextButton.styleFrom(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 0),

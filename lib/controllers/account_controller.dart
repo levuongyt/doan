@@ -12,6 +12,9 @@ class AccountController extends GetxController{
   RxBool isLoading=false.obs;
   final FireBaseUtil fireBaseUtil=FireBaseUtil();
   final FirebaseStorageUtil firebaseStorageUtil=FirebaseStorageUtil();
+  
+  // Avatar management
+  RxString selectedAvatar = 'assets/images/avatarboy.png'.obs;
 
   Future<void> getUser() async {
     isLoading.value = true;
@@ -56,6 +59,11 @@ class AccountController extends GetxController{
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
     isLoading.value = false;
+  }
+
+  void changeAvatar(String avatarPath) {
+    selectedAvatar.value = avatarPath;
+    // TODO: Save to preferences or server if needed
   }
 
  @override

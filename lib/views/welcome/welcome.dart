@@ -75,8 +75,7 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          // Get.to(const SignIn());
-          Get.off(const SignIn());
+          Get.off(() => const SignIn());
         },
         child: const Text(
           'Đăng nhập',
@@ -98,7 +97,7 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Get.off(const SignUp());
+          Get.off(() => const SignUp());
         },
         child: const Text(
           'Đăng ký',

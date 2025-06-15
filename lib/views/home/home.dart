@@ -11,8 +11,8 @@ import 'package:convex_bottom_bar/convex_bottom_bar.dart';
 import '../../controllers/home_controller.dart';
 import '../../controllers/navigation_controller.dart';
 import '../account/account.dart';
+import '../ai_chat/ai_financial_chat.dart';
 import '../add_transaction/add_transactions.dart';
-import '../expense_analysis/expense_analysis.dart';
 import '../report/report.dart';
 import '../setting/setting.dart';
 
@@ -29,7 +29,7 @@ class _HomeState extends State<Home> {
 
   final List<Widget> pages = [
     const HomePage(),
-    const ExpenseAnalysis(),
+    const AIFinancialChat(),
     const NhapLieu(),
     const BaoCao(),
     const Account(),
@@ -45,7 +45,7 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: Obx(() => ConvexAppBar(
             items: [
               TabItem(icon: Icons.home_outlined, title: 'Tổng quan'.tr),
-              TabItem(icon: Icons.analytics_outlined, title: 'Đánh giá'.tr),
+              TabItem(icon: Icons.smart_toy_outlined, title: 'AI Chat'.tr),
               TabItem(
                 icon: Icons.add, 
                 title: 'Nhập vào'.tr,

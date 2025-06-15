@@ -25,6 +25,11 @@ class _BaoCaoState extends State<BaoCao> {
   }
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
@@ -137,13 +142,16 @@ class _BaoCaoState extends State<BaoCao> {
     );
   }
 
+
+
   SingleChildScrollView buildTabExpense(double doubleHeight, double doubleWidth, BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
-          Container(
+          // Chart section with loading state
+          Obx(() => Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
@@ -157,20 +165,18 @@ class _BaoCaoState extends State<BaoCao> {
               ],
             ),
             padding: const EdgeInsets.all(8),
-            child: Obx(
-              () => SizedBox(
-                height: doubleHeight * (180 / 800),
-                width: doubleWidth * (250 / 360),
-                child: PieChart(
-                    swapAnimationDuration:
-                    const Duration(milliseconds: 150), // Optional
-                    swapAnimationCurve: Curves.linear,
-                    PieChartData(
-                        sections:
-                        reportController.getSectionsChiTieu())),
-              ),
+            child: SizedBox(
+              height: doubleHeight * (180 / 800),
+              width: doubleWidth * (250 / 360),
+              child: PieChart(
+                  swapAnimationDuration:
+                  const Duration(milliseconds: 150), // Optional
+                  swapAnimationCurve: Curves.linear,
+                  PieChartData(
+                      sections:
+                      reportController.getSectionsChiTieu())),
             ),
-          ),
+          )),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(10),
@@ -272,11 +278,11 @@ class _BaoCaoState extends State<BaoCao> {
                 .isEmpty ??
                 true
                 ? Center(
-              child: Text(
-                'Chưa có dữ liệu'.tr,
-                style: const TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            )
+            child: Text(
+              'Chưa có dữ liệu'.tr,
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          )
                 : ListView.builder(
               itemCount: reportController
                   .report.value?.categories?.values
@@ -340,6 +346,11 @@ class _BaoCaoState extends State<BaoCao> {
                                 ),
                                 Text(
                                   '${category.percentage.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
                                 )
                               ],
                             ),
@@ -376,7 +387,8 @@ class _BaoCaoState extends State<BaoCao> {
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
-          Container(
+          // Chart section
+          Obx(() => Container(
             decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.circular(15),
@@ -390,20 +402,18 @@ class _BaoCaoState extends State<BaoCao> {
               ],
             ),
             padding: const EdgeInsets.all(8),
-            child: Obx(
-              () => SizedBox(
-                height: doubleHeight * (180 / 800),
-                width: doubleWidth * (250 / 360),
-                child: PieChart(
-                    swapAnimationDuration:
-                    const Duration(milliseconds: 150), // Optional
-                    swapAnimationCurve: Curves.linear,
-                    PieChartData(
-                        sections:
-                        reportController.getSectionsThuNhap())),
-              ),
+            child: SizedBox(
+              height: doubleHeight * (180 / 800),
+              width: doubleWidth * (250 / 360),
+              child: PieChart(
+                  swapAnimationDuration:
+                  const Duration(milliseconds: 150), // Optional
+                  swapAnimationCurve: Curves.linear,
+                  PieChartData(
+                      sections:
+                      reportController.getSectionsThuNhap())),
             ),
-          ),
+          )),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(10),
@@ -505,11 +515,11 @@ class _BaoCaoState extends State<BaoCao> {
                 .isEmpty ??
                 true
                 ? Center(
-              child: Text(
-                'Chưa có dữ liệu'.tr,
-                style: const TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-            )
+            child: Text(
+              'Chưa có dữ liệu'.tr,
+              style: const TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+          )
                 : ListView.builder(
               itemCount: reportController
                   .report.value?.categories?.values
@@ -573,6 +583,11 @@ class _BaoCaoState extends State<BaoCao> {
                                 ),
                                 Text(
                                   '${category.percentage.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.grey[600],
+                                  ),
                                 )
                               ],
                             ),
