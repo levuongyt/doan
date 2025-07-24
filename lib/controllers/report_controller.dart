@@ -40,11 +40,16 @@ class ReportController extends GetxController {
   }
 
   Future<void> fetchReport() async {
-    ReportModel? reportModel = await firebaseStorageUtil.getReport(selectedMonth.value);
-    if (reportModel != null) {
-      report.value = reportModel;
-    } else {
-      report.value = null;
+    isLoading.value = true;
+    try {
+      ReportModel? reportModel = await firebaseStorageUtil.getReport(selectedMonth.value);
+      if (reportModel != null) {
+        report.value = reportModel;
+      } else {
+        report.value = null;
+      }
+    } finally {
+      isLoading.value = false;
     }
   }
 
@@ -106,7 +111,6 @@ class ReportController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     fetchReport();
     getCurrency();

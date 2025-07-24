@@ -4,6 +4,7 @@ import 'package:doan_ql_thu_chi/models/transaction_model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../widget_common/custom_app_bar.dart';
 
 class DetailsReport extends StatefulWidget {
   final String categoryId;
@@ -20,27 +21,20 @@ class _DetailsReportState extends State<DetailsReport> {
   final ReportController reportController = Get.find();
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     reportController.fetchCategoryTransactions(widget.categoryId);
   }
   String formatBalance(double amount) {
-    return reportController.donViTienTe.value == 'đ'
+    return (reportController.donViTienTe.value == 'đ' || reportController.donViTienTe.value == '¥')
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${reportController.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${reportController.donViTienTe.value}';
   }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'CHI TIẾT DANH MỤC'.tr,
-          style: Theme.of(context).textTheme.displayLarge,
+              appBar: CustomAppBar(
+          title: 'CHI TIẾT DANH MỤC'.tr,
         ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        iconTheme: const IconThemeData(color: Colors.white),
-      ),
       body: SafeArea(
           child: Container(
             padding: const EdgeInsets.all(10),

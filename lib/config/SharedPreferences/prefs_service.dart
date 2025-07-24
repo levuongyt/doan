@@ -42,7 +42,7 @@ class PrefsService{
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       result = prefs.getString(key);
     } catch (e) {
-
+      result = null;
     }
     return result;
   }

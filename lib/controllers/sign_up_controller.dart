@@ -64,7 +64,7 @@ class SignUpController extends GetxController {
       Get.lazyPut(() => HomeController());
       Get.lazyPut(() => TransactionController());
       Get.lazyPut(() => ReportController());
-      Get.off(const Home());
+      Get.off(() => const Home());
     } else {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }

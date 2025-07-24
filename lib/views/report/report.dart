@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
+import '../../config/themes/themes_app.dart';
 import 'details_report.dart';
 
 class BaoCao extends StatefulWidget {
@@ -19,15 +20,22 @@ class BaoCao extends StatefulWidget {
 class _BaoCaoState extends State<BaoCao> {
   final ReportController reportController = Get.find();
   String formatBalance(double amount ) {
-    return reportController.donViTienTe.value == 'đ'
+    return (reportController.donViTienTe.value == 'đ' || reportController.donViTienTe.value == '¥')
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${reportController.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${reportController.donViTienTe.value}';
+  }
+
+  @override
+  void initState() {
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -36,11 +44,32 @@ class _BaoCaoState extends State<BaoCao> {
           automaticallyImplyLeading: false,
           title: Text(
             'BÁO CÁO'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: gradientTheme?.primaryGradient ?? LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: gradientTheme?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(100.0),
             child: Column(
@@ -138,86 +167,145 @@ class _BaoCaoState extends State<BaoCao> {
 
   SingleChildScrollView buildTabExpense(double doubleHeight, double doubleWidth, BuildContext context) {
     return SingleChildScrollView(
+      physics: const NeverScrollableScrollPhysics(),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Column(children: [
-          Obx(
-                () => SizedBox(
-              height: doubleHeight * (200 / 800),
+          Obx(() => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              height: doubleHeight * (180 / 800),
               width: doubleWidth * (250 / 360),
               child: PieChart(
-                  swapAnimationDuration:
-                  const Duration(milliseconds: 150), // Optional
-                  swapAnimationCurve: Curves.linear,
+                  duration:
+                  const Duration(milliseconds: 150),
+                  curve: Curves.linear,
                   PieChartData(
                       sections:
                       reportController.getSectionsChiTieu())),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Tổng chi tiêu:'.tr,
-                style: Theme.of(context).textTheme.bodySmall,),
-              Obx(
-                    () => Text(
-                  formatBalance(reportController.report.value?.totalExpense ?? 0),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Trung bình chi/ngày:'.tr,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Obx(
-                    () => Text(
-                  formatBalance(reportController.report.value?.totalExpenseDay ?? 0),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+          )),
+          const SizedBox(height: 8),
           Container(
-            width: double.infinity,
-            height: 2,
-            color: Colors.grey,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Tổng chi tiêu:'.tr,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).textTheme.titleMedium?.color,
+                      ),
+                    ),
+                    Obx(
+                      () => Text(
+                        formatBalance(reportController.report.value?.totalExpense ?? 0),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.red[600],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Trung bình chi/ngày:'.tr,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).textTheme.titleMedium?.color,
+                      ),
+                    ),
+                    Obx(
+                      () => Text(
+                        formatBalance(reportController.report.value?.totalExpenseDay ?? 0),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red[500],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(
-            height: 10,
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.red[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.red[100] ?? Colors.red, width: 1),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.assessment_outlined,
+                  color: Colors.red[600],
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Chi tiết'.tr,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.red[700],
+                  ),
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text(
-                'Chi tiết'.tr,
-                style: Theme.of(context).textTheme.titleMedium,
-              ),
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Obx(() => SizedBox(
-            height: 230,
+          const SizedBox(height: 8),
+          Obx(() => Container(
+            height: 280,
+            padding: const EdgeInsets.only(bottom: 80),
             child: reportController.report.value?.categories?.values
                 .where((category) => category.type == 'Chi Tiêu')
                 .isEmpty ??
                 true
                 ? Center(
-              child: Text(
-                'Chưa có dữ liệu'.tr,
-                style: const TextStyle(fontSize: 18, color: Colors.grey),
+            child: Text(
+              'Chưa có dữ liệu'.tr,
+              style: TextStyle(
+                fontSize: 18, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6)
               ),
-            )
+            ),
+          )
                 : ListView.builder(
               itemCount: reportController
                   .report.value?.categories?.values
@@ -228,21 +316,20 @@ class _BaoCaoState extends State<BaoCao> {
               itemBuilder: (BuildContext context, int index) {
                 CategoryReportModel? category = reportController
                     .report.value?.categories?.values
-                    .where((category) => category.type == 'Chi Tiêu')
-                    .elementAt(index);
+                                    .where((category) => category.type == 'Chi Tiêu')
+                .elementAt(index);
                 if (category == null) {
                   return Container();
                 }
                 return Column(
                   children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 4),
                     Container(
-                      padding:const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).focusColor,
-                        borderRadius: BorderRadius.circular(15),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -274,6 +361,11 @@ class _BaoCaoState extends State<BaoCao> {
                                 ),
                                 Text(
                                   '${category.percentage.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                                  ),
                                 )
                               ],
                             ),
@@ -292,9 +384,7 @@ class _BaoCaoState extends State<BaoCao> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 4),
                   ],
                 );
               },
@@ -310,87 +400,143 @@ class _BaoCaoState extends State<BaoCao> {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Container(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.all(8),
         child: Column(children: [
-          Obx(
-                () => SizedBox(
-              height: doubleHeight * (200 / 800),
+          Obx(() => Container(
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            padding: const EdgeInsets.all(8),
+            child: SizedBox(
+              height: doubleHeight * (180 / 800),
               width: doubleWidth * (250 / 360),
               child: PieChart(
-                  swapAnimationDuration:
-                  const Duration(milliseconds: 150), // Optional
-                  swapAnimationCurve: Curves.linear,
+                  duration:
+                  const Duration(milliseconds: 150),
+                  curve: Curves.linear,
                   PieChartData(
                       sections:
                       reportController.getSectionsThuNhap())),
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Tổng thu nhập:'.tr,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Obx(
-                    () => Text(
-                  formatBalance(reportController.report.value?.totalIncome ?? 0),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              )
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Trung bình thu/ngày:'.tr,
-                style: Theme.of(context).textTheme.bodySmall,
-              ),
-              Obx(
-                    () => Text(
-                  formatBalance(reportController.report.value?.totalIncomeDay ?? 0),
-                  style: Theme.of(context).textTheme.bodySmall,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
+          )),
+          const SizedBox(height: 8),
           Container(
-            width: double.infinity,
-            height: 2,
-            color: Colors.grey,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+              color: Theme.of(context).cardColor,
+              borderRadius: BorderRadius.circular(12),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
+                  spreadRadius: 1,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Tổng thu nhập:'.tr,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).textTheme.titleMedium?.color,
+                      ),
+                    ),
+                    Obx(
+                      () => Text(
+                        formatBalance(reportController.report.value?.totalIncome ?? 0),
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green[600],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text('Trung bình thu/ngày:'.tr,
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                        color: Theme.of(context).textTheme.titleMedium?.color,
+                      ),
+                    ),
+                    Obx(
+                      () => Text(
+                        formatBalance(reportController.report.value?.totalIncomeDay ?? 0),
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.green[500],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+              ],
+            ),
           ),
-          const SizedBox(
-            height: 10,
+          const SizedBox(height: 10),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            decoration: BoxDecoration(
+              color: Colors.green[50],
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: Colors.green[100] ?? Colors.green, width: 1),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.assessment_outlined,
+                  color: Colors.green[600],
+                  size: 18,
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  'Chi tiết'.tr,
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.green[700],
+                  ),
+                ),
+              ],
+            ),
           ),
-          Row(
-            children: [
-              Text(
-                'Chi tiết'.tr,
-                style: Theme.of(context).textTheme.titleMedium,
-              )
-            ],
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Obx(() => SizedBox(
-
-            height: 230,
+          const SizedBox(height: 8),
+          Obx(() => Container(
+            height: 280,
+            padding: const EdgeInsets.only(bottom: 80),
             child: reportController.report.value?.categories?.values
                 .where((category) => category.type == 'Thu Nhập')
                 .isEmpty ??
                 true
                 ? Center(
-              child: Text(
-                'Chưa có dữ liệu'.tr,
-                style: const TextStyle(fontSize: 18, color: Colors.grey),
+            child: Text(
+              'Chưa có dữ liệu'.tr,
+              style: TextStyle(
+                fontSize: 18, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6)
               ),
-            )
+            ),
+          )
                 : ListView.builder(
               itemCount: reportController
                   .report.value?.categories?.values
@@ -401,21 +547,20 @@ class _BaoCaoState extends State<BaoCao> {
               itemBuilder: (BuildContext context, int index) {
                 CategoryReportModel? category = reportController
                     .report.value?.categories?.values
-                    .where((category) => category.type == 'Thu Nhập')
-                    .elementAt(index);
+                                    .where((category) => category.type == 'Thu Nhập')
+                .elementAt(index);
                 if (category == null) {
                   return Container();
                 }
                 return Column(
                   children: [
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 4),
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Theme.of(context).focusColor,
-                        borderRadius: BorderRadius.circular(15),
+                        color: Theme.of(context).cardColor,
+                        borderRadius: BorderRadius.circular(10),
+                        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -447,6 +592,11 @@ class _BaoCaoState extends State<BaoCao> {
                                 ),
                                 Text(
                                   '${category.percentage.toStringAsFixed(1)}%',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w600,
+                                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
+                                  ),
                                 )
                               ],
                             ),
@@ -465,9 +615,7 @@ class _BaoCaoState extends State<BaoCao> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 4),
                   ],
                 );
               },

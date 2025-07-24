@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../../config/images/image_app.dart';
+import '../../config/themes/themes_app.dart';
 import '../../controllers/sign_up_controller.dart';
 
 class SignUp extends StatefulWidget {
@@ -18,7 +19,6 @@ class _SignUpState extends State<SignUp> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ever(signUpController.isLoading, (callback) {
       if (callback) {
@@ -36,15 +36,47 @@ class _SignUpState extends State<SignUp> {
     return Form(
       key: formKeySignUp,
       child: Scaffold(
+        extendBodyBehindAppBar: true,
         appBar: AppBar(
-          automaticallyImplyLeading: false,
           title: Text(
             'ĐĂNG KÝ'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: Theme.of(context).extension<AppGradientTheme>()?.primaryGradient ?? LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              borderRadius: const BorderRadius.only(
+                bottomLeft: Radius.circular(20),
+                bottomRight: Radius.circular(20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).extension<AppGradientTheme>()?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(20),
+              bottomRight: Radius.circular(20),
+            ),
+          ),
+          automaticallyImplyLeading: false,
         ),
         body: SafeArea(
           child: SingleChildScrollView(
@@ -80,89 +112,223 @@ class _SignUpState extends State<SignUp> {
     );
   }
 
-  TextFormField buildEmailField(BuildContext context) {
-    return TextFormField(
-      controller: signUpController.emailController,
-      keyboardType: TextInputType.emailAddress,
-      focusNode: signUpController.emailFocusNode,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      validator: signUpController.ktEmail,
-      decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.email),
-          hintText: "Email",
-          hintStyle: TextStyle(color: Theme.of(context).hintColor),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-          )),
-    );
-  }
-
-  TextFormField buildUsernameField(BuildContext context) {
-    return TextFormField(
-      controller: signUpController.usernameController,
-      validator: signUpController.ktUserName,
-      focusNode: signUpController.usernameFocusNode,
-      autovalidateMode: AutovalidateMode.onUserInteraction,
-      decoration: InputDecoration(
-          prefixIcon: const Icon(Icons.person),
-          hintText: "Tên tài khoản".tr,
-          hintStyle: TextStyle(color: Theme.of(context).hintColor),
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(30),
-          )),
-    );
-  }
-
-  Obx buildPasswordField(BuildContext context) {
-    return Obx(
-          () => TextFormField(
-        controller: signUpController.passwordController,
-        obscureText: !signUpController.isVisibility.value,
-        validator: signUpController.ktPassWord,
-        focusNode: signUpController.passwordFocusNode,
+  Widget buildEmailField(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      child: TextFormField(
+        controller: signUpController.emailController,
+        keyboardType: TextInputType.emailAddress,
+        validator: signUpController.ktEmail,
+        focusNode: signUpController.emailFocusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
         decoration: InputDecoration(
-            prefixIcon: const Icon(Icons.lock),
-            suffixIcon: IconButton(
-                onPressed: () {
-                  signUpController.xuLiVisibility();
-
-                  ///c2
-                  // signUpController.isVisibility.toggle();
-                },
-                icon: signUpController.isVisibility.value
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off)),
-            hintText: "Mật khẩu".tr,
-            hintStyle: TextStyle(color: Theme.of(context).hintColor),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(30),
-            )),
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          prefixIcon: Icon(
+            Icons.email,
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+          ),
+          hintText: "Email".tr,
+          hintStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+          ),
+          fillColor: Theme.of(context).cardColor,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+        ),
       ),
     );
   }
 
-  SizedBox buildSignUpButton(double doubleHeight, BuildContext context) {
-    return SizedBox(
-      height: doubleHeight * (50 / 800),
-      child: ElevatedButton(
-          onPressed: () async {
-            if (formKeySignUp.currentState!.validate()) {
-              await signUpController.signUp(
-                  signUpController.emailController.text,
-                  signUpController.usernameController.text,
-                  signUpController.passwordController.text,
-                  0.0);
-            }
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
+  Widget buildUsernameField(BuildContext context) {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+      child: TextFormField(
+        controller: signUpController.usernameController,
+        validator: signUpController.ktUserName,
+        focusNode: signUpController.usernameFocusNode,
+        autovalidateMode: AutovalidateMode.onUserInteraction,
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+          prefixIcon: Icon(
+            Icons.person,
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
           ),
-          child: Center(
-              child: Text(
-                'ĐĂNG KÝ'.tr,
-                style: Theme.of(context).textTheme.displayLarge,
-              ))),
+          hintText: "Tên tài khoản".tr,
+          hintStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+          ),
+          fillColor: Theme.of(context).cardColor,
+          filled: true,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+          ),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(8),
+            borderSide: const BorderSide(color: Colors.red, width: 1.5),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildPasswordField(BuildContext context) {
+    return Obx(
+      () => Container(
+        margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 4),
+        child: TextFormField(
+          controller: signUpController.passwordController,
+          obscureText: !signUpController.isVisibility.value,
+          focusNode: signUpController.passwordFocusNode,
+          validator: signUpController.ktPassWord,
+          autovalidateMode: AutovalidateMode.onUserInteraction,
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
+          decoration: InputDecoration(
+            contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+            ),
+            suffixIcon: IconButton(
+              onPressed: () {
+                signUpController.xuLiVisibility();
+              },
+              icon: signUpController.isVisibility.value
+                  ? Icon(
+                      Icons.visibility,
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    )
+                  : Icon(
+                      Icons.visibility_off,
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    ),
+            ),
+            hintText: "Mật khẩu".tr,
+            hintStyle: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            ),
+            fillColor: Theme.of(context).cardColor,
+            filled: true,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
+            ),
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.red, width: 1.5),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSignUpButton(double doubleHeight, BuildContext context) {
+    return Container(
+      height: doubleHeight * 0.065,
+      margin: const EdgeInsets.symmetric(vertical: 12),
+      child: ElevatedButton(
+        onPressed: () async {
+          if (formKeySignUp.currentState!.validate()) {
+            await signUpController.signUp(
+                signUpController.emailController.text,
+                signUpController.usernameController.text,
+                signUpController.passwordController.text,
+                0.0);
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Theme.of(context).indicatorColor,
+          foregroundColor: Colors.white,
+          elevation: 2,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(25),
+          ),
+        ),
+        child:  Center(
+          child: Text(
+            'ĐĂNG KÝ'.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.5,
+              fontSize: 16,
+              color: Colors.white,
+            ),
+          )
+        )
+      ),
     );
   }
 
@@ -172,7 +338,10 @@ class _SignUpState extends State<SignUp> {
       children: [
         Text(
           'Bạn đã có tài khoản?'.tr,
-          style: const TextStyle(fontSize: 15),
+          style: TextStyle(
+            fontSize: 15,
+            color: Theme.of(context).textTheme.bodyMedium?.color,
+          ),
         ),
         TextButton(
             onPressed: () {
@@ -180,7 +349,10 @@ class _SignUpState extends State<SignUp> {
             },
             child: Text(
               'Đăng nhập ngay'.tr,
-              style: const TextStyle(fontSize: 15),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).primaryColor,
+              ),
             )),
       ],
     );

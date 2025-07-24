@@ -12,8 +12,7 @@ class Welcome extends StatelessWidget {
     final PageController pageController = PageController();
     final doubleWidth = MediaQuery.of(context).size.width;
     return Scaffold(
-      body: SafeArea(
-        child: Center(
+      body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -59,7 +58,7 @@ class Welcome extends StatelessWidget {
             ],
           ),
         ),
-      ),
+      
     );
   }
 
@@ -75,8 +74,7 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          // Get.to(const SignIn());
-          Get.off(const SignIn());
+          Get.off(() => const SignIn());
         },
         child: const Text(
           'Đăng nhập',
@@ -98,11 +96,11 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Get.off(const SignUp());
+          Get.off(() => const SignUp());
         },
-        child: const Text(
-          'Đăng ký',
-          style: TextStyle(color: Colors.white, fontSize: 16),
+        child: Text(
+          'Đăng ký'.tr,
+          style: const TextStyle(color: Colors.white, fontSize: 16),
         ),
       ),
     );

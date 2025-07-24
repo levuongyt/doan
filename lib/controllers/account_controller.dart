@@ -12,6 +12,9 @@ class AccountController extends GetxController{
   RxBool isLoading=false.obs;
   final FireBaseUtil fireBaseUtil=FireBaseUtil();
   final FirebaseStorageUtil firebaseStorageUtil=FirebaseStorageUtil();
+  
+  // Avatar management
+  RxString selectedAvatar = 'assets/images/avatarboy.png'.obs;
 
   Future<void> getUser() async {
     isLoading.value = true;
@@ -58,9 +61,12 @@ class AccountController extends GetxController{
     isLoading.value = false;
   }
 
+  void changeAvatar(String avatarPath) {
+    selectedAvatar.value = avatarPath;
+  }
+
  @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     getUser();
   }

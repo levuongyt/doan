@@ -1,0 +1,1 @@
+/home/vuong/doan/build/app/intermediates/cxx/RelWithDebInfo/2yz1t24c/obj/arm64-v8a
