@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../controllers/ai_chat_controller.dart';
 import '../../models/chat_message_model.dart';
+import '../../config/themes/themes_app.dart';
 
 class AIFinancialChat extends StatefulWidget {
   const AIFinancialChat({super.key});
@@ -23,40 +24,85 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
     super.dispose();
   }
 
-  void _scrollToBottom() {
+  void _scrollToNewMessage(int messageIndex) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (scrollController.hasClients) {
-        scrollController.animateTo(
-          scrollController.position.maxScrollExtent,
-          duration: const Duration(milliseconds: 300),
-          curve: Curves.easeOut,
-        );
+      if (scrollController.hasClients && controller.messages.isNotEmpty) {
+        final message = controller.messages[messageIndex];
+        
+        // Chỉ scroll khi AI trả lời (không phải user)
+        if (!message.isUser) {
+          // Kiểm tra xem user có đang scroll ở cuối không
+          double currentPosition = scrollController.position.pixels;
+          double maxScroll = scrollController.position.maxScrollExtent;
+          bool isNearBottom = (maxScroll - currentPosition) < 200; // Trong vòng 200px từ cuối
+          
+          // Chỉ scroll nếu user đang ở gần cuối màn hình
+          if (isNearBottom) {
+            // Tính toán vị trí để hiển thị đầu tin nhắn AI
+            double estimatedItemHeight = 120.0;
+            double padding = 16.0;
+            double targetPosition = (messageIndex * estimatedItemHeight) + padding - 50;
+            
+            // Đảm bảo không scroll quá giới hạn
+            double minScroll = scrollController.position.minScrollExtent;
+            double scrollPosition = targetPosition.clamp(minScroll, maxScroll);
+            
+            scrollController.animateTo(
+              scrollPosition,
+              duration: const Duration(milliseconds: 400),
+              curve: Curves.easeInOut,
+            );
+          }
+          // Nếu user đang scroll ở giữa, không làm gì cả (giữ nguyên vị trí)
+        }
+        // Với tin nhắn của user, không scroll gì cả (giữ nguyên vị trí input)
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return Scaffold(
-      backgroundColor: Colors.grey.shade50,
+      backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       appBar: AppBar(
-        title: const Text(
-          'Trợ lý AI Tài chính',
-          style: TextStyle(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        automaticallyImplyLeading: false,
+        flexibleSpace: Container(
+          decoration: BoxDecoration(
+            gradient: gradientTheme?.primaryGradient ?? LinearGradient(
+              colors: [Colors.blue.shade800, Colors.blue.shade500],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: gradientTheme?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
+                blurRadius: 10,
+                offset: const Offset(0, 3),
+              ),
+            ],
+          ),
+        ),
+        title: Text(
+          'TRỢ LÝ AI TÀI CHÍNH'.tr,
+          style: const TextStyle(
             fontWeight: FontWeight.bold,
+            letterSpacing: 1.2,
+            fontSize: 20,
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blue.shade600,
-        elevation: 0,
-        automaticallyImplyLeading: false,
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {
               _showClearChatDialog();
             },
             icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'Xóa cuộc trò chuyện',
+            tooltip: 'Xóa cuộc trò chuyện'.tr,
           ),
         ],
       ),
@@ -73,7 +119,10 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
               itemCount: controller.messages.length,
               itemBuilder: (context, index) {
                 final message = controller.messages[index];
-                _scrollToBottom();
+                // Chỉ scroll khi có tin nhắn mới và là tin nhắn cuối cùng
+                if (index == controller.messages.length - 1) {
+                  _scrollToNewMessage(index);
+                }
                 return _buildMessageBubble(message);
               },
             )),
@@ -106,8 +155,8 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
               onPressed: () {
                 controller.sendSuggestedQuestion(question);
               },
-              backgroundColor: Colors.blue.shade50,
-              side: BorderSide(color: Colors.blue.shade200),
+              backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.1),
+              side: BorderSide(color: Theme.of(context).primaryColor.withValues(alpha: 0.3)),
             ),
           );
         },
@@ -128,11 +177,11 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
           if (!isUser) ...[
             CircleAvatar(
               radius: 16,
-              backgroundColor: Colors.blue.shade100,
+              backgroundColor: Theme.of(context).primaryColor.withValues(alpha: 0.2),
               child: Icon(
                 Icons.smart_toy,
                 size: 18,
-                color: Colors.blue.shade600,
+                color: Theme.of(context).primaryColor,
               ),
             ),
             const SizedBox(width: 8),
@@ -142,11 +191,11 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
             child: Container(
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: isUser ? Colors.blue.shade600 : Colors.white,
+                color: isUser ? Theme.of(context).primaryColor : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 4,
                     offset: const Offset(0, 2),
@@ -166,7 +215,7 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             valueColor: AlwaysStoppedAnimation<Color>(
-                              Colors.blue.shade600,
+                              Theme.of(context).primaryColor,
                             ),
                           ),
                         ),
@@ -174,7 +223,7 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
                         Text(
                           message.content,
                           style: TextStyle(
-                            color: isUser ? Colors.white : Colors.black87,
+                            color: isUser ? Colors.white : Theme.of(context).textTheme.bodyLarge?.color,
                             fontSize: 14,
                           ),
                         ),
@@ -184,7 +233,7 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
                     Text(
                       message.content,
                       style: TextStyle(
-                        color: isUser ? Colors.white : Colors.black87,
+                        color: isUser ? Colors.white : Theme.of(context).textTheme.bodyLarge?.color,
                         fontSize: 14,
                         height: 1.4,
                       ),
@@ -195,7 +244,7 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
                   Text(
                     DateFormat('HH:mm').format(message.timestamp),
                     style: TextStyle(
-                      color: isUser ? Colors.white70 : Colors.grey.shade600,
+                      color: isUser ? Colors.white70 : Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                       fontSize: 10,
                     ),
                   ),
@@ -208,7 +257,7 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
             const SizedBox(width: 8),
             CircleAvatar(
               radius: 16,
-              backgroundColor: Colors.blue.shade600,
+              backgroundColor: Theme.of(context).primaryColor,
               child: const Icon(
                 Icons.person,
                 size: 18,
@@ -223,70 +272,84 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
 
   Widget _buildInputArea() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.fromLTRB(
+        16, 
+        16, 
+        16, 
+        16 + MediaQuery.of(context).padding.bottom + 20,
+      ),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
             spreadRadius: 1,
-            blurRadius: 4,
+            blurRadius: 6,
             offset: const Offset(0, -2),
           ),
         ],
       ),
-      child: SafeArea(
-        child: Row(
-          children: [
-            Expanded(
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade100,
-                  borderRadius: BorderRadius.circular(24),
-                ),
-                child: TextField(
-                  controller: messageController,
-                  maxLines: null,
-                  textInputAction: TextInputAction.send,
-                  onSubmitted: (_) => _sendMessage(),
-                  decoration: const InputDecoration(
-                    hintText: 'Hỏi về tài chính cá nhân...',
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(
-                      horizontal: 16,
-                      vertical: 12,
-                    ),
+      child: Row(
+        children: [
+          Expanded(
+            child: Container(
+              decoration: BoxDecoration(
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey.shade100,
+                borderRadius: BorderRadius.circular(24),
+                border: Theme.of(context).brightness == Brightness.dark 
+                    ? Border.all(color: Theme.of(context).dividerColor) 
+                    : null,
+              ),
+              child: TextField(
+                controller: messageController,
+                maxLines: null,
+                textInputAction: TextInputAction.send,
+                onSubmitted: (_) => _sendMessage(),
+                                  decoration: InputDecoration(
+                  hintText: 'Hỏi về tài chính cá nhân...'.tr,
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                   ),
+                  border: InputBorder.none,
+                  contentPadding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 12,
+                  ),
+                ),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
             ),
-            const SizedBox(width: 8),
-            Obx(() => Container(
-              decoration: BoxDecoration(
-                color: controller.isLoading.value 
-                    ? Colors.grey.shade300 
-                    : Colors.blue.shade600,
-                shape: BoxShape.circle,
-              ),
-              child: IconButton(
-                onPressed: controller.isLoading.value ? null : _sendMessage,
-                icon: controller.isLoading.value
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator(
-                          strokeWidth: 2,
-                          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                        ),
-                      )
-                    : const Icon(
-                        Icons.send,
-                        color: Colors.white,
+          ),
+          const SizedBox(width: 8),
+          Obx(() => Container(
+            decoration: BoxDecoration(
+              color: controller.isLoading.value 
+                  ? Theme.of(context).disabledColor 
+                  : Theme.of(context).primaryColor,
+              shape: BoxShape.circle,
+            ),
+            child: IconButton(
+              onPressed: controller.isLoading.value ? null : _sendMessage,
+              icon: controller.isLoading.value
+                  ? const SizedBox(
+                      width: 20,
+                      height: 20,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
                       ),
-              ),
-            )),
-          ],
-        ),
+                    )
+                  : const Icon(
+                      Icons.send,
+                      color: Colors.white,
+                    ),
+            ),
+          )),
+        ],
       ),
     );
   }
@@ -302,12 +365,22 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
   void _showClearChatDialog() {
     Get.dialog(
       AlertDialog(
-        title: const Text('Xóa cuộc trò chuyện'),
-        content: const Text('Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?'),
+        backgroundColor: Theme.of(context).cardColor,
+        title: Text(
+          'Xóa cuộc trò chuyện'.tr,
+          style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
+        ),
+        content: Text(
+          'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?'.tr,
+          style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
+        ),
         actions: [
           TextButton(
             onPressed: () => Get.back(),
-            child: const Text('Hủy'),
+            child: Text(
+              'Hủy'.tr,
+              style: TextStyle(color: Theme.of(context).textTheme.bodyLarge?.color),
+            ),
           ),
           ElevatedButton(
             onPressed: () {
@@ -317,9 +390,9 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
             ),
-            child: const Text(
-              'Xóa',
-              style: TextStyle(color: Colors.white),
+            child: Text(
+              'Xóa'.tr,
+              style: const TextStyle(color: Colors.white),
             ),
           ),
         ],

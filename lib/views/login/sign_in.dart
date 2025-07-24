@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../../config/images/image_app.dart';
+import '../../config/themes/themes_app.dart';
 import '../../controllers/sign_in_controller.dart';
 import '../forgot_password/forgot_password.dart';
 
@@ -16,7 +17,6 @@ class _SignInState extends State<SignIn> {
   final SignInController signInController = Get.put(SignInController());
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     ever(signInController.isLoading, (callback) {
       if (callback) {
@@ -53,7 +53,7 @@ class _SignInState extends State<SignIn> {
           elevation: 0,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
+              gradient: Theme.of(context).extension<AppGradientTheme>()?.primaryGradient ?? LinearGradient(
                 colors: [Colors.blue.shade800, Colors.blue.shade500],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
@@ -64,7 +64,7 @@ class _SignInState extends State<SignIn> {
               ),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.blue.shade300.withOpacity(0.5),
+                  color: Theme.of(context).extension<AppGradientTheme>()?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
                   blurRadius: 10,
                   offset: const Offset(0, 3),
                 ),
@@ -160,25 +160,39 @@ class _SignInState extends State<SignIn> {
         validator: signInController.ktEmail,
         focusNode: signInController.emailFocusNode,
         autovalidateMode: AutovalidateMode.onUserInteraction,
-        style: const TextStyle(fontSize: 16),
+        style: TextStyle(
+          fontSize: 16,
+          color: Theme.of(context).textTheme.bodyLarge?.color,
+        ),
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-          prefixIcon: const Icon(Icons.email, color: Colors.grey),
-          hintText: "Email",
-          hintStyle: TextStyle(color: Colors.grey.shade500),
-          fillColor: Colors.white,
+          prefixIcon: Icon(
+            Icons.email,
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+          ),
+          hintText: "Email".tr,
+          hintStyle: TextStyle(
+            color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+          ),
+          fillColor: Theme.of(context).cardColor,
           filled: true,
           border: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+            borderSide: BorderSide(
+              color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+              width: 1,
+            ),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
-            borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+            borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
           ),
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(8),
@@ -203,33 +217,53 @@ class _SignInState extends State<SignIn> {
           focusNode: signInController.passwordFocusNode,
           validator: signInController.ktPassWord,
           autovalidateMode: AutovalidateMode.onUserInteraction,
-          style: const TextStyle(fontSize: 16),
+          style: TextStyle(
+            fontSize: 16,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
           decoration: InputDecoration(
             contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
-            prefixIcon: const Icon(Icons.lock, color: Colors.grey),
+            prefixIcon: Icon(
+              Icons.lock,
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+            ),
             suffixIcon: IconButton(
               onPressed: () {
                 signInController.xuLiVisibility();
               },
               icon: signInController.isVisibility.value
-                  ? const Icon(Icons.visibility, color: Colors.grey)
-                  : const Icon(Icons.visibility_off, color: Colors.grey),
+                  ? Icon(
+                      Icons.visibility,
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    )
+                  : Icon(
+                      Icons.visibility_off,
+                      color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
+                    ),
             ),
             hintText: " Password".tr,
-            hintStyle: TextStyle(color: Colors.grey.shade500),
-            fillColor: Colors.white,
+            hintStyle: TextStyle(
+              color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+            ),
+            fillColor: Theme.of(context).cardColor,
             filled: true,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+                width: 1,
+              ),
             ),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey.shade300, width: 1),
+              borderSide: BorderSide(
+                color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
+                width: 1,
+              ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.blue.shade400, width: 1.5),
+              borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
             ),
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
@@ -251,17 +285,23 @@ class _SignInState extends State<SignIn> {
         padding: const EdgeInsets.only(left: 8.0, top: 4.0),
         child: Row(
           children: [
-            Transform.scale(
+                          Transform.scale(
               scale: 0.9,
               child: Checkbox(
                   value: signInController.isCheckBok.value,
-                  activeColor: Colors.blue,
+                  activeColor: Theme.of(context).primaryColor,
                   onChanged: (value) {
                     signInController.stateCheckBok();
                   }),
             ),
-            Text('Nhớ mật khẩu'.tr,
-                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
+            Text(
+              'Nhớ mật khẩu'.tr,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.w500,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
+              ),
+            )
           ],
         ),
       ),
@@ -272,22 +312,6 @@ class _SignInState extends State<SignIn> {
     return Container(
       height: height,
       margin: const EdgeInsets.symmetric(vertical: 12),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(25),
-        gradient: LinearGradient(
-          colors: [Colors.blue.shade700, Colors.blue.shade500],
-          begin: Alignment.centerLeft,
-          end: Alignment.centerRight,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.blue.withOpacity(0.3),
-            spreadRadius: 1,
-            blurRadius: 8,
-            offset: const Offset(0, 3),
-          ),
-        ],
-      ),
       child: ElevatedButton(
           onPressed: () async {
             if (signInController.formKey.currentState!.validate()) {
@@ -297,16 +321,17 @@ class _SignInState extends State<SignIn> {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Colors.transparent,
-            elevation: 0,
+            backgroundColor: Theme.of(context).indicatorColor,
+            foregroundColor: Colors.white,
+            elevation: 2,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(25),
             ),
           ),
-          child: const Center(
+          child: Center(
               child: Text(
-                'LOGIN',
-                style: TextStyle(
+                'ĐĂNG NHẬP'.tr,
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   letterSpacing: 1.5,
                   fontSize: 16,
@@ -329,10 +354,10 @@ class _SignInState extends State<SignIn> {
             ),
             child: Text(
               'Quên mật khẩu'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
               ),
             )),
         TextButton(
@@ -344,10 +369,10 @@ class _SignInState extends State<SignIn> {
             ),
             child: Text(
               'Đăng ký'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 14,
                 fontWeight: FontWeight.w500,
-                color: Colors.blue,
+                color: Theme.of(context).primaryColor,
               ),
             )),
       ],
@@ -415,7 +440,7 @@ class _SignInState extends State<SignIn> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.3),
+              color: Colors.grey.withValues(alpha: 0.3),
               blurRadius: 8,
               offset: const Offset(0, 3),
             ),

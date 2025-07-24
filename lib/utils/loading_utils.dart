@@ -6,7 +6,7 @@ class LoadingUtils {
   // Loading cho việc lưu giao dịch
   static Widget buildSaveTransactionLoader() {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       child: Center(
         child: Container(
           width: 100,
@@ -17,15 +17,15 @@ class LoadingUtils {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 2,
                 blurRadius: 10,
                 offset: const Offset(0, 3),
               ),
             ],
           ),
-          child: SpinKitFoldingCube(
-            color: const Color(0xFF4CAF50),
+          child: const SpinKitFoldingCube(
+            color: Color(0xFF4CAF50),
             size: 40.0,
           ),
         ),
@@ -36,7 +36,7 @@ class LoadingUtils {
   // Loading cho tải dữ liệu
   static Widget buildDataLoader() {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(30),
@@ -45,7 +45,7 @@ class LoadingUtils {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 2,
                 blurRadius: 10,
                 offset: const Offset(0, 3),
@@ -55,8 +55,8 @@ class LoadingUtils {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SpinKitFadingCircle(
-                color: const Color(0xFF6366F1),
+              const SpinKitFadingCircle(
+                color: Color(0xFF6366F1),
                 size: 60.0,
               ),
               const SizedBox(height: 20),
@@ -78,7 +78,7 @@ class LoadingUtils {
   // Loading cho đồng bộ
   static Widget buildSyncLoader() {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(30),
@@ -87,7 +87,7 @@ class LoadingUtils {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 2,
                 blurRadius: 10,
                 offset: const Offset(0, 3),
@@ -97,7 +97,7 @@ class LoadingUtils {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SpinKitSpinningCircle(
+              const SpinKitSpinningCircle(
                 color: Colors.orange,
                 size: 60.0,
               ),
@@ -120,7 +120,7 @@ class LoadingUtils {
   // Loading chung (mặc định)
   static Widget buildDefaultLoader() {
     return Container(
-      color: Colors.black.withOpacity(0.8),
+      color: Colors.black.withValues(alpha: 0.8),
       child: Center(
         child: Container(
           padding: const EdgeInsets.all(30),
@@ -129,7 +129,7 @@ class LoadingUtils {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.2),
+                color: Colors.black.withValues(alpha: 0.2),
                 spreadRadius: 2,
                 blurRadius: 10,
                 offset: const Offset(0, 3),
@@ -139,8 +139,8 @@ class LoadingUtils {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              SpinKitFadingCircle(
-                color: const Color(0xFF6366F1),
+              const SpinKitFadingCircle(
+                color: Color(0xFF6366F1),
                 size: 60.0,
               ),
               const SizedBox(height: 20),

@@ -1,11 +1,11 @@
-import 'package:groq/groq.dart';
 import 'package:get/get.dart';
+import 'package:groq/groq.dart';
 
 class GroqAIService {
   Groq? _groq;
   
-  // API key được cung cấp
-  static const String _apiKey = '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';
+  // Lấy API key từ environment variable
+  static const String _apiKey = String.fromEnvironment('GROQ_API_KEY', defaultValue: '');
   
   GroqAIService() {
     _initializeGroq();
@@ -13,6 +13,10 @@ class GroqAIService {
   
   void _initializeGroq() {
     try {
+      if (_apiKey.isEmpty) {
+        return;
+      }
+      
       _groq = Groq(
         apiKey: _apiKey,
         model: "meta-llama/llama-4-scout-17b-16e-instruct", 
@@ -23,7 +27,7 @@ class GroqAIService {
       
       // Thiết lập hướng dẫn cho AI
       _groq?.setCustomInstructionsWith(
-        "Bạn là trợ lý AI tài chính thông minh và thân thiện tên là FinBot. "
+        "Bạn là trợ lý AI tài chính thông minh và thân thiện tên là FinBot"
         "Chuyên môn chính của bạn là tư vấn tài chính cá nhân, quản lý chi tiêu và tiết kiệm. "
         "Tuy nhiên, bạn cũng có thể trò chuyện thân thiện về các chủ đề khác. "
         "Khi được hỏi về tài chính, hãy phân tích dữ liệu chi tiêu và đưa ra lời khuyên cụ thể. "
@@ -31,20 +35,13 @@ class GroqAIService {
         "Luôn trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu và sử dụng emoji phù hợp."
       );
       
-      print('✅ Groq AI đã được khởi tạo thành công');
     } catch (e) {
-      print('❌ Lỗi khởi tạo Groq: $e');
       _groq = null;
     }
   }
   
   Future<String> getFinancialAdvice(String userQuestion, Map<String, dynamic> expenseData) async {
-    print('🔍 Debug: getFinancialAdvice called with question: $userQuestion');
-    print('🔍 Debug: _groq is null? ${_groq == null}');
-    
-    // Kiểm tra khởi tạo Groq
     if (_groq == null) {
-      print('❌ Debug: Groq is null, returning default advice');
       return _getDefaultAdvice(userQuestion);
     }
     
@@ -61,15 +58,10 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     ''';
     
     try {
-      print('🚀 Debug: Calling Groq API...');
       GroqResponse response = await _groq!.sendMessage(prompt);
-      print('✅ Debug: Groq API response received');
-      String content = response.choices.first.message.content ?? "Xin lỗi, tôi không thể trả lời câu hỏi này lúc này.";
-      print('📝 Debug: Response content: ${content.substring(0, content.length > 100 ? 100 : content.length)}...');
+      String content = response.choices.first.message.content;
       return content;
     } catch (e) {
-      print('❌ Groq AI Error: $e');
-      print('🔄 Debug: Falling back to default advice');
       
       // Trả về lời khuyên mặc định nếu API không hoạt động
       return _getDefaultAdvice(userQuestion);
@@ -83,13 +75,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     if (lowerQuestion.contains('tên') || lowerQuestion.contains('là ai') || 
         lowerQuestion.contains('giới thiệu') || lowerQuestion.contains('hello') || 
         lowerQuestion.contains('xin chào')) {
-      return "👋 Xin chào! Tôi là FinBot - trợ lý AI tài chính của bạn!\n\n"
-          "🤖 Tôi có thể giúp bạn:\n"
-          "💰 Tư vấn về tiết kiệm và đầu tư\n"
-          "📊 Phân tích chi tiêu cá nhân\n"
-          "📈 Lập kế hoạch tài chính\n"
-          "💡 Đưa ra lời khuyên quản lý tiền bạc\n\n"
-          "Hãy hỏi tôi bất cứ điều gì về tài chính nhé! 😊";
+      return "Xin chào! Tôi là FinBot - trợ lý AI tài chính thông minh của bạn!".tr;
     }
     
     // Xử lý câu hỏi về tiết kiệm
@@ -126,13 +112,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     }
     
     // Trả lời mặc định cho các câu hỏi khác
-    return "🤖 Tôi là FinBot - chuyên gia tư vấn tài chính của bạn!\n\n"
-        "💡 Tôi có thể giúp bạn về:\n"
-        "• Lập kế hoạch tiết kiệm và chi tiêu\n"
-        "• Phân tích thói quen tài chính\n"
-        "• Tư vấn đầu tư cơ bản\n"
-        "• Quản lý ngân sách cá nhân\n\n"
-        "Hãy hỏi tôi về tài chính hoặc chia sẻ tình hình chi tiêu để được tư vấn cụ thể nhé! 😊";
+    return "Xin chào! Tôi là FinBot - trợ lý AI tài chính thông minh của bạn!".tr;
   }
   
   Future<String> getGeneralFinancialTip() async {
@@ -144,7 +124,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
       GroqResponse response = await _groq!.sendMessage(
         "Hãy đưa ra một lời khuyên ngắn gọn về quản lý tài chính cá nhân bằng tiếng Việt."
       );
-      return response.choices.first.message.content ?? "Hãy lập kế hoạch chi tiêu và tiết kiệm đều đặn! 💰";
+      return response.choices.first.message.content;
     } catch (e) {
       return "💡 Mẹo tài chính: Hãy lập kế hoạch chi tiêu và tiết kiệm đều đặn! 💰";
     }
@@ -152,12 +132,10 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
   
   List<String> getSuggestedQuestions() {
     return [
-      "Tên bạn là gì?",
-      "Tôi nên cắt giảm chi tiêu ở đâu?",
-      "Làm sao để tiết kiệm hiệu quả?",
-      "Chi tiêu của tôi có hợp lý không?",
-      "Cách lập ngân sách chi tiêu?",
-      "Đầu tư tiền nhàn rỗi như thế nào?",
+      "Tôi nên cắt giảm chi tiêu ở đâu?".tr,
+      "Làm sao để tiết kiệm hiệu quả?".tr,
+      "Chi tiêu của tôi có hợp lý không?".tr,
+      "Cách lập ngân sách chi tiêu?".tr,
     ];
   }
 } 

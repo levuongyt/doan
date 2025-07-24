@@ -23,14 +23,7 @@ class AIChatController extends GetxController {
   void _addWelcomeMessage() {
     final welcomeMessage = ChatMessage(
       id: _uuid.v4(),
-      content: "Xin chào! 👋 Tôi là FinBot - trợ lý AI tài chính thông minh của bạn!\n\n"
-          "🤖 Tôi có thể giúp bạn:\n"
-          "💰 Phân tích chi tiêu và thu nhập\n"
-          "📊 Đưa ra lời khuyên tiết kiệm\n"
-          "📈 Lập kế hoạch tài chính\n"
-          "💡 Tối ưu hóa ngân sách cá nhân\n\n"
-          "Bạn có thể hỏi tôi về tài chính hoặc trò chuyện thân thiện! 😊\n"
-          "Ví dụ: 'Tên bạn là gì?' hoặc 'Tôi nên tiết kiệm như thế nào?'",
+      content: "Xin chào! Tôi là FinBot - trợ lý AI tài chính thông minh của bạn!".tr,
       isUser: false,
       timestamp: DateTime.now(),
     );
@@ -87,7 +80,7 @@ class AIChatController extends GetxController {
       // Add error message
       final errorMessage = ChatMessage(
         id: _uuid.v4(),
-        content: "Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau. 😔",
+        content: "Xin lỗi, có lỗi xảy ra. Vui lòng thử lại sau.",
         isUser: false,
         timestamp: DateTime.now(),
       );
@@ -108,14 +101,12 @@ class AIChatController extends GetxController {
   }
   
   double _calculateTotalIncome() {
-    // Calculate from transactions or use mock data
     return homeController.listResultTK
         .where((transaction) => transaction.type == 'Thu Nhập')
         .fold(0.0, (sum, transaction) => sum + (transaction.amount));
   }
   
   double _calculateTotalExpense() {
-    // Calculate from transactions or use mock data
     return homeController.listResultTK
         .where((transaction) => transaction.type == 'Chi Tiêu')
         .fold(0.0, (sum, transaction) => sum + (transaction.amount));
@@ -126,7 +117,6 @@ class AIChatController extends GetxController {
     
     for (final transaction in homeController.listResultTK) {
       if (transaction.type == 'Chi Tiêu') {
-        // Get category name from categoryIdToDetails map
         final categoryModel = homeController.categoryIdToDetails[transaction.categoryId];
         final category = categoryModel?.name ?? 'Khác';
         categories[category] = (categories[category] ?? 0) + transaction.amount;

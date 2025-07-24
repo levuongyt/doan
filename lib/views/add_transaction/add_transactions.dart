@@ -5,9 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import '../../controllers/transaction_controller.dart';
 import '../category/category.dart';
+import '../../config/themes/themes_app.dart';
 
 class NhapLieu extends StatefulWidget {
   const NhapLieu({super.key});
@@ -116,15 +116,39 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return Form(
       key: formKey,
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: gradientTheme?.primaryGradient ?? LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: gradientTheme?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
           title: Text(
             'NHẬP LIỆU'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           centerTitle: true,
           iconTheme: const IconThemeData(color: Colors.white),
@@ -135,7 +159,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                 color: Theme.of(context).cardColor,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
+                    color: Colors.grey.withValues(alpha: 0.1),
                     spreadRadius: 1,
                     blurRadius: 3,
                     offset: const Offset(0, 2),
@@ -151,29 +175,25 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                   Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
+                      color: Theme.of(context).focusColor,
                       borderRadius: BorderRadius.circular(25),
                     ),
                     child: TabBar(
                       controller: tabController,
                       indicator: BoxDecoration(
                         borderRadius: BorderRadius.circular(25),
-                        gradient: const LinearGradient(
-                          colors: [Colors.blueAccent, Colors.blue],
-                          begin: Alignment.centerLeft,
-                          end: Alignment.centerRight,
-                        ),
+                        gradient: gradientTheme?.buttonGradient,
                         boxShadow: [
-                          BoxShadow(
-                            color: Colors.blueAccent.withOpacity(0.3),
-                            spreadRadius: 1,
-                            blurRadius: 8,
-                            offset: const Offset(0, 2),
-                          ),
+                                                  BoxShadow(
+                          color: gradientTheme?.shadowColor ?? Colors.black.withValues(alpha: 0.3),
+                          spreadRadius: 1,
+                          blurRadius: 8,
+                          offset: const Offset(0, 2),
+                        ),
                         ],
                       ),
                       labelColor: Colors.white,
-                      unselectedLabelColor: Colors.grey[600],
+                      unselectedLabelColor: Theme.of(context).textTheme.bodySmall?.color,
                       labelStyle: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
@@ -185,7 +205,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                       indicatorSize: TabBarIndicatorSize.tab,
                       dividerColor: Colors.transparent,
                       splashFactory: NoSplash.splashFactory,
-                      overlayColor: MaterialStateProperty.all(Colors.transparent),
+                      overlayColor: WidgetStateProperty.all(Colors.transparent),
                       tabs: [
                         Container(
                           height: 45,
@@ -343,7 +363,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                             color: controller.selectedExpenseCategory.value ==
                                 category.id
                                 ? Colors.blueAccent
-                                : Colors.grey.withOpacity(0.3),
+                                : Colors.grey.withValues(alpha: 0.3),
                             width: controller.selectedExpenseCategory.value ==
                                 category.id
                                 ? 3
@@ -373,11 +393,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -389,7 +409,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -403,10 +423,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Số tiền'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -460,9 +480,14 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                 ),
                 decoration: InputDecoration(
                   hintText: '0',
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6), 
+                    fontSize: 18
+                  ),
                   filled: true,
-                  fillColor: Colors.grey[50],
+                  fillColor: Theme.of(context).brightness == Brightness.dark 
+                      ? Theme.of(context).cardColor 
+                      : Colors.grey[50],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -480,7 +505,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Obx(() => Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
+              color: Colors.red.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -502,11 +527,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -518,12 +543,12 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.description,
-              color: Colors.orange,
+              color: Theme.of(context).primaryColor,
               size: 20,
             ),
           ),
@@ -532,10 +557,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Nội dung'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -545,19 +570,27 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               controller: noiDungChiController,
               validator: controller.ktNoiDung,
               inputFormatters: [LengthLimitingTextInputFormatter(100)],
-              style: const TextStyle(fontSize: 15),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
               decoration: InputDecoration(
-                hintText: 'Nhập mô tả giao dịch...',
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                hintText: 'Nhập mô tả giao dịch...'.tr,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6), 
+                  fontSize: 14
+                ),
                 filled: true,
-                fillColor: Colors.grey[50],
+                fillColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[50],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
@@ -573,11 +606,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -589,12 +622,12 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.blueAccent.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.calendar_today,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
               size: 20,
             ),
           ),
@@ -603,10 +636,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Ngày'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -621,10 +654,16 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.chevron_left, color: Colors.grey, size: 20),
+              child: Icon(
+                Icons.chevron_left, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7), 
+                size: 20
+              ),
             ),
           ),
           Expanded(
@@ -633,15 +672,17 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               controller: ngayChiController,
               readOnly: true,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.blueAccent,
+                color: Theme.of(context).primaryColor,
               ),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[50],
-                suffixIcon: const Icon(Icons.calendar_month, color: Colors.blueAccent),
+                fillColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[50],
+                suffixIcon: Icon(Icons.calendar_month, color: Theme.of(context).primaryColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -675,10 +716,16 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+              child: Icon(
+                Icons.chevron_right, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7), 
+                size: 20
+              ),
             ),
           ),
         ],
@@ -716,7 +763,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                             color: controller.selectedIncomeCategory.value ==
                                 category.id
                                 ? Colors.blueAccent
-                                : Colors.grey.withOpacity(0.3),
+                                : Colors.grey.withValues(alpha: 0.3),
                             width: controller.selectedIncomeCategory.value ==
                                 category.id
                                 ? 3
@@ -746,11 +793,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -765,7 +812,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.purple.withOpacity(0.1),
+                  color: Colors.purple.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: const Icon(
@@ -777,10 +824,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               const SizedBox(width: 12),
               Text(
                 'Danh mục'.tr,
-                style: const TextStyle(
+                style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
-                  color: Colors.black87,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
                 ),
               ),
             ],
@@ -809,11 +856,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -825,7 +872,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: const Icon(
@@ -839,10 +886,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Số tiền'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -898,9 +945,14 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                 ),
                 decoration: InputDecoration(
                   hintText: '0',
-                  hintStyle: TextStyle(color: Colors.grey[400], fontSize: 18),
+                  hintStyle: TextStyle(
+                    color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6), 
+                    fontSize: 18
+                  ),
                   filled: true,
-                  fillColor: Colors.grey[50],
+                  fillColor: Theme.of(context).brightness == Brightness.dark 
+                      ? Theme.of(context).cardColor 
+                      : Colors.grey[50],
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10),
                     borderSide: BorderSide.none,
@@ -918,7 +970,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Obx(() => Container(
             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
             decoration: BoxDecoration(
-              color: Colors.green.withOpacity(0.1),
+              color: Colors.green.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(6),
             ),
             child: Text(
@@ -940,11 +992,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -956,12 +1008,12 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.orange.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.description,
-              color: Colors.orange,
+              color: Theme.of(context).primaryColor,
               size: 20,
             ),
           ),
@@ -970,10 +1022,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Nội dung'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -983,19 +1035,27 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               controller: noiDungController,
               validator: controller.ktNoiDung,
               inputFormatters: [LengthLimitingTextInputFormatter(100)],
-              style: const TextStyle(fontSize: 15),
+              style: TextStyle(
+                fontSize: 15,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
               decoration: InputDecoration(
-                hintText: 'Nhập mô tả giao dịch...',
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 14),
+                hintText: 'Nhập mô tả giao dịch...'.tr,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6), 
+                  fontSize: 14
+                ),
                 filled: true,
-                fillColor: Colors.grey[50],
+                fillColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[50],
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.orange, width: 2),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
               ),
@@ -1011,11 +1071,11 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
       padding: const EdgeInsets.all(12),
       margin: const EdgeInsets.symmetric(horizontal: 4),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Colors.grey.withValues(alpha: 0.1),
             spreadRadius: 1,
             blurRadius: 4,
             offset: const Offset(0, 2),
@@ -1027,12 +1087,12 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.blueAccent.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.calendar_today,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
               size: 20,
             ),
           ),
@@ -1041,10 +1101,10 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             flex: 1,
             child: Text(
               'Ngày'.tr,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
           ),
@@ -1059,10 +1119,16 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.chevron_left, color: Colors.grey, size: 20),
+              child: Icon(
+                Icons.chevron_left, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7), 
+                size: 20
+              ),
             ),
           ),
           Expanded(
@@ -1071,15 +1137,17 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
               controller: ngayController,
               readOnly: true,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
-                color: Colors.blueAccent,
+                color: Theme.of(context).primaryColor,
               ),
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.grey[50],
-                suffixIcon: const Icon(Icons.calendar_month, color: Colors.blueAccent),
+                fillColor: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[50],
+                suffixIcon: Icon(Icons.calendar_month, color: Theme.of(context).primaryColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10),
                   borderSide: BorderSide.none,
@@ -1114,10 +1182,16 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
             icon: Container(
               padding: const EdgeInsets.all(6),
               decoration: BoxDecoration(
-                color: Colors.grey[100],
+                color: Theme.of(context).brightness == Brightness.dark 
+                    ? Theme.of(context).cardColor 
+                    : Colors.grey[100],
                 borderRadius: BorderRadius.circular(6),
               ),
-              child: const Icon(Icons.chevron_right, color: Colors.grey, size: 20),
+              child: Icon(
+                Icons.chevron_right, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7), 
+                size: 20
+              ),
             ),
           ),
         ],

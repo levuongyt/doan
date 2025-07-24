@@ -16,7 +16,7 @@ class UpdateCategoryController extends GetxController {
   var categories = <CategoryModel>[].obs;
   RxBool isLoading = false.obs;
   RxInt selectedIconTNCode = Icons.home.codePoint.obs;
-  RxInt selectedTNColor = Colors.red.value.obs;
+  RxInt selectedTNColor = Colors.red.toARGB32().obs;
 
   Future<void> updateCategory(
       String id, String nameDM, int iconDM, int colorDM, String typeDM) async {

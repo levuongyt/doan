@@ -29,6 +29,7 @@ class FirebaseStorageUtil {
         'tongSoDu': tongSoDu,
       });
     } catch (e) {
+      // Error adding user to database
     }
   }
 
@@ -123,6 +124,7 @@ class FirebaseStorageUtil {
         'type': type,
       });
     } catch (e) {
+      // Error adding category to database
     }
   }
 
@@ -164,7 +166,7 @@ class FirebaseStorageUtil {
           snapshot.docs.map((doc) => CategoryModel.fromDocument(doc)).toList();
       return categories;
     } catch (e) {
-
+      // Error getting categories from database
       return [];
     }
   }
@@ -176,7 +178,7 @@ class FirebaseStorageUtil {
           await storage.collection('Categories').doc(uid).get();
       return CategoryModel.fromDocument(snapshot);
     } catch (e) {
-
+      // Error getting category transaction from database
       return null;
     }
   }

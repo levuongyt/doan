@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/timezone.dart' as tz;
-import 'package:timezone/data/latest_all.dart' as tz_data;
 
 class NotificationService {
   static final NotificationService _instance = NotificationService._internal();
@@ -18,14 +15,9 @@ class NotificationService {
   Future<void> initializeBasic() async {
     if (_isInitialized) return;
     
-    print('🔧 Basic initialization of notification service...');
-    
-    // Set timezone for Vietnam
     try {
       _vietnamLocation = tz.getLocation('Asia/Ho_Chi_Minh');
-      print('✅ Vietnam timezone set: ${_vietnamLocation.name}');
     } catch (e) {
-      print('❌ Error setting Vietnam timezone: $e');
       _vietnamLocation = tz.local;
     }
 
@@ -34,7 +26,7 @@ class NotificationService {
 
     const DarwinInitializationSettings iosSettings =
         DarwinInitializationSettings(
-      requestSoundPermission: false, // Không tự động xin quyền
+      requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
     );
@@ -50,9 +42,8 @@ class NotificationService {
         onDidReceiveNotificationResponse: _onNotificationTapped,
       );
       _isInitialized = true;
-      print('✅ Notifications plugin initialized (without permissions)');
     } catch (e) {
-      print('❌ Notification initialization error: $e');
+      // Notification initialization error
     }
   }
 
@@ -65,8 +56,6 @@ class NotificationService {
       return true;
     }
 
-    print('🔧 Requesting notification permissions...');
-    
     final AndroidFlutterLocalNotificationsPlugin? androidImplementation =
         _notifications.resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>();
@@ -75,15 +64,12 @@ class NotificationService {
       try {
         final granted = await androidImplementation.requestNotificationsPermission();
         _hasPermission = granted ?? false;
-        print('✅ Notification permission: $_hasPermission');
         return _hasPermission;
       } catch (e) {
-        print('❌ Permission request error: $e');
         return false;
       }
     }
     
-    // For iOS, request permissions
     final IOSFlutterLocalNotificationsPlugin? iosImplementation =
         _notifications.resolvePlatformSpecificImplementation<
             IOSFlutterLocalNotificationsPlugin>();
@@ -96,24 +82,20 @@ class NotificationService {
           sound: true,
         );
         _hasPermission = granted ?? false;
-        print('✅ iOS notification permission: $_hasPermission');
         return _hasPermission;
       } catch (e) {
-        print('❌ iOS permission request error: $e');
         return false;
       }
     }
     
-    return true; // Default for other platforms
+    return true;
   }
 
   void _onNotificationTapped(NotificationResponse response) {
-    print('🔔 Notification tapped: ${response.payload}');
+    // Notification tapped
   }
 
-  // Test notification to check if notifications work immediately
   Future<void> showTestNotification() async {
-    print('🧪 Sending test notification...');
     try {
       await _notifications.show(
         999,
@@ -135,9 +117,8 @@ class NotificationService {
           ),
         ),
       );
-      print('✅ Test notification sent');
     } catch (e) {
-      print('❌ Test notification error: $e');
+      // Test notification error
     }
   }
 
@@ -146,11 +127,8 @@ class NotificationService {
     required String body,
     required TimeOfDay scheduledTime,
   }) async {
-    print('📅 Scheduling notification for ${scheduledTime.format(Get.context!)}');
-    
     try {
       final scheduledDate = _nextInstanceOfTime(scheduledTime);
-      print('📅 Next notification time: $scheduledDate');
       
       await _notifications.zonedSchedule(
         0,
@@ -182,26 +160,21 @@ class NotificationService {
         matchDateTimeComponents: DateTimeComponents.time,
         payload: 'transaction_reminder',
       );
-      print('✅ Notification scheduled successfully');
     } catch (e) {
-      print('❌ Schedule notification error: $e');
+      // Schedule notification error
     }
   }
 
   Future<void> cancelAllNotifications() async {
     await _notifications.cancelAll();
-    print('🗑️ All notifications cancelled');
   }
 
   Future<void> cancelTransactionReminder() async {
     await _notifications.cancel(0);
-    print('🗑️ Transaction reminder cancelled');
   }
 
   tz.TZDateTime _nextInstanceOfTime(TimeOfDay time) {
     final now = tz.TZDateTime.now(_vietnamLocation);
-    print('🌍 Current Vietnam time: $now');
-    print('🌍 Vietnam timezone offset: ${now.timeZoneOffset}');
     
     tz.TZDateTime scheduledDate = tz.TZDateTime(
       _vietnamLocation,
@@ -215,10 +188,6 @@ class NotificationService {
     if (scheduledDate.isBefore(now)) {
       scheduledDate = scheduledDate.add(const Duration(days: 1));
     }
-
-    print('🕐 Current Vietnam time: $now');
-    print('🕐 Scheduled time: $scheduledDate');
-    print('🕐 Time difference: ${scheduledDate.difference(now)}');
     
     return scheduledDate;
   }
@@ -235,28 +204,19 @@ class NotificationService {
     if (androidImplementation != null) {
       final enabled = await androidImplementation.areNotificationsEnabled() ?? false;
       _hasPermission = enabled;
-      print('🔔 Notifications enabled: $enabled');
       return enabled;
     }
-    return false; // Mặc định false cho an toàn
+    return false;
   }
 
-  // Get pending notifications for debugging
   Future<void> debugPendingNotifications() async {
     try {
-      final pendingNotifications = await _notifications.pendingNotificationRequests();
-      print('📋 Pending notifications: ${pendingNotifications.length}');
-      for (var notification in pendingNotifications) {
-        print('  - ID: ${notification.id}, Title: ${notification.title}');
-      }
     } catch (e) {
-      print('❌ Error getting pending notifications: $e');
+      // Error getting pending notifications
     }
   }
 
-  // Schedule a test notification in 10 seconds
   Future<void> scheduleTestIn10Seconds() async {
-    print('🧪 Scheduling test notification in 10 seconds...');
     final now = tz.TZDateTime.now(_vietnamLocation);
     final scheduledDate = now.add(const Duration(seconds: 10));
     
@@ -278,28 +238,13 @@ class NotificationService {
         ),
         uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
       );
-      print('✅ Test notification scheduled for $scheduledDate');
     } catch (e) {
-      print('❌ Error scheduling test notification: $e');
+      // Error scheduling test notification
     }
   }
 
-  // Debug timezone information
   Future<void> debugTimezone() async {
-    final now = tz.TZDateTime.now(_vietnamLocation);
-    final localNow = DateTime.now();
-    
-    print('🌍 === TIMEZONE DEBUG ===');
-    print('🌍 Vietnam location: ${_vietnamLocation.name}');
-    print('🌍 Vietnam time now: $now');
-    print('🌍 Vietnam timezone offset: ${now.timeZoneOffset}');
-    print('🌍 Local system time: $localNow');
-    print('🌍 Difference: ${now.difference(localNow.toUtc().add(now.timeZoneOffset))}');
-    
-    // Test with a specific time
-    final testTime = TimeOfDay(hour: 23, minute: 35);
-    final scheduledDate = _nextInstanceOfTime(testTime);
-    print('🌍 Test time 23:35 -> Scheduled: $scheduledDate');
-    print('🌍 === END DEBUG ===');
+    const testTime = TimeOfDay(hour: 23, minute: 35);
+    _nextInstanceOfTime(testTime);
   }
 } 

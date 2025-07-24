@@ -63,12 +63,10 @@ class AccountController extends GetxController{
 
   void changeAvatar(String avatarPath) {
     selectedAvatar.value = avatarPath;
-    // TODO: Save to preferences or server if needed
   }
 
  @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     getUser();
   }

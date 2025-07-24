@@ -35,7 +35,11 @@ class SettingController extends GetxController {
       "Local": const Locale('en', 'EN'),
       "image": ImageApp.imageFlagEN,
     },
-
+    {
+      "name": "Tiếng Nhật",
+      "Local": const Locale('ja', 'JP'),
+      "image": ImageApp.imageFlagJP,
+    },
   ];
 
   final List<Map<String, dynamic>> listCurrency = [
@@ -57,10 +61,18 @@ class SettingController extends GetxController {
       "symbol":"€",
       "image": ImageApp.imageFlagEURO,
     },
+    {
+      "name": "Yên Nhật",
+      "currency": "JPY",
+      "symbol":"¥",
+      "image": ImageApp.imageFlagJP,
+    },
   ];
 
-  void toggleTheme() {
+  void toggleTheme() async {
     isDarkMode.value = !isDarkMode.value;
+    await saveThemeToPreferences(isDarkMode.value);
+    Get.changeThemeMode(isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
   }
 
   Future<void> saveThemeToPreferences(bool isDarkMode) async {
@@ -188,12 +200,11 @@ class SettingController extends GetxController {
 
   Future<void> scheduleTransactionReminder() async {
     if (!notificationEnabled.value) {
-      print('❌ General notification is disabled');
       return;
     }
     
     await notificationService.scheduleTransactionReminder(
-      title: 'Nhắc nhở ghi chép',
+              title: 'Nhắc nhở ghi chép'.tr,
       body: 'Đừng quên ghi lại các giao dịch thu chi hôm nay!',
       scheduledTime: reminderTime.value,
     );
@@ -233,6 +244,8 @@ class SettingController extends GetxController {
         return rates.vND?.toDouble();
       case 'EUR':
         return rates.eUR;
+      case 'JPY':
+        return rates.jPY;
       default:
         return null;
     }
@@ -254,14 +267,21 @@ class SettingController extends GetxController {
         return 'đ';
       case 'EUR':
         return '€';
+      case 'JPY':
+        return '¥';
       default:
         return '';
     }
   }
 
+  // Helper method to get current theme mode
+  ThemeMode get currentThemeMode => isDarkMode.value ? ThemeMode.dark : ThemeMode.light;
+  
+  // Helper method to check if current theme is dark
+  bool get isCurrentThemeDark => isDarkMode.value;
+
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     loadThemeFromPreferences();
     readLanguage();

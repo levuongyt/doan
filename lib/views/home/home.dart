@@ -1,5 +1,6 @@
 import 'package:doan_ql_thu_chi/models/category_model.dart';
 import 'package:doan_ql_thu_chi/config/extensions/extension_currency.dart';
+import 'package:doan_ql_thu_chi/config/themes/themes_app.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -55,14 +56,14 @@ class _HomeState extends State<Home> {
             ],
             initialActiveIndex: navigationController.selectedIndex.value,
             onTap: (index) => navigationController.changeIndex(index),
-            backgroundColor: Colors.white,
-            activeColor: Colors.blueAccent, // Màu xanh khi được chọn
-            color: Colors.grey, // Màu xám khi không được chọn
+            backgroundColor: Theme.of(context).cardColor,
+            activeColor: Theme.of(context).primaryColor,
+            color: Theme.of(context).hintColor,
             style: TabStyle.fixedCircle,
             curveSize: 80,
             top: -25,
             height: 65,
-            shadowColor: Colors.grey.withOpacity(0.3),
+            shadowColor: Theme.of(context).extension<AppGradientTheme>()?.shadowColor ?? Colors.grey.withValues(alpha: 0.3),
             elevation: 8,
             cornerRadius: 25,
           )),
@@ -98,7 +99,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   String formatBalance(double amount) {
-    return controller.donViTienTe.value == 'đ'
+    return (controller.donViTienTe.value == 'đ' || controller.donViTienTe.value == '¥')
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${controller.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${controller.donViTienTe.value}';
   }
@@ -112,18 +113,39 @@ class _HomePageState extends State<HomePage> {
       child: Scaffold(
         resizeToAvoidBottomInset: true,
         appBar: AppBar(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           automaticallyImplyLeading: false,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: Theme.of(context).extension<AppGradientTheme>()?.primaryGradient,
+              boxShadow: [
+                BoxShadow(
+                  color: Theme.of(context).extension<AppGradientTheme>()?.shadowColor ?? Colors.black.withValues(alpha: 0.3),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
           title: Row(
             children: [
               Text(
                 'Chào mừng '.tr,
-                style: Theme.of(context).textTheme.displayLarge,
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                  color: Colors.white,
+                ),
               ),
               Obx(
                 () => Text(
                   controller.userModel.value?.name ?? " ",
-                  style: Theme.of(context).textTheme.displayLarge,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ],
@@ -248,7 +270,7 @@ class _HomePageState extends State<HomePage> {
           controller: totalBalanceController,
           keyboardType: TextInputType.number,
           validator: controller.validateTotalBalance,
-          inputFormatters: controller.donViTienTe.value == 'đ'
+          inputFormatters: (controller.donViTienTe.value == 'đ' || controller.donViTienTe.value == '¥')
               ? [FilteringTextInputFormatter.digitsOnly]
               : [
                   FilteringTextInputFormatter.allow(
@@ -257,7 +279,7 @@ class _HomePageState extends State<HomePage> {
                 ],
           onChanged: (value) {
             value = value.replaceAll(',', '');
-            if (controller.donViTienTe.value == 'đ') {
+            if (controller.donViTienTe.value == 'đ' || controller.donViTienTe.value == '¥') {
               totalBalanceController.value = TextEditingValue(
                 text: currencyFormatter.format(int.tryParse(value) ?? 0),
                 selection: TextSelection.collapsed(
@@ -315,7 +337,7 @@ class _HomePageState extends State<HomePage> {
               onPressed: () async {
                 if (formKeyBalance.currentState!.validate()) {
                   double amountCT;
-                  if (controller.donViTienTe.value == "đ") {
+                  if (controller.donViTienTe.value == "đ" || controller.donViTienTe.value == "¥") {
                     amountCT = double.parse(
                         totalBalanceController.text.replaceAll(',', ''));
                   } else {
@@ -347,7 +369,7 @@ class _HomePageState extends State<HomePage> {
           borderRadius: BorderRadius.circular(15),
           boxShadow: [
             BoxShadow(
-              color: Colors.grey.withOpacity(0.5),
+              color: Colors.grey.withValues(alpha: 0.5),
               spreadRadius: 2,
               blurRadius: 7,
               offset: const Offset(0, 1),
@@ -440,7 +462,7 @@ class _HomePageState extends State<HomePage> {
                           height: doubleHeight * (130 / 800),
                           width: doubleWidth * (170 / 360),
                           decoration: BoxDecoration(
-                            color: Colors.blueAccent.withOpacity(0.1),
+                            color: Colors.blueAccent.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: SfCartesianChart(
@@ -606,7 +628,7 @@ class _HomePageState extends State<HomePage> {
                                       ),
                                       color: Color(
                                         category?.colorIcon ??
-                                            Colors.grey.value,
+                                            Colors.grey.toARGB32(),
                                       ),
                                       size: 24,
                                     ),

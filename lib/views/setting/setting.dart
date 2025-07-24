@@ -1,6 +1,7 @@
 import 'package:doan_ql_thu_chi/controllers/setting_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../../widget_common/custom_app_bar.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../category/add_category.dart';
 
@@ -30,14 +31,9 @@ class _SettingState extends State<Setting> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'CÀI ĐẶT'.tr,
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-        centerTitle: true,
-        backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-        iconTheme: const IconThemeData(color: Colors.white),
+      appBar: CustomAppBar(
+        title: 'CÀI ĐẶT'.tr,
+        showBackButton: true,
       ),
       body: SafeArea(
         child: SingleChildScrollView(
@@ -45,7 +41,7 @@ class _SettingState extends State<Setting> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              _buildSectionHeader('Tùy chỉnh'),
+              _buildSectionHeader('Tùy chỉnh'.tr),
               _buildSettingsGroup([
                 buildAddCategory(),
                 const SizedBox(height: 8),
@@ -56,17 +52,17 @@ class _SettingState extends State<Setting> {
                 buildLightDarkTheme(),
               ]),
               const SizedBox(height: 24),
-              _buildSectionHeader('Thông báo'),
+              _buildSectionHeader('Thông báo'.tr),
               _buildSettingsGroup([
                 buildNotificationSettings(),
                 const SizedBox(height: 8),
                 buildReminderSettings(),
               ]),
               const SizedBox(height: 24),
-              _buildSectionHeader('Thông tin ứng dụng'),
-              _buildSettingsGroup([
-                _buildAppInfoTile(),
-              ]),
+             // _buildSectionHeader('Thông tin ứng dụng'.tr),
+              //_buildSettingsGroup([
+               // _buildAppInfoTile(),
+              //]),
             ],
           ),
         ),
@@ -79,10 +75,10 @@ class _SettingState extends State<Setting> {
       padding: const EdgeInsets.only(left: 4, bottom: 8),
       child: Text(
         title.tr,
-        style: const TextStyle(
+        style: TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Colors.black87,
+          color: Theme.of(context).textTheme.titleLarge?.color ?? Colors.black87,
         ),
       ),
     );
@@ -91,11 +87,11 @@ class _SettingState extends State<Setting> {
   Widget _buildSettingsGroup(List<Widget> children) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
+            color: Theme.of(context).dividerColor.withValues(alpha: 0.5),
             spreadRadius: 1,
             blurRadius: 8,
             offset: const Offset(0, 2),
@@ -108,70 +104,6 @@ class _SettingState extends State<Setting> {
     );
   }
 
-  Widget _buildAppInfoTile() {
-    return GestureDetector(
-      onTap: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Thông tin ứng dụng - Phiên bản 1.0.0')),
-        );
-      },
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-        child: Row(
-          children: [
-            Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: const Icon(
-                Icons.info_outline,
-                color: Colors.green,
-                size: 24,
-              ),
-            ),
-            const SizedBox(width: 16),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Thông tin ứng dụng'.tr,
-                    style: const TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                      color: Colors.black87,
-                    ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    'Phiên bản 1.0.0'.tr,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.grey[600],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              padding: const EdgeInsets.all(6),
-              decoration: BoxDecoration(
-                color: Colors.grey[100],
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: const Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: Colors.grey,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
 
   Widget buildAddCategory() {
     return GestureDetector(
@@ -183,7 +115,7 @@ class _SettingState extends State<Setting> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.purple.withOpacity(0.1),
+                color: Colors.purple.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -199,10 +131,10 @@ class _SettingState extends State<Setting> {
                 children: [
                   Text(
                     'Thêm danh mục'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.titleMedium?.color,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -244,7 +176,7 @@ class _SettingState extends State<Setting> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.blue.withOpacity(0.1),
+                color: Colors.blue.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -260,15 +192,15 @@ class _SettingState extends State<Setting> {
                 children: [
                   Text(
                     'Ngôn ngữ'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.titleMedium?.color,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Obx(() => Text(
-                    '${settingController.localizations.firstWhere((lang) => lang['Local'] == settingController.selectedLanguage.value)['name']}'.tr,
+                    '${settingController.localizations.firstWhere((lang) => lang['Local'] == settingController.selectedLanguage.value, orElse: () => {'name': 'Tiếng việt'})['name']}'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -305,7 +237,7 @@ class _SettingState extends State<Setting> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -321,15 +253,15 @@ class _SettingState extends State<Setting> {
                 children: [
                   Text(
                     'Đơn vị tiền tệ'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.titleMedium?.color,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Obx(() => Text(
-                    '${settingController.listCurrency.firstWhere((currency) => currency['currency'] == settingController.selectedCurrency.value)['name']}'.tr,
+                    '${settingController.listCurrency.firstWhere((currency) => currency['currency'] == settingController.selectedCurrency.value, orElse: () => {'name': 'Việt Nam Đồng'})['name']}'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       color: Colors.grey[600],
@@ -370,7 +302,7 @@ class _SettingState extends State<Setting> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.orange.withOpacity(0.1),
+                color: Colors.orange.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -386,10 +318,10 @@ class _SettingState extends State<Setting> {
                 children: [
                   Text(
                     'Chế độ sáng/tối'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -426,7 +358,7 @@ class _SettingState extends State<Setting> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Colors.blue.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: const Icon(
@@ -442,10 +374,10 @@ class _SettingState extends State<Setting> {
               children: [
                 Text(
                   'Thông báo chung'.tr,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black87,
                   ),
                 ),
                 const SizedBox(height: 4),
@@ -493,7 +425,7 @@ class _SettingState extends State<Setting> {
             Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.green.withOpacity(0.1),
+                color: Colors.green.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Icon(
@@ -509,19 +441,19 @@ class _SettingState extends State<Setting> {
                 children: [
                   Text(
                     'Nhắc nhở ghi chép'.tr,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.w600,
-                      color: Colors.black87,
+                      color: Theme.of(context).textTheme.titleMedium?.color ?? Colors.black87,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Obx(() => Text(
                     settingController.reminderEnabled.value
-                        ? 'Đã bật lúc ${settingController.reminderTime.value.format(context)}'
+                        ? '${'Đã bật lúc'.tr} ${settingController.reminderTime.value.format(context)}'
                         : settingController.notificationEnabled.value 
                             ? 'Nhắc nhở ghi chép thu chi hàng ngày'.tr
-                            : 'Cần bật thông báo chung trước',
+                            : 'Cần bật thông báo chung trước'.tr,
                     style: TextStyle(
                       fontSize: 14,
                       color: settingController.notificationEnabled.value 
@@ -592,12 +524,12 @@ class _SettingState extends State<Setting> {
                     border: Border.all(
                       color: settingController.selectedLanguage.value == currentLocalValue
                           ? Colors.blue
-                          : Colors.grey.withOpacity(0.3),
+                          : Colors.grey.withValues(alpha: 0.3),
                       width: settingController.selectedLanguage.value == currentLocalValue ? 2 : 1,
                     ),
                     borderRadius: BorderRadius.circular(10),
                     color: settingController.selectedLanguage.value == currentLocalValue
-                        ? Colors.blue.withOpacity(0.1)
+                        ? Colors.blue.withValues(alpha: 0.1)
                         : Colors.transparent,
                   ),
                   child: ListTile(
@@ -617,7 +549,7 @@ class _SettingState extends State<Setting> {
                         : null,
                   ),
                 ));
-              }).toList(),
+              }),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -694,12 +626,12 @@ class _SettingState extends State<Setting> {
                     border: Border.all(
                       color: settingController.selectedCurrency.value == currentCurrencyValue
                           ? Colors.green
-                          : Colors.grey.withOpacity(0.3),
+                          : Colors.grey.withValues(alpha: 0.3),
                       width: settingController.selectedCurrency.value == currentCurrencyValue ? 2 : 1,
                     ),
                     borderRadius: BorderRadius.circular(10),
                     color: settingController.selectedCurrency.value == currentCurrencyValue
-                        ? Colors.green.withOpacity(0.1)
+                        ? Colors.green.withValues(alpha: 0.1)
                         : Colors.transparent,
                   ),
                   child: ListTile(
@@ -720,7 +652,7 @@ class _SettingState extends State<Setting> {
                         : null,
                   ),
                 ));
-              }).toList(),
+              }),
               const SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -790,8 +722,8 @@ class _SettingState extends State<Setting> {
                       padding: const EdgeInsets.all(12),
                       margin: const EdgeInsets.only(bottom: 16),
                       decoration: BoxDecoration(
-                        color: Colors.orange.withOpacity(0.1),
-                        border: Border.all(color: Colors.orange.withOpacity(0.3)),
+                        color: Colors.orange.withValues(alpha: 0.1),
+                        border: Border.all(color: Colors.orange.withValues(alpha: 0.3)),
                         borderRadius: BorderRadius.circular(8),
                       ),
                       child: Row(
@@ -800,7 +732,7 @@ class _SettingState extends State<Setting> {
                           const SizedBox(width: 8),
                           Expanded(
                             child: Text(
-                              'Cần bật "Thông báo chung" trước khi sử dụng tính năng này',
+                              'Cần bật "Thông báo chung" trước khi sử dụng tính năng này'.tr,
                               style: TextStyle(
                                 fontSize: 14,
                                 color: Colors.orange[700],
@@ -896,15 +828,15 @@ class _SettingState extends State<Setting> {
                       // Kiểm tra thông báo chung có bật không
                       if (!settingController.notificationEnabled.value) {
                         ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: const Text(
-                              'Cần bật "Thông báo chung" trước khi sử dụng tính năng nhắc nhở',
-                            ),
+                                                      SnackBar(
+                              content: Text(
+                                'Cần bật "Thông báo chung" trước khi sử dụng tính năng này'.tr,
+                              ),
                             backgroundColor: Colors.orange,
                             duration: const Duration(seconds: 3),
                             action: SnackBarAction(
-                              label: 'Bật ngay',
-                              textColor: Colors.white,
+                                label: 'Bật ngay'.tr,
+                                textColor: Colors.white,
                               onPressed: () {
                                 settingController.toggleNotification();
                               },

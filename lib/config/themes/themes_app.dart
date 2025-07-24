@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class AppColors {
   // Light theme colors
@@ -10,7 +11,7 @@ class AppColors {
   static const Color textPrimaryLight = Colors.black87;
   static const Color textSecondaryLight = Colors.black54;
   static const Color dividerLight = Color(0xFFEEEEEE);
-  static final Color shadowLight = Colors.black.withOpacity(0.1);
+  static final Color shadowLight = Colors.black.withValues(alpha: 0.1);
   
   // Dark theme colors
   static const Color primaryDark = Color(0xFF1976D2);
@@ -21,7 +22,13 @@ class AppColors {
   static const Color textPrimaryDark = Colors.white;
   static const Color textSecondaryDark = Colors.white70;
   static const Color dividerDark = Color(0xFF323232);
-  static final Color shadowDark = Colors.black.withOpacity(0.3);
+  static final Color shadowDark = Colors.black.withValues(alpha: 0.3);
+  
+  // AppBar colors for better dark mode
+  static const Color appBarLightStart = Color(0xFF1565C0);
+  static const Color appBarLightEnd = Color(0xFF42A5F5);
+  static const Color appBarDarkStart = Color(0xFF1A1A1A);
+  static const Color appBarDarkEnd = Color(0xFF2D2D2D);
 }
 
 class AppTextStyles {
@@ -94,26 +101,26 @@ class AppTextStyles {
 
 class AppGradients {
   // Gradients for light theme
-  static LinearGradient primaryGradientLight = LinearGradient(
-    colors: [AppColors.primaryDarkLight, AppColors.primaryLight],
+  static LinearGradient primaryGradientLight = const LinearGradient(
+    colors: [AppColors.appBarLightStart, AppColors.appBarLightEnd],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   
-  static LinearGradient buttonGradientLight = LinearGradient(
+  static LinearGradient buttonGradientLight = const LinearGradient(
     colors: [AppColors.primaryDarkLight, AppColors.primaryLight],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
   );
   
   // Gradients for dark theme
-  static LinearGradient primaryGradientDark = LinearGradient(
-    colors: [AppColors.primaryDarkDark, AppColors.primaryDark],
+  static LinearGradient primaryGradientDark = const LinearGradient(
+    colors: [AppColors.appBarDarkStart, AppColors.appBarDarkEnd],
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
   );
   
-  static LinearGradient buttonGradientDark = LinearGradient(
+  static LinearGradient buttonGradientDark = const LinearGradient(
     colors: [AppColors.primaryDarkDark, AppColors.primaryDark],
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
@@ -161,7 +168,7 @@ class ThemesApp {
         borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide.none,
       ),
-      hintStyle: TextStyle(color: Colors.grey),
+      hintStyle: const TextStyle(color: Colors.grey),
       prefixIconColor: AppColors.primaryLight,
       suffixIconColor: Colors.grey,
     ),
@@ -173,16 +180,26 @@ class ThemesApp {
         return null;
       }),
     ),
+    // Extensions for custom gradients
+    extensions: <ThemeExtension<dynamic>>[
+      AppGradientTheme.light(),
+    ],
   );
 
   static final dark = ThemeData(
     brightness: Brightness.dark,
     primaryColor: AppColors.primaryDark,
     appBarTheme: AppBarTheme(
-      backgroundColor: AppColors.primaryDark,
-      elevation: 0,
+      backgroundColor: AppColors.appBarDarkStart,
+      elevation: 2,
+      shadowColor: Colors.black.withValues(alpha: 0.3),
       iconTheme: const IconThemeData(color: Colors.white),
       titleTextStyle: AppTextStyles.headingDark,
+      systemOverlayStyle: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+      ),
     ),
     scaffoldBackgroundColor: AppColors.backgroundDark,
     cardColor: AppColors.cardDark,
@@ -191,7 +208,7 @@ class ThemesApp {
     hintColor: Colors.grey,
     indicatorColor: AppColors.primaryDark,
     dividerColor: AppColors.dividerDark,
-    textTheme: TextTheme(
+    textTheme: const TextTheme(
       displayLarge: AppTextStyles.headingDark,
       titleLarge: AppTextStyles.titleDark,
       titleMedium: AppTextStyles.subtitleDark,
@@ -215,7 +232,7 @@ class ThemesApp {
         borderRadius: BorderRadius.circular(30),
         borderSide: BorderSide.none,
       ),
-      hintStyle: TextStyle(color: Colors.grey),
+      hintStyle: const TextStyle(color: Colors.grey),
       prefixIconColor: AppColors.primaryDark,
       suffixIconColor: Colors.grey,
     ),
@@ -227,5 +244,67 @@ class ThemesApp {
         return null;
       }),
     ),
+    // Extensions for custom gradients
+    extensions: <ThemeExtension<dynamic>>[
+      AppGradientTheme.dark(),
+    ],
   );
+}
+
+// Custom theme extension for gradients
+class AppGradientTheme extends ThemeExtension<AppGradientTheme> {
+  final LinearGradient primaryGradient;
+  final LinearGradient buttonGradient;
+  final Color shadowColor;
+
+  const AppGradientTheme({
+    required this.primaryGradient,
+    required this.buttonGradient,
+    required this.shadowColor,
+  });
+
+  factory AppGradientTheme.light() {
+    return AppGradientTheme(
+      primaryGradient: AppGradients.primaryGradientLight,
+      buttonGradient: AppGradients.buttonGradientLight,
+      shadowColor: AppColors.shadowLight,
+    );
+  }
+
+  factory AppGradientTheme.dark() {
+    return AppGradientTheme(
+      primaryGradient: AppGradients.primaryGradientDark,
+      buttonGradient: AppGradients.buttonGradientDark,
+      shadowColor: AppColors.shadowDark,
+    );
+  }
+
+  @override
+  ThemeExtension<AppGradientTheme> copyWith({
+    LinearGradient? primaryGradient,
+    LinearGradient? buttonGradient,
+    Color? shadowColor,
+  }) {
+    return AppGradientTheme(
+      primaryGradient: primaryGradient ?? this.primaryGradient,
+      buttonGradient: buttonGradient ?? this.buttonGradient,
+      shadowColor: shadowColor ?? this.shadowColor,
+    );
+  }
+
+  @override
+  ThemeExtension<AppGradientTheme> lerp(
+    ThemeExtension<AppGradientTheme>? other,
+    double t,
+  ) {
+    if (other is! AppGradientTheme) {
+      return this;
+    }
+
+    return AppGradientTheme(
+      primaryGradient: LinearGradient.lerp(primaryGradient, other.primaryGradient, t) ?? primaryGradient,
+      buttonGradient: LinearGradient.lerp(buttonGradient, other.buttonGradient, t) ?? buttonGradient,
+      shadowColor: Color.lerp(shadowColor, other.shadowColor, t) ?? shadowColor,
+    );
+  }
 }

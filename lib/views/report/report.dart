@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:month_year_picker/month_year_picker.dart';
+import '../../config/themes/themes_app.dart';
 import 'details_report.dart';
 
 class BaoCao extends StatefulWidget {
@@ -19,7 +20,7 @@ class BaoCao extends StatefulWidget {
 class _BaoCaoState extends State<BaoCao> {
   final ReportController reportController = Get.find();
   String formatBalance(double amount ) {
-    return reportController.donViTienTe.value == 'đ'
+    return (reportController.donViTienTe.value == 'đ' || reportController.donViTienTe.value == '¥')
         ? '${NumberFormat('#,##0').format(amount.toCurrency())} ${reportController.donViTienTe.value}'
         : '${NumberFormat('#,##0.##').format(amount.toCurrency())} ${reportController.donViTienTe.value}';
   }
@@ -33,6 +34,8 @@ class _BaoCaoState extends State<BaoCao> {
   Widget build(BuildContext context) {
     final doubleHeight = MediaQuery.of(context).size.height;
     final doubleWidth = MediaQuery.of(context).size.width;
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
@@ -41,12 +44,32 @@ class _BaoCaoState extends State<BaoCao> {
           automaticallyImplyLeading: false,
           title: Text(
             'BÁO CÁO'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white),
-          elevation: 2,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: gradientTheme?.primaryGradient ?? LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: gradientTheme?.shadowColor ?? Colors.blue.shade300.withValues(alpha: 0.5),
+                  blurRadius: 10,
+                  offset: const Offset(0, 3),
+                ),
+              ],
+            ),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(100.0),
             child: Column(
@@ -142,25 +165,22 @@ class _BaoCaoState extends State<BaoCao> {
     );
   }
 
-
-
   SingleChildScrollView buildTabExpense(double doubleHeight, double doubleWidth, BuildContext context) {
     return SingleChildScrollView(
       physics: const NeverScrollableScrollPhysics(),
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
-          // Chart section with loading state
           Obx(() => Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   spreadRadius: 1,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -169,9 +189,9 @@ class _BaoCaoState extends State<BaoCao> {
               height: doubleHeight * (180 / 800),
               width: doubleWidth * (250 / 360),
               child: PieChart(
-                  swapAnimationDuration:
-                  const Duration(milliseconds: 150), // Optional
-                  swapAnimationCurve: Curves.linear,
+                  duration:
+                  const Duration(milliseconds: 150),
+                  curve: Curves.linear,
                   PieChartData(
                       sections:
                       reportController.getSectionsChiTieu())),
@@ -181,11 +201,11 @@ class _BaoCaoState extends State<BaoCao> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.15),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
@@ -201,7 +221,7 @@ class _BaoCaoState extends State<BaoCao> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.titleMedium?.color,
                       ),
                     ),
                     Obx(
@@ -224,7 +244,7 @@ class _BaoCaoState extends State<BaoCao> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.titleMedium?.color,
                       ),
                     ),
                     Obx(
@@ -248,7 +268,7 @@ class _BaoCaoState extends State<BaoCao> {
             decoration: BoxDecoration(
               color: Colors.red[50],
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.red[100]!, width: 1),
+              border: Border.all(color: Colors.red[100] ?? Colors.red, width: 1),
             ),
             child: Row(
               children: [
@@ -272,7 +292,7 @@ class _BaoCaoState extends State<BaoCao> {
           const SizedBox(height: 8),
           Obx(() => Container(
             height: 280,
-            padding: const EdgeInsets.only(bottom: 80), // Padding để tránh navbar che
+            padding: const EdgeInsets.only(bottom: 80),
             child: reportController.report.value?.categories?.values
                 .where((category) => category.type == 'Chi Tiêu')
                 .isEmpty ??
@@ -280,7 +300,10 @@ class _BaoCaoState extends State<BaoCao> {
                 ? Center(
             child: Text(
               'Chưa có dữ liệu'.tr,
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6)
+              ),
             ),
           )
                 : ListView.builder(
@@ -293,8 +316,8 @@ class _BaoCaoState extends State<BaoCao> {
               itemBuilder: (BuildContext context, int index) {
                 CategoryReportModel? category = reportController
                     .report.value?.categories?.values
-                    .where((category) => category.type == 'Chi Tiêu')
-                    .elementAt(index);
+                                    .where((category) => category.type == 'Chi Tiêu')
+                .elementAt(index);
                 if (category == null) {
                   return Container();
                 }
@@ -304,17 +327,9 @@ class _BaoCaoState extends State<BaoCao> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                        border: Border.all(color: Colors.grey[200]!, width: 1),
+                        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -349,7 +364,7 @@ class _BaoCaoState extends State<BaoCao> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                                   ),
                                 )
                               ],
@@ -387,17 +402,16 @@ class _BaoCaoState extends State<BaoCao> {
       child: Container(
         padding: const EdgeInsets.all(8),
         child: Column(children: [
-          // Chart section
           Obx(() => Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(15),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.2),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   spreadRadius: 1,
-                  blurRadius: 6,
-                  offset: const Offset(0, 3),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
                 ),
               ],
             ),
@@ -406,9 +420,9 @@ class _BaoCaoState extends State<BaoCao> {
               height: doubleHeight * (180 / 800),
               width: doubleWidth * (250 / 360),
               child: PieChart(
-                  swapAnimationDuration:
-                  const Duration(milliseconds: 150), // Optional
-                  swapAnimationCurve: Curves.linear,
+                  duration:
+                  const Duration(milliseconds: 150),
+                  curve: Curves.linear,
                   PieChartData(
                       sections:
                       reportController.getSectionsThuNhap())),
@@ -418,11 +432,11 @@ class _BaoCaoState extends State<BaoCao> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).cardColor,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withOpacity(0.15),
+                  color: Theme.of(context).shadowColor.withValues(alpha: 0.1),
                   spreadRadius: 1,
                   blurRadius: 4,
                   offset: const Offset(0, 2),
@@ -438,7 +452,7 @@ class _BaoCaoState extends State<BaoCao> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.titleMedium?.color,
                       ),
                     ),
                     Obx(
@@ -461,7 +475,7 @@ class _BaoCaoState extends State<BaoCao> {
                       style: TextStyle(
                         fontSize: 15,
                         fontWeight: FontWeight.w500,
-                        color: Colors.grey[700],
+                        color: Theme.of(context).textTheme.titleMedium?.color,
                       ),
                     ),
                     Obx(
@@ -485,7 +499,7 @@ class _BaoCaoState extends State<BaoCao> {
             decoration: BoxDecoration(
               color: Colors.green[50],
               borderRadius: BorderRadius.circular(8),
-              border: Border.all(color: Colors.green[100]!, width: 1),
+              border: Border.all(color: Colors.green[100] ?? Colors.green, width: 1),
             ),
             child: Row(
               children: [
@@ -509,7 +523,7 @@ class _BaoCaoState extends State<BaoCao> {
           const SizedBox(height: 8),
           Obx(() => Container(
             height: 280,
-            padding: const EdgeInsets.only(bottom: 80), // Padding để tránh navbar che
+            padding: const EdgeInsets.only(bottom: 80),
             child: reportController.report.value?.categories?.values
                 .where((category) => category.type == 'Thu Nhập')
                 .isEmpty ??
@@ -517,7 +531,10 @@ class _BaoCaoState extends State<BaoCao> {
                 ? Center(
             child: Text(
               'Chưa có dữ liệu'.tr,
-              style: const TextStyle(fontSize: 18, color: Colors.grey),
+              style: TextStyle(
+                fontSize: 18, 
+                color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6)
+              ),
             ),
           )
                 : ListView.builder(
@@ -530,8 +547,8 @@ class _BaoCaoState extends State<BaoCao> {
               itemBuilder: (BuildContext context, int index) {
                 CategoryReportModel? category = reportController
                     .report.value?.categories?.values
-                    .where((category) => category.type == 'Thu Nhập')
-                    .elementAt(index);
+                                    .where((category) => category.type == 'Thu Nhập')
+                .elementAt(index);
                 if (category == null) {
                   return Container();
                 }
@@ -541,17 +558,9 @@ class _BaoCaoState extends State<BaoCao> {
                     Container(
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                         borderRadius: BorderRadius.circular(10),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 1,
-                            blurRadius: 3,
-                            offset: const Offset(0, 2),
-                          ),
-                        ],
-                        border: Border.all(color: Colors.grey[200]!, width: 1),
+                        border: Border.all(color: Theme.of(context).dividerColor, width: 1),
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -586,7 +595,7 @@ class _BaoCaoState extends State<BaoCao> {
                                   style: TextStyle(
                                     fontSize: 12,
                                     fontWeight: FontWeight.w600,
-                                    color: Colors.grey[600],
+                                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                                   ),
                                 )
                               ],

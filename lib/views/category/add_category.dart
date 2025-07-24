@@ -1,8 +1,8 @@
 import 'package:doan_ql_thu_chi/config/category/icon_color_category.dart';
-import 'package:doan_ql_thu_chi/widget_common/tabbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import '../../config/themes/themes_app.dart';
 import '../../controllers/add_category_controller.dart';
 
 class AddCategory extends StatefulWidget {
@@ -24,8 +24,8 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
     nameDMThuNhapController.clear();
     controller.selectedIconTNCode.value = Icons.home.codePoint;
     controller.selectedIconCTCode.value = Icons.home.codePoint;
-    controller.selectedTNColor.value = Colors.red.value;
-    controller.selectedCTColor.value = Colors.red.value;
+    controller.selectedTNColor.value = Colors.red.toARGB32();
+    controller.selectedCTColor.value = Colors.red.toARGB32();
   }
 
   @override
@@ -54,27 +54,41 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
         key: formKey,
         child: Scaffold(
           appBar: AppBar(
-            backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+            backgroundColor: Colors.transparent,
+            elevation: 0,
+                                  flexibleSpace: Container(
+              decoration: BoxDecoration(
+                gradient: Theme.of(context).extension<AppGradientTheme>()?.primaryGradient ?? LinearGradient(
+                  colors: [Colors.blue.shade800, Colors.blue.shade500],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+                ),
+            ),
             title: Text(
-              'Tạo mới danh mục'.tr,
-              style: Theme.of(context).textTheme.displayLarge,
+              'TẠO DANH MỤC'.tr,
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                letterSpacing: 1.2,
+                fontSize: 20,
+                color: Colors.white,
+              ),
             ),
             centerTitle: true,
-            iconTheme: const IconThemeData(color: Colors.white),
+            leading: IconButton(
+              onPressed: () => Get.back(),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+                size: 20,
+              ),
+            ),
             bottom: PreferredSize(
               preferredSize: const Size.fromHeight(70.0),
               child: Container(
                 decoration: BoxDecoration(
                   color: Theme.of(context).cardColor,
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.grey.withOpacity(0.1),
-                      spreadRadius: 1,
-                      blurRadius: 3,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
+                  ),
                 child: Column(
                   children: [
                     Container(
@@ -84,29 +98,26 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                     Container(
                       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       decoration: BoxDecoration(
-                        color: Colors.grey[100],
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Theme.of(context).cardColor 
+                            : Colors.grey[100],
                         borderRadius: BorderRadius.circular(25),
+                        border: Theme.of(context).brightness == Brightness.dark 
+                            ? Border.all(color: Theme.of(context).dividerColor) 
+                            : null,
                       ),
                       child: TabBar(
                         controller: tabController,
                         indicator: BoxDecoration(
                           borderRadius: BorderRadius.circular(25),
-                          gradient: const LinearGradient(
+                          gradient: Theme.of(context).extension<AppGradientTheme>()?.buttonGradient ?? const LinearGradient(
                             colors: [Colors.blueAccent, Colors.blue],
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.blueAccent.withOpacity(0.3),
-                              spreadRadius: 1,
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
+                          ),
                         labelColor: Colors.white,
-                        unselectedLabelColor: Colors.grey[600],
+                        unselectedLabelColor: Theme.of(context).textTheme.bodyLarge?.color?.withValues(alpha: 0.7),
                         labelStyle: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
@@ -118,7 +129,7 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                         indicatorSize: TabBarIndicatorSize.tab,
                         dividerColor: Colors.transparent,
                         splashFactory: NoSplash.splashFactory,
-                        overlayColor: MaterialStateProperty.all(Colors.transparent),
+                        overlayColor: WidgetStateProperty.all(Colors.transparent),
                         tabs: [
                           Container(
                             height: 45,
@@ -238,8 +249,6 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
     );
   }
 
-
-
   SizedBox buildListColorExpense(double doubleHeight) {
     return SizedBox(
       height: doubleHeight * (220 / 800),
@@ -255,42 +264,26 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
           final color = IconColorCategory.colors[index];
           return InkWell(
             onTap: () {
-              controller.selectedCTColor.value = color.value;
+              controller.selectedCTColor.value = color.toARGB32();
             },
             child: Obx(
               () => AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: controller.selectedCTColor.value == color.value
-                        ? Colors.white
-                        : Colors.grey.withOpacity(0.3),
-                    width: controller.selectedCTColor.value == color.value ? 3 : 1,
+                    color: controller.selectedCTColor.value == color.toARGB32()
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).dividerColor.withValues(alpha: 0.4),
+                    width: controller.selectedCTColor.value == color.toARGB32() ? 3 : 1,
                   ),
                   color: color,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: controller.selectedCTColor.value == color.value
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 0,
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+
                 ),
-                child: controller.selectedCTColor.value == color.value
-                    ? const Icon(
+                child: controller.selectedCTColor.value == color.toARGB32()
+                    ? Icon(
                         Icons.check,
-                        color: Colors.white,
+                        color: _getContrastColor(color),
                         size: 20,
                       )
                     : null,
@@ -322,40 +315,24 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: controller.selectedIconCTCode.value == iconCode
-                      ? Colors.blueAccent.withOpacity(0.1)
-                      : Colors.white,
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                      : Theme.of(context).cardColor,
                   border: Border.all(
                     color: controller.selectedIconCTCode.value == iconCode
-                        ? Colors.blueAccent
-                        : Colors.grey.withOpacity(0.3),
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).dividerColor.withValues(alpha: 0.4),
                     width: controller.selectedIconCTCode.value == iconCode
                         ? 2
                         : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: controller.selectedIconCTCode.value == iconCode
-                      ? [
-                          BoxShadow(
-                            color: Colors.blueAccent.withOpacity(0.2),
-                            spreadRadius: 1,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 0,
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+
                 ),
                 child: Icon(
                   IconData(iconCode, fontFamily: 'MaterialIcons'),
                   color: controller.selectedIconCTCode.value == iconCode
-                      ? Colors.blueAccent
-                      : Colors.grey[600],
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   size: 24,
                 ),
               ),
@@ -373,10 +350,10 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
         children: [
           Text(
             title.tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.titleMedium?.color,
             ),
           ),
         ],
@@ -388,25 +365,17 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
           return Container(
         padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
+        ),
       child: Row(
         children: [
           Text(
             'Tên danh mục'.tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.titleMedium?.color,
             ),
           ),
           const SizedBox(width: 12),
@@ -419,19 +388,27 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                   formKey.currentState!.validate();
                 }
               },
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
               decoration: InputDecoration(
-                hintText: 'Nhập tên...',
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                hintText: 'Nhập tên...'.tr,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+                  fontSize: 13,
+                ),
                 filled: true,
-                fillColor: Colors.grey[50],
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.surface
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Colors.red, width: 1.5),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
@@ -442,31 +419,21 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
     );
   }
 
-
-
   Widget buildRowNameCategoryIncome() {
           return Container(
         padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 3,
-            offset: const Offset(0, 1),
-          ),
-        ],
-      ),
+        ),
       child: Row(
         children: [
           Text(
             'Tên danh mục'.tr,
-            style: const TextStyle(
+            style: TextStyle(
               fontWeight: FontWeight.w600,
               fontSize: 14,
-              color: Colors.black87,
+              color: Theme.of(context).textTheme.titleMedium?.color,
             ),
           ),
           const SizedBox(width: 12),
@@ -479,19 +446,27 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                   formKey.currentState!.validate();
                 }
               },
-              style: const TextStyle(fontSize: 14),
+              style: TextStyle(
+                fontSize: 14,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
               decoration: InputDecoration(
-                hintText: 'Nhập tên...',
-                hintStyle: TextStyle(color: Colors.grey[400], fontSize: 13),
+                hintText: 'Nhập tên...'.tr,
+                hintStyle: TextStyle(
+                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
+                  fontSize: 13,
+                ),
                 filled: true,
-                fillColor: Colors.grey[50],
+                fillColor: Theme.of(context).brightness == Brightness.dark
+                    ? Theme.of(context).colorScheme.surface
+                    : Theme.of(context).colorScheme.surfaceContainerHighest,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide.none,
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
-                  borderSide: const BorderSide(color: Colors.blue, width: 1.5),
+                  borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 1.5),
                 ),
                 contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
               ),
@@ -501,8 +476,6 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
       ),
     );
   }
-
-
 
   SizedBox buildListColorIncome(double doubleHeight) {
     return SizedBox(
@@ -519,42 +492,26 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
           final color = IconColorCategory.colors[index];
           return InkWell(
             onTap: () {
-              controller.selectedTNColor.value = color.value;
+              controller.selectedTNColor.value = color.toARGB32();
             },
             child: Obx(
               () => AnimatedContainer(
                 duration: const Duration(milliseconds: 200),
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color: controller.selectedTNColor.value == color.value
-                        ? Colors.white
-                        : Colors.grey.withOpacity(0.3),
-                    width: controller.selectedTNColor.value == color.value ? 3 : 1,
+                    color: controller.selectedTNColor.value == color.toARGB32()
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).dividerColor.withValues(alpha: 0.4),
+                    width: controller.selectedTNColor.value == color.toARGB32() ? 3 : 1,
                   ),
                   color: color,
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: controller.selectedTNColor.value == color.value
-                      ? [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.2),
-                            spreadRadius: 2,
-                            blurRadius: 6,
-                            offset: const Offset(0, 3),
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 0,
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+
                 ),
-                child: controller.selectedTNColor.value == color.value
-                    ? const Icon(
+                child: controller.selectedTNColor.value == color.toARGB32()
+                    ? Icon(
                         Icons.check,
-                        color: Colors.white,
+                        color: _getContrastColor(color),
                         size: 20,
                       )
                     : null,
@@ -586,40 +543,24 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                 padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: controller.selectedIconTNCode.value == iconCode
-                      ? Colors.blueAccent.withOpacity(0.1)
-                      : Colors.white,
+                      ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
+                      : Theme.of(context).cardColor,
                   border: Border.all(
                     color: controller.selectedIconTNCode.value == iconCode
-                        ? Colors.blueAccent
-                        : Colors.grey.withOpacity(0.3),
+                        ? Theme.of(context).primaryColor
+                        : Theme.of(context).dividerColor.withValues(alpha: 0.4),
                     width: controller.selectedIconTNCode.value == iconCode
                         ? 2
                         : 1,
                   ),
                   borderRadius: BorderRadius.circular(12),
-                  boxShadow: controller.selectedIconTNCode.value == iconCode
-                      ? [
-                          BoxShadow(
-                            color: Colors.blueAccent.withOpacity(0.2),
-                            spreadRadius: 1,
-                            blurRadius: 4,
-                            offset: const Offset(0, 2),
-                          ),
-                        ]
-                      : [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.1),
-                            spreadRadius: 0,
-                            blurRadius: 2,
-                            offset: const Offset(0, 1),
-                          ),
-                        ],
+
                 ),
                 child: Icon(
                   IconData(iconCode, fontFamily: 'MaterialIcons'),
                   color: controller.selectedIconTNCode.value == iconCode
-                      ? Colors.blueAccent
-                      : Colors.grey[600],
+                      ? Theme.of(context).primaryColor
+                      : Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                   size: 24,
                 ),
               ),
@@ -628,5 +569,10 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
         },
       ),
     );
+  }
+
+  Color _getContrastColor(Color color) {
+    double luminance = color.computeLuminance();
+    return luminance > 0.5 ? Colors.black87 : Colors.white;
   }
 }

@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../config/themes/themes_app.dart';
 
 class TabBarContent extends StatelessWidget {
   const TabBarContent({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
       decoration: BoxDecoration(
-        color: Colors.grey[100],
+        color: Theme.of(context).focusColor,
         borderRadius: BorderRadius.circular(25),
       ),
       child: TabBar(
         indicator: BoxDecoration(
           borderRadius: BorderRadius.circular(25),
-          gradient: const LinearGradient(
-            colors: [Colors.blueAccent, Colors.blue],
-            begin: Alignment.centerLeft,
-            end: Alignment.centerRight,
-          ),
+          gradient: gradientTheme?.buttonGradient,
           boxShadow: [
             BoxShadow(
-              color: Colors.blueAccent.withOpacity(0.3),
+              color: gradientTheme?.shadowColor ?? Colors.black.withValues(alpha: 0.3),
               spreadRadius: 1,
               blurRadius: 8,
               offset: const Offset(0, 2),
@@ -30,7 +29,7 @@ class TabBarContent extends StatelessWidget {
           ],
         ),
         labelColor: Colors.white,
-        unselectedLabelColor: Colors.grey[600],
+        unselectedLabelColor: Theme.of(context).textTheme.bodySmall?.color,
         labelStyle: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.bold,
@@ -42,7 +41,7 @@ class TabBarContent extends StatelessWidget {
         indicatorSize: TabBarIndicatorSize.tab,
         dividerColor: Colors.transparent,
         splashFactory: NoSplash.splashFactory,
-        overlayColor: MaterialStateProperty.all(Colors.transparent),
+        overlayColor: WidgetStateProperty.all(Colors.transparent),
         tabs: [
           Container(
             height: 45,

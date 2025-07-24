@@ -111,7 +111,6 @@ class ReportController extends GetxController {
 
   @override
   void onInit() {
-    // TODO: implement onInit
     super.onInit();
     fetchReport();
     getCurrency();

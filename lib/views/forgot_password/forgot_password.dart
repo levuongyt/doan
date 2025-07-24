@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../../controllers/forgot_pass_controller.dart';
+import '../../widget_common/custom_app_bar.dart';
 class ForgotPassword extends StatefulWidget {
   const ForgotPassword({super.key});
 
@@ -31,15 +32,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     return Form(
       key: formKey,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text(
-            'QUÊN MẬT KHẨU'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+                  appBar: CustomAppBar(
+            title: 'QUÊN MẬT KHẨU'.tr,
           ),
-          centerTitle: true,
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-          iconTheme: const IconThemeData(color: Colors.white),
-        ),
         body: SingleChildScrollView(
           padding: const EdgeInsets.all(16),
           child: Column(
@@ -71,7 +66,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 validator: controller.ktEmail,
                 decoration: InputDecoration(
                   hintStyle: TextStyle(color: Theme.of(context).hintColor),
-                  hintText: 'Email',
+                                      hintText: 'Email'.tr,
                   contentPadding: const EdgeInsets.symmetric(
                     vertical: 18,
                     horizontal: 20,

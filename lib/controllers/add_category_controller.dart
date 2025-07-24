@@ -9,8 +9,8 @@ class AddCetegoryController extends GetxController {
   RxBool isLoading = false.obs;
   RxInt selectedIconTNCode = Icons.home.codePoint.obs;
   RxInt selectedIconCTCode = Icons.home.codePoint.obs;
-  RxInt selectedTNColor = Colors.red.value.obs;
-  RxInt selectedCTColor = Colors.red.value.obs;
+  RxInt selectedTNColor = Colors.red.toARGB32().obs;
+  RxInt selectedCTColor = Colors.red.toARGB32().obs;
 
   Future<void> addCategory(
       String nameDM, int iconCode, int colorIcon, String type) async {

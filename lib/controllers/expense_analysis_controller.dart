@@ -41,11 +41,10 @@ class ExpenseAnalysisController extends GetxController {
   }
   
   void _loadSpendingData() {
-    // Mock data - sau này sẽ connect với Firebase
-    totalSpending.value = 15000000; // 15 triệu VND
-    budgetLimit.value = 20000000; // 20 triệu VND
-    lastMonthSpending.value = 18000000; // 18 triệu tháng trước
-    savingsGoal.value = 5000000; // Mục tiêu tiết kiệm 5 triệu
+    totalSpending.value = 15000000;
+    budgetLimit.value = 20000000;
+    lastMonthSpending.value = 18000000;
+    savingsGoal.value = 5000000;
     
     spendingCategories.addAll([
       SpendingCategoryModel(
@@ -105,7 +104,7 @@ class ExpenseAnalysisController extends GetxController {
     optimizationSuggestions.addAll([
       OptimizationSuggestion(
         id: '1',
-        title: 'Chi tiêu ăn uống cao',
+        title: 'Chi tiêu ăn uống cao'.tr,
         description: 'Bạn đang chi 6M cho ăn uống (40% tổng chi). Thử nấu ăn tại nhà nhiều hơn.',
         category: 'Ăn uống',
         potentialSavings: 1500000,
@@ -120,7 +119,7 @@ class ExpenseAnalysisController extends GetxController {
       ),
       OptimizationSuggestion(
         id: '2',
-        title: 'Tối ưu di chuyển',
+        title: 'Tối ưu di chuyển'.tr,
         description: 'Cân nhắc sử dụng xe bus/grab bike thay vì grab car để tiết kiệm.',
         category: 'Di chuyển',
         potentialSavings: 800000,
@@ -135,7 +134,7 @@ class ExpenseAnalysisController extends GetxController {
       ),
       OptimizationSuggestion(
         id: '3',
-        title: 'Kiểm soát mua sắm',
+        title: 'Kiểm soát mua sắm'.tr,
         description: 'Lập danh sách mua sắm và tránh mua đồ không cần thiết.',
         category: 'Mua sắm',
         potentialSavings: 500000,
@@ -155,7 +154,7 @@ class ExpenseAnalysisController extends GetxController {
     savingsTips.addAll([
       SavingTipModel(
         id: '1',
-        title: '50/30/20 Rule',
+        title: '50/30/20 Rule'.tr,
         description: '50% nhu cầu thiết yếu, 30% giải trí, 20% tiết kiệm',
         icon: Icons.pie_chart,
         color: Colors.blue,
@@ -163,7 +162,7 @@ class ExpenseAnalysisController extends GetxController {
       ),
       SavingTipModel(
         id: '2',
-        title: 'Nấu ăn tại nhà',
+        title: 'Nấu ăn tại nhà'.tr,
         description: 'Tiết kiệm 40-60% chi phí ăn uống mỗi tháng',
         icon: Icons.home,
         color: Colors.green,
@@ -171,7 +170,7 @@ class ExpenseAnalysisController extends GetxController {
       ),
       SavingTipModel(
         id: '3',
-        title: 'So sánh giá',
+        title: 'So sánh giá'.tr,
         description: 'Sử dụng app so sánh giá trước khi mua sắm',
         icon: Icons.compare_arrows,
         color: Colors.orange,
@@ -179,7 +178,7 @@ class ExpenseAnalysisController extends GetxController {
       ),
       SavingTipModel(
         id: '4',
-        title: 'Tự động tiết kiệm',
+        title: 'Tự động tiết kiệm'.tr,
         description: 'Thiết lập chuyển tiền tự động vào tài khoản tiết kiệm',
         icon: Icons.autorenew,
         color: Colors.purple,
@@ -227,13 +226,12 @@ class ExpenseAnalysisController extends GetxController {
   
   // Apply optimization suggestion
   void applyOptimization(String suggestionId) {
-    // TODO: Implement optimization application logic
     // This could update user preferences, set reminders, etc.
   }
   
   // Mark tip as helpful
   void markTipAsHelpful(String tipId) {
-    // TODO: Track which tips users find helpful
+
   }
 }
 

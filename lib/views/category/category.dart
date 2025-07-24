@@ -4,6 +4,7 @@ import 'package:doan_ql_thu_chi/widget_common/tabbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../controllers/transaction_controller.dart';
+import '../../config/themes/themes_app.dart';
 import 'add_category.dart';
 
 class Category extends StatefulWidget {
@@ -17,39 +18,55 @@ class _CategoryState extends State<Category> {
   final TransactionController controller = Get.find();
   @override
   Widget build(BuildContext context) {
+    final gradientTheme = Theme.of(context).extension<AppGradientTheme>();
+    
     return DefaultTabController(
       initialIndex: 0,
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: BoxDecoration(
+              gradient: gradientTheme?.primaryGradient ?? LinearGradient(
+                colors: [Colors.blue.shade800, Colors.blue.shade500],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+              ),
+          ),
           title: Text(
-            'Thêm danh mục'.tr,
-            style: Theme.of(context).textTheme.displayLarge,
+            'DANH MỤC'.tr,
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+              fontSize: 20,
+              color: Colors.white,
+            ),
           ),
           actions: [
             IconButton(
                 onPressed: () {
                   Get.to(const AddCategory());
                 },
-                icon: const Icon(Icons.add))
+                icon: const Icon(Icons.add, color: Colors.white))
           ],
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white),
+          leading: IconButton(
+            onPressed: () => Get.back(),
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 20,
+            ),
+          ),
           bottom: PreferredSize(
             preferredSize: const Size.fromHeight(70.0),
             child: Container(
               decoration: BoxDecoration(
                 color: Theme.of(context).cardColor,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 3,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-              ),
+                ),
               child: Column(
                 children: [
                   Container(
@@ -99,27 +116,19 @@ class _CategoryState extends State<Category> {
                         margin: const EdgeInsets.only(bottom: 12),
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                           border: Border.all(
-                            color: Colors.grey.withOpacity(0.3),
+                            color: Theme.of(context).dividerColor,
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(12),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.1),
-                              spreadRadius: 1,
-                              blurRadius: 4,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
+                          ),
                         child: Row(
                           children: [
                             Container(
                               padding: const EdgeInsets.all(10),
                               decoration: BoxDecoration(
-                                color: Color(category.colorIcon).withOpacity(0.1),
+                                color: Color(category.colorIcon).withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Icon(
@@ -131,12 +140,12 @@ class _CategoryState extends State<Category> {
                             ),
                             const SizedBox(width: 16),
                             Expanded(
-                              child: Text(
+                              child:                               Text(
                                 category.name.tr,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
-                                  color: Colors.black87,
+                                  color: Theme.of(context).textTheme.titleMedium?.color,
                                 ),
                               ),
                             ),
@@ -144,12 +153,12 @@ class _CategoryState extends State<Category> {
                             Container(
                               padding: const EdgeInsets.all(6),
                               decoration: BoxDecoration(
-                                color: Colors.grey.withOpacity(0.1),
+                                color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                                 borderRadius: BorderRadius.circular(6),
                               ),
-                              child: const Icon(
+                              child: Icon(
                                 Icons.edit,
-                                color: Colors.grey,
+                                color: Theme.of(context).primaryColor,
                                 size: 18,
                               ),
                             ),

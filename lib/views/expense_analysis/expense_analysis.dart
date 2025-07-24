@@ -13,12 +13,10 @@ class ExpenseAnalysis extends StatefulWidget {
 class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
   final NumberFormat currencyFormatter = NumberFormat('#,##0');
   
-  // Mock data - sẽ thay thế bằng controller sau
-  final double totalSpending = 15000000; // 15 triệu VND
-  final double budgetLimit = 20000000; // 20 triệu VND
-  final double lastMonthSpending = 18000000; // 18 triệu tháng trước
-  final double savingsGoal = 5000000; // Mục tiêu tiết kiệm 5 triệu
-  
+  final double totalSpending = 15000000;
+  final double budgetLimit = 20000000;
+  final double lastMonthSpending = 18000000;
+  final double savingsGoal = 5000000;
   final List<SpendingCategory> spendingData = [
     SpendingCategory('Ăn uống', 6000000, Colors.red, Icons.restaurant, 40.0),
     SpendingCategory('Di chuyển', 3000000, Colors.blue, Icons.directions_car, 20.0),
@@ -153,8 +151,8 @@ class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
               const SizedBox(height: 8),
               LinearProgressIndicator(
                 value: spendingPercentage / 100,
-                backgroundColor: Colors.white.withOpacity(0.3),
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                backgroundColor: Colors.white.withValues(alpha: 0.3),
+                valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
                 borderRadius: BorderRadius.circular(4),
               ),
               const SizedBox(height: 8),
@@ -321,16 +319,16 @@ class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Icon(icon, color: color, size: 20),
@@ -426,7 +424,7 @@ class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: category.color.withOpacity(0.1),
+              color: category.color.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Icon(category.icon, color: category.color, size: 24),
@@ -574,9 +572,9 @@ class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: tip.color.withOpacity(0.1),
+        color: tip.color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: tip.color.withOpacity(0.3)),
+        border: Border.all(color: tip.color.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -612,31 +610,31 @@ class _ExpenseAnalysisState extends State<ExpenseAnalysis> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Cài đặt phân tích'),
-        content: const Column(
+                      title: Text('Cài đặt phân tích'.tr),
+                content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             ListTile(
-              leading: Icon(Icons.calendar_month),
-              title: Text('Chọn khoảng thời gian'),
-              trailing: Icon(Icons.chevron_right),
+              leading: const Icon(Icons.calendar_month),
+              title: Text('Chọn khoảng thời gian'.tr),
+              trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(
-              leading: Icon(Icons.tune),
-              title: Text('Tùy chỉnh ngân sách'),
-              trailing: Icon(Icons.chevron_right),
+              leading: const Icon(Icons.tune),
+              title: Text('Tùy chỉnh ngân sách'.tr),
+              trailing: const Icon(Icons.chevron_right),
             ),
             ListTile(
-              leading: Icon(Icons.category),
-              title: Text('Quản lý danh mục'),
-              trailing: Icon(Icons.chevron_right),
+              leading: const Icon(Icons.category),
+              title: Text('Quản lý danh mục'.tr),
+              trailing: const Icon(Icons.chevron_right),
             ),
           ],
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Đóng'),
+            child: Text('Đóng'.tr),
           ),
         ],
       ),

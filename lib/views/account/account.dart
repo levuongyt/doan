@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import '../../controllers/transaction_controller.dart';
+import '../../widget_common/custom_app_bar.dart';
 import '../login/sign_in.dart';
 
 class Account extends StatefulWidget {
@@ -35,33 +36,25 @@ class _AccountState extends State<Account> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'ACCOUNT'.tr,
-          style: Theme.of(context).textTheme.displayLarge,
-        ),
-        centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white),
+      resizeToAvoidBottomInset: true,
+      appBar: CustomAppBar(
+        title: 'TÀI KHOẢN'.tr,
+        showBackButton: false,
       ),
       body: SafeArea(
-          child: Container(
-        padding: const EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.all(10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
             Container(
               padding: const EdgeInsets.all(20),
               decoration: BoxDecoration(
-                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.1),
-                    spreadRadius: 1,
-                    blurRadius: 10,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
+                border: Border.all(
+                  color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+                  width: 1,
+                ),
               ),
               child: Column(
                 children: [
@@ -74,29 +67,21 @@ class _AccountState extends State<Account> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Theme.of(context).indicatorColor.withOpacity(0.3),
+                            color: Theme.of(context).indicatorColor.withValues(alpha: 0.3),
                             width: 3,
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.2),
-                              spreadRadius: 2,
-                              blurRadius: 8,
-                              offset: const Offset(0, 2),
-                            ),
-                          ],
-                        ),
+                          ),
                         child: ClipOval(
                           child: Image.asset(
                             accountController.selectedAvatar.value,
                             fit: BoxFit.cover,
                             errorBuilder: (context, error, stackTrace) {
                               return Container(
-                                color: Colors.grey[300],
+                                color: Theme.of(context).disabledColor,
                                 child: Icon(
                                   Icons.person,
                                   size: 50,
-                                  color: Colors.grey[600],
+                                  color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                                 ),
                               );
                             },
@@ -118,15 +103,7 @@ class _AccountState extends State<Account> {
                                 color: Colors.white,
                                 width: 2,
                               ),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 4,
-                                  offset: const Offset(0, 1),
-                                ),
-                              ],
-                            ),
+                              ),
                             child: const Icon(
                               Icons.camera_alt,
                               color: Colors.white,
@@ -155,13 +132,13 @@ class _AccountState extends State<Account> {
                         child: Container(
                           padding: const EdgeInsets.all(6),
                           decoration: BoxDecoration(
-                            color: Colors.blue.withOpacity(0.1),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
-                          child: const Icon(
+                          child: Icon(
                             Icons.edit,
                             size: 18,
-                            color: Colors.blueAccent,
+                            color: Theme.of(context).primaryColor,
                           ),
                         ),
                       ),
@@ -171,13 +148,13 @@ class _AccountState extends State<Account> {
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                     decoration: BoxDecoration(
-                      color: Colors.blue.withOpacity(0.1),
+                      color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Obx(() => Text(
                       accountController.userModel.value?.email ?? '',
                       style: TextStyle(
-                        color: Colors.blue[700],
+                        color: Theme.of(context).primaryColor,
                         fontSize: 14,
                         fontWeight: FontWeight.w500,
                       ),
@@ -194,55 +171,70 @@ class _AccountState extends State<Account> {
             buildLogout(),
           ],
         ),
-      )),
+      ),
+      )
     );
   }
 
   void _showAvatarPicker(BuildContext context) {
-    Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Chọn ảnh đại diện'.tr,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    // Ẩn bàn phím trước khi hiển thị dialog
+    FocusScope.of(context).unfocus();
+    
+    // Lưu theme trước khi async
+    final cardColor = Theme.of(context).cardColor;
+    final titleColor = Theme.of(context).textTheme.titleLarge?.color;
+    
+    // Delay nhỏ để đảm bảo bàn phím đã ẩn hoàn toàn
+    Future.delayed(const Duration(milliseconds: 100), () {
+      Get.dialog(
+        Dialog(
+          backgroundColor: cardColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          child: SingleChildScrollView(
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  _buildAvatarOption(
-                    'assets/images/avatarboy.png',
-                    'Nam'.tr,
-                    Icons.face,
+                  Text(
+                    'Chọn ảnh đại diện'.tr,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: titleColor,
+                    ),
                   ),
-                  _buildAvatarOption(
-                    'assets/images/avatargirl.png',
-                    'Nữ'.tr,
-                    Icons.face_3,
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      _buildAvatarOption(
+                        'assets/images/avatarboy.png',
+                        'Nam'.tr,
+                        Icons.face,
+                      ),
+                      _buildAvatarOption(
+                        'assets/images/avatargirl.png',
+                        'Nữ'.tr,
+                        Icons.face_3,
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 20),
+                  TextButton(
+                    onPressed: () => Get.back(),
+                    child: Text(
+                      'Hủy'.tr,
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ],
               ),
-              const SizedBox(height: 20),
-              TextButton(
-                onPressed: () => Get.back(),
-                child: Text(
-                  'Hủy'.tr,
-                  style: const TextStyle(fontSize: 16),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget _buildAvatarOption(String avatarPath, String label, IconData icon) {
@@ -256,13 +248,13 @@ class _AccountState extends State<Account> {
         decoration: BoxDecoration(
           border: Border.all(
             color: accountController.selectedAvatar.value == avatarPath
-                ? Colors.blueAccent
-                : Colors.grey.withOpacity(0.3),
+                ? Theme.of(context).primaryColor
+                : Theme.of(context).dividerColor,
             width: accountController.selectedAvatar.value == avatarPath ? 3 : 1,
           ),
           borderRadius: BorderRadius.circular(12),
           color: accountController.selectedAvatar.value == avatarPath
-              ? Colors.blue.withOpacity(0.1)
+              ? Theme.of(context).primaryColor.withValues(alpha: 0.1)
               : Colors.transparent,
         ),
         child: Column(
@@ -272,10 +264,10 @@ class _AccountState extends State<Account> {
               height: 80,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: Colors.grey.withOpacity(0.3),
-                  width: 2,
-                ),
+                                  border: Border.all(
+                    color: Theme.of(context).dividerColor,
+                    width: 2,
+                  ),
               ),
               child: ClipOval(
                 child: Image.asset(
@@ -283,11 +275,11 @@ class _AccountState extends State<Account> {
                   fit: BoxFit.cover,
                   errorBuilder: (context, error, stackTrace) {
                     return Container(
-                      color: Colors.grey[300],
+                      color: Theme.of(context).disabledColor,
                       child: Icon(
                         icon,
                         size: 40,
-                        color: Colors.grey[600],
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.6),
                       ),
                     );
                   },
@@ -300,8 +292,8 @@ class _AccountState extends State<Account> {
               style: TextStyle(
                 fontWeight: FontWeight.w600,
                 color: accountController.selectedAvatar.value == avatarPath
-                    ? Colors.blueAccent
-                    : Colors.grey[700],
+                    ? Theme.of(context).primaryColor
+                    : Theme.of(context).textTheme.bodyMedium?.color,
               ),
             ),
           ],
@@ -313,77 +305,99 @@ class _AccountState extends State<Account> {
   void _showEditNameDialog() {
     usernameController.text = accountController.userModel.value?.name ?? '';
     Get.dialog(
-      Dialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-        child: Container(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Chỉnh sửa tên'.tr,
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              const SizedBox(height: 20),
-              Form(
-                            key: formKey,
-                autovalidateMode: AutovalidateMode.onUserInteraction,
-                            child: TextFormField(
-                              controller: usernameController,
-                              keyboardType: TextInputType.name,
-                              validator: accountController.checkUserName,
-                              decoration: InputDecoration(
-                    labelText: 'Tên tài khoản'.tr,
-                    hintText: 'Nhập tên mới...'.tr,
-                    prefixIcon: const Icon(Icons.person),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.blueAccent, width: 2),
-                    ),
-                              ),
-                              onChanged: (value) {
-                                formKey.currentState!.validate();
-                              },
-                            ),
-                          ),
-              const SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  TextButton(
-                    onPressed: () => Get.back(),
-                    child: Text(
-                      'Hủy'.tr,
-                      style: const TextStyle(fontSize: 16),
+      Scaffold(
+        backgroundColor: Colors.transparent,
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Center(
+                child: Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 40),
+                  constraints: BoxConstraints(
+                    maxHeight: constraints.maxHeight * 0.8,
+                    minHeight: 200,
+                    maxWidth: constraints.maxWidth - 40,
+                  ),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: BorderRadius.circular(15),
+                  ),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                  Text(
+                    'Chỉnh sửa tên'.tr,
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).textTheme.titleLarge?.color,
                     ),
                   ),
-                            ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                  const SizedBox(height: 20),
+                  Form(
+                    key: formKey,
+                    autovalidateMode: AutovalidateMode.onUserInteraction,
+                    child: TextFormField(
+                      controller: usernameController,
+                      keyboardType: TextInputType.name,
+                      validator: accountController.checkUserName,
+                      decoration: InputDecoration(
+                        labelText: 'Tên tài khoản'.tr,
+                        hintText: 'Nhập tên mới...'.tr,
+                        prefixIcon: const Icon(Icons.person),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: BorderSide(color: Theme.of(context).primaryColor, width: 2),
+                        ),
                       ),
-                                ),
-                                onPressed: () async {
-                                  if (formKey.currentState!.validate()) {
-                                    Get.back();
-                        await accountController.updateNameUser(usernameController.text);
-                      }
-                    },
-                    child: Text(
-                      'Lưu'.tr,
-                      style: const TextStyle(color: Colors.white),
+                      onChanged: (value) {
+                        formKey.currentState!.validate();
+                      },
                     ),
                   ),
-                ],
+                  const SizedBox(height: 20),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      TextButton(
+                        onPressed: () => Get.back(),
+                        child: Text(
+                          'Hủy'.tr,
+                          style: const TextStyle(fontSize: 16),
+                        ),
+                      ),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                        ),
+                        onPressed: () async {
+                          if (formKey.currentState!.validate()) {
+                            Get.back();
+                            await accountController.updateNameUser(usernameController.text);
+                          }
+                        },
+                        child: Text(
+                          'Lưu'.tr,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                                    ],
               ),
             ],
+                    ),
+                  ),
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -393,61 +407,57 @@ class _AccountState extends State<Account> {
   Widget buildLogout() {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.logout,
-            color: Colors.red,
+            color: Theme.of(context).primaryColor,
             size: 24,
           ),
         ),
         title: Text(
           'Đăng xuất'.tr,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
-            color: Colors.red,
+            color: Theme.of(context).primaryColor,
           ),
         ),
         subtitle: Text(
           'Thoát khỏi tài khoản hiện tại'.tr,
           style: TextStyle(
-            color: Colors.grey[600],
+            color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
             fontSize: 14,
           ),
         ),
         trailing: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: Colors.red.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.arrow_forward_ios,
             size: 16,
-            color: Colors.red,
+            color: Theme.of(context).primaryColor,
           ),
         ),
       onTap: () {
           Get.dialog(
             Dialog(
+              backgroundColor: Theme.of(context).cardColor,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
               child: Container(
                 padding: const EdgeInsets.all(20),
@@ -462,9 +472,10 @@ class _AccountState extends State<Account> {
                     const SizedBox(height: 16),
                     Text(
                       'Đăng xuất'.tr,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).textTheme.titleLarge?.color,
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -472,7 +483,7 @@ class _AccountState extends State<Account> {
                       'Bạn có chắc chắn muốn đăng xuất không?'.tr,
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.grey[600],
+                        color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                         fontSize: 14,
                       ),
                     ),
@@ -520,55 +531,51 @@ class _AccountState extends State<Account> {
   Widget buildResetPass(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         leading: Container(
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-            color: Colors.orange.withOpacity(0.1),
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.lock_reset,
-            color: Colors.orange,
+            color: Theme.of(context).primaryColor,
             size: 24,
           ),
         ),
         title: Text(
           'Đặt lại mật khẩu'.tr,
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
+            color: Theme.of(context).textTheme.titleMedium?.color,
           ),
         ),
         subtitle: Text(
           'Gửi email đặt lại mật khẩu'.tr,
           style: TextStyle(
-            color: Colors.grey[600],
+            color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
             fontSize: 14,
           ),
         ),
         trailing: Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: Colors.grey[100],
+            color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
-          child: const Icon(
+          child: Icon(
             Icons.arrow_forward_ios,
             size: 16,
-            color: Colors.grey,
+            color: Theme.of(context).primaryColor,
           ),
         ),
       onTap: () {
@@ -577,11 +584,12 @@ class _AccountState extends State<Account> {
         Get.dialog(
             Dialog(
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
-              child: Container(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
                     const Icon(
                       Icons.lock_reset,
                       size: 48,
@@ -651,6 +659,7 @@ class _AccountState extends State<Account> {
                       ],
                     ),
                   ],
+                  ),
                 ),
               ),
           ),
@@ -664,28 +673,23 @@ class _AccountState extends State<Account> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
         borderRadius: BorderRadius.circular(12),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.grey.withOpacity(0.1),
-            spreadRadius: 1,
-            blurRadius: 4,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border: Border.all(
+          color: Theme.of(context).dividerColor.withValues(alpha: 0.3),
+          width: 1,
+        ),
       ),
       child: Row(
         children: [
           Container(
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
-              color: Colors.blue.withOpacity(0.1),
+              color: Theme.of(context).primaryColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(10),
             ),
-            child: const Icon(
+            child: Icon(
               Icons.email_outlined,
-              color: Colors.blueAccent,
+              color: Theme.of(context).primaryColor,
               size: 24,
             ),
           ),
@@ -698,17 +702,17 @@ class _AccountState extends State<Account> {
                   'Email'.tr,
                   style: TextStyle(
                     fontSize: 14,
-                    color: Colors.grey[600],
+                    color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.7),
                     fontWeight: FontWeight.w500,
                   ),
                 ),
                 const SizedBox(height: 4),
                 Obx(() => Text(
                   accountController.userModel.value?.email ?? "",
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 16,
                     fontWeight: FontWeight.w600,
-                    color: Colors.black87,
+                    color: Theme.of(context).textTheme.titleMedium?.color,
                   ),
                 )),
               ],

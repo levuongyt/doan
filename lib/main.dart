@@ -18,14 +18,14 @@ Future<void> configure() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-  } catch (e) {
-    // Firebase already initialized
-    if (e.toString().contains('duplicate-app')) {
-      print('Firebase already initialized');
-    } else {
-      rethrow;
+      } catch (e) {
+      // Firebase already initialized
+      if (e.toString().contains('duplicate-app')) {
+        // Firebase already initialized
+      } else {
+        rethrow;
+      }
     }
-  }
 }
 
 Future<void> main() async {
@@ -38,7 +38,7 @@ Future<void> main() async {
   try {
     tz.setLocalLocation(tz.getLocation('Asia/Ho_Chi_Minh'));
   } catch (e) {
-    print('❌ Error setting Vietnam timezone: $e');
+    // Error setting Vietnam timezone
   }
   
   await configure();
@@ -56,7 +56,7 @@ class GetMyApp extends StatelessWidget {
       overlayWidgetBuilder: (_) {
         return LoadingUtils.buildSaveTransactionLoader();
       },
-      child: GetMaterialApp(
+      child: Obx(() => GetMaterialApp(
         localizationsDelegates: const [
           GlobalMaterialLocalizations.delegate,
           GlobalMaterialLocalizations.delegate,
@@ -64,13 +64,21 @@ class GetMyApp extends StatelessWidget {
           GlobalCupertinoLocalizations.delegate,
           MonthYearPickerLocalizations.delegate,
         ],
+        supportedLocales: const [
+          Locale('vi', 'VI'),
+          Locale('en', 'EN'),
+          Locale('ja', 'JP'),
+        ],
         translations: LocalStringLanguage(),
         locale: settingController.selectedLanguage.value,
         theme: ThemesApp.light,
         darkTheme: ThemesApp.dark,
+        themeMode: settingController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
         debugShowCheckedModeBanner: false,
-        home: const SpalshScreen(),
-      ),
+        defaultTransition: Transition.rightToLeft,
+        transitionDuration: const Duration(milliseconds: 300),
+        home: const SplashScreen(),
+      )),
     );
   }
 }
