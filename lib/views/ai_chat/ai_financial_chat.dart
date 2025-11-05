@@ -99,10 +99,10 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
         actions: [
           IconButton(
             onPressed: () {
-              _showClearChatDialog();
+              _showNewChatDialog();
             },
-            icon: const Icon(Icons.refresh, color: Colors.white),
-            tooltip: 'Xóa cuộc trò chuyện'.tr,
+            icon: const Icon(Icons.add_comment, color: Colors.white),
+            tooltip: 'Cuộc trò chuyện mới'.tr,
           ),
         ],
       ),
@@ -362,16 +362,16 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
     }
   }
 
-  void _showClearChatDialog() {
+  void _showNewChatDialog() {
     Get.dialog(
       AlertDialog(
         backgroundColor: Theme.of(context).cardColor,
         title: Text(
-          'Xóa cuộc trò chuyện'.tr,
+          'Cuộc trò chuyện mới'.tr,
           style: TextStyle(color: Theme.of(context).textTheme.titleLarge?.color),
         ),
         content: Text(
-          'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?'.tr,
+          'Bạn có muốn bắt đầu cuộc trò chuyện mới? Lịch sử trò chuyện hiện tại sẽ bị xóa.'.tr,
           style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color),
         ),
         actions: [
@@ -388,10 +388,10 @@ class _AIFinancialChatState extends State<AIFinancialChat> {
               Get.back();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: Colors.red,
+              backgroundColor: Theme.of(context).primaryColor,
             ),
             child: Text(
-              'Xóa'.tr,
+              'Bắt đầu mới'.tr,
               style: const TextStyle(color: Colors.white),
             ),
           ),

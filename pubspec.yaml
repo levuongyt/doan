@@ -35,25 +35,26 @@ dependencies:
   smooth_page_indicator: ^1.2.0+3
   get: ^4.6.6
   carousel_slider: ^5.0.0
-  firebase_auth: ^5.3.0
-  firebase_core: ^3.5.0
+  firebase_auth: ^6.1.2
+  firebase_core: ^4.2.1
   google_sign_in: ^6.2.1
   flutter_facebook_auth: ^7.1.1
   pretty_dio_logger: ^1.4.0
-  cloud_firestore: ^5.4.2
-  firebase_storage: ^12.3.1
+  cloud_firestore: ^6.1.0
+  firebase_storage: ^13.0.4
   uuid: ^4.5.1
-  loader_overlay: ^4.0.2+1
+  loader_overlay: ^5.0.0
   flutter_spinkit: ^5.2.1
   dio: ^5.5.0+1
-  intl: ^0.19.0
-  fl_chart: ^0.69.0
-  syncfusion_flutter_charts: ^27.1.53
+  intl: ^0.20.2
+  fl_chart: ^1.1.1
+  syncfusion_flutter_charts: ^31.2.5
   shared_preferences: ^2.3.2
-  month_year_picker: ^0.4.0+1
-  flutter_local_notifications: ^17.1.2
-  timezone: ^0.9.2
+  month_year_picker: ^0.5.0+1
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
   groq: ^1.0.0
+  flutter_dotenv: ^5.1.0
   flutter_localizations:
     sdk: flutter
 
@@ -72,7 +73,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^4.0.0
+  flutter_lints: ^6.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -87,8 +88,10 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - .env
     - assets/Lottie/Animation.json
     - assets/images/
+    - assets/Lottie/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/to/resolution-aware-images

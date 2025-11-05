@@ -5,6 +5,7 @@ import '../config/notifications/notifications.dart';
 import '../utils/firebase/login/authentication.dart';
 import '../utils/firebase/storage/firebase_storage.dart';
 import '../views/home/home.dart';
+import '../views/login/signup_success_screen.dart';
 import 'home_controller.dart';
 import 'transaction_controller.dart';
 
@@ -60,15 +61,25 @@ class SignUpController extends GetxController {
   Future<void> signUp(String email, String name, String pass, double soDu) async {
     isLoading.value = true;
     bool result = await fireBaseUtil.register(email, name, pass, soDu);
+    isLoading.value = false;
+    
     if (result == true) {
-      Get.lazyPut(() => HomeController());
-      Get.lazyPut(() => TransactionController());
-      Get.lazyPut(() => ReportController());
-      Get.off(() => const Home());
+      // Show success animation first
+      Get.off(
+        () => SignUpSuccessScreen(
+          onAnimationComplete: () {
+            // After animation completes, go to Home
+            Get.lazyPut(() => HomeController());
+            Get.lazyPut(() => TransactionController());
+            Get.lazyPut(() => ReportController());
+            Get.off(() => const Home());
+          },
+        ),
+        transition: Transition.fadeIn,
+      );
     } else {
       showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
-    isLoading.value = false;
   }
 
 

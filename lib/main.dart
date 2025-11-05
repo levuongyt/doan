@@ -11,6 +11,7 @@ import 'package:month_year_picker/month_year_picker.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'firebase_options.dart';
 
 Future<void> configure() async {
@@ -30,6 +31,9 @@ Future<void> configure() async {
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  
+  // Load environment variables from .env file
+  await dotenv.load(fileName: ".env");
   
   // Initialize timezone data properly
   tz.initializeTimeZones();

@@ -151,10 +151,23 @@ class LocalStringLanguage extends Translations {
           'Đã bật nhắc nhở ghi chép': 'Recording reminder enabled',
           'Đã tắt nhắc nhở ghi chép': 'Recording reminder disabled',
           
+          // Login/Signup Animation
+          'Chào mừng trở lại!': 'Welcome back!',
+          'Đang thiết lập tài khoản của bạn...': 'Setting up your account...',
+          'Đăng nhập Google thành công!': 'Google Login Successful!',
+          'Đang đồng bộ tài khoản Google...': 'Syncing your Google account...',
+          'Chào mừng bạn đến với Ứng dụng Quản lý Thu Chi!': 'Welcome to Expense Management App!',
+          'Tài khoản của bạn đã được tạo thành công. Hãy bắt đầu quản lý tài chính của bạn!': 'Your account has been created successfully. Let\'s start managing your finances!',
+          'Đang thiết lập tài khoản...': 'Setting up your account...',
+          
           // AI Chat
           'TRỢ LÝ AI TÀI CHÍNH': 'AI FINANCIAL ASSISTANT',
+          'Cuộc trò chuyện mới': 'New conversation',
           'Xóa cuộc trò chuyện': 'Delete conversation',
           'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?': 'Are you sure you want to delete the entire conversation?',
+          'Bạn có muốn bắt đầu cuộc trò chuyện mới? Lịch sử trò chuyện hiện tại sẽ bị xóa.': 'Do you want to start a new conversation? Current chat history will be deleted.',
+          'Bắt đầu mới': 'Start new',
+          'Xóa': 'Delete',
           'Hỏi về tài chính cá nhân...': 'Ask about personal finance...',
           
           // Expense Analysis
@@ -356,10 +369,23 @@ class LocalStringLanguage extends Translations {
           'Đã bật nhắc nhở ghi chép': '記録リマインダーが有効になりました',
           'Đã tắt nhắc nhở ghi chép': '記録リマインダーが無効になりました',
           
+          // Login/Signup Animation
+          'Chào mừng trở lại!': 'おかえりなさい！',
+          'Đang thiết lập tài khoản của bạn...': 'アカウントを設定しています...',
+          'Đăng nhập Google thành công!': 'Googleログイン成功！',
+          'Đang đồng bộ tài khoản Google...': 'Googleアカウントを同期しています...',
+          'Chào mừng bạn đến với Ứng dụng Quản lý Thu Chi!': '支出管理アプリへようこそ！',
+          'Tài khoản của bạn đã được tạo thành công. Hãy bắt đầu quản lý tài chính của bạn!': 'アカウントが正常に作成されました。財務管理を始めましょう！',
+          'Đang thiết lập tài khoản...': 'アカウントを設定しています...',
+          
           // AI Chat
           'TRỢ LÝ AI TÀI CHÍNH': 'AI金融アシスタント',
+          'Cuộc trò chuyện mới': '新しい会話',
           'Xóa cuộc trò chuyện': '会話を削除',
           'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?': '会話全体を削除してもよろしいですか？',
+          'Bạn có muốn bắt đầu cuộc trò chuyện mới? Lịch sử trò chuyện hiện tại sẽ bị xóa.': '新しい会話を始めますか？現在のチャット履歴は削除されます。',
+          'Bắt đầu mới': '新規開始',
+          'Xóa': '削除',
           'Hỏi về tài chính cá nhân...': '個人金融について質問...',
           
           // Expense Analysis
@@ -582,10 +608,23 @@ class LocalStringLanguage extends Translations {
           'Đã bật nhắc nhở ghi chép': 'Đã bật nhắc nhở ghi chép',
           'Đã tắt nhắc nhở ghi chép': 'Đã tắt nhắc nhở ghi chép',
           
+          // Login/Signup Animation
+          'Chào mừng trở lại!': 'Chào mừng trở lại!',
+          'Đang thiết lập tài khoản của bạn...': 'Đang thiết lập tài khoản của bạn...',
+          'Đăng nhập Google thành công!': 'Đăng nhập Google thành công!',
+          'Đang đồng bộ tài khoản Google...': 'Đang đồng bộ tài khoản Google...',
+          'Chào mừng bạn đến với Ứng dụng Quản lý Thu Chi!': 'Chào mừng bạn đến với Ứng dụng Quản lý Thu Chi!',
+          'Tài khoản của bạn đã được tạo thành công. Hãy bắt đầu quản lý tài chính của bạn!': 'Tài khoản của bạn đã được tạo thành công. Hãy bắt đầu quản lý tài chính của bạn!',
+          'Đang thiết lập tài khoản...': 'Đang thiết lập tài khoản...',
+          
           // AI Chat
           'TRỢ LÝ AI TÀI CHÍNH': 'TRỢ LÝ AI TÀI CHÍNH',
+          'Cuộc trò chuyện mới': 'Cuộc trò chuyện mới',
           'Xóa cuộc trò chuyện': 'Xóa cuộc trò chuyện',
           'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?': 'Bạn có chắc chắn muốn xóa toàn bộ cuộc trò chuyện?',
+          'Bạn có muốn bắt đầu cuộc trò chuyện mới? Lịch sử trò chuyện hiện tại sẽ bị xóa.': 'Bạn có muốn bắt đầu cuộc trò chuyện mới? Lịch sử trò chuyện hiện tại sẽ bị xóa.',
+          'Bắt đầu mới': 'Bắt đầu mới',
+          'Xóa': 'Xóa',
           'Hỏi về tài chính cá nhân...': 'Hỏi về tài chính cá nhân...',
           
           // Expense Analysis

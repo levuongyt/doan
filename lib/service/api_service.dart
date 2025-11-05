@@ -1,8 +1,10 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:doan_ql_thu_chi/models/rates_currency_model.dart';
 
 class ApiService {
-  final String apiKey = '14d0306192d750bb3165c7dd';
+  // Lấy API key từ .env file
+  String get apiKey => dotenv.env['EXCHANGE_RATE_API_KEY'] ?? '';
   final Dio dio = Dio();
 
   Future<RatesCurrencyModel?> getExchangeRate() async {

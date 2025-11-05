@@ -128,8 +128,7 @@ class _SignInState extends State<SignIn> {
               buildEmailField(context),
               const SizedBox(height: 12),
               buildPasswordField(context),
-              buildRememberCheckbox(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 16),
               buildSignInButton(height * 0.055, context),
               buildFGPassAndSignUp(),
             ],
@@ -274,35 +273,6 @@ class _SignInState extends State<SignIn> {
               borderSide: const BorderSide(color: Colors.red, width: 1.5),
             ),
           ),
-        ),
-      ),
-    );
-  }
-
-  Widget buildRememberCheckbox() {
-    return Obx(
-      () => Padding(
-        padding: const EdgeInsets.only(left: 8.0, top: 4.0),
-        child: Row(
-          children: [
-                          Transform.scale(
-              scale: 0.9,
-              child: Checkbox(
-                  value: signInController.isCheckBok.value,
-                  activeColor: Theme.of(context).primaryColor,
-                  onChanged: (value) {
-                    signInController.stateCheckBok();
-                  }),
-            ),
-            Text(
-              'Nhớ mật khẩu'.tr,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.w500,
-                color: Theme.of(context).textTheme.bodyMedium?.color,
-              ),
-            )
-          ],
         ),
       ),
     );

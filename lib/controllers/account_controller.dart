@@ -65,6 +65,10 @@ class AccountController extends GetxController{
     selectedAvatar.value = avatarPath;
   }
 
+  Future<void> logout() async {
+    await fireBaseUtil.signOut();
+  }
+
  @override
   void onInit() {
     super.onInit();

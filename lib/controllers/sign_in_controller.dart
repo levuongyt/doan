@@ -1,4 +1,3 @@
-import 'package:doan_ql_thu_chi/config/SharedPreferences/prefs_service.dart';
 import 'package:doan_ql_thu_chi/config/notifications/notifications.dart';
 import 'package:doan_ql_thu_chi/controllers/report_controller.dart';
 import 'package:doan_ql_thu_chi/controllers/transaction_controller.dart';
@@ -6,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../utils/firebase/login/authentication.dart';
 import '../views/home/home.dart';
+import '../views/login/login_loading_screen.dart';
 import 'home_controller.dart';
 
 class SignInController extends GetxController {
@@ -16,31 +16,7 @@ class SignInController extends GetxController {
   final passwordController = TextEditingController();
   RxBool isVisibility = false.obs;
   RxBool isLoading = false.obs;
-  RxBool isCheckBok = false.obs;
   final FireBaseUtil fireBaseUtil = FireBaseUtil();
-  final PrefsService prefsService = PrefsService();
-
-  void stateCheckBok() {
-    isCheckBok.value = !isCheckBok.value;
-  }
-
-  Future<void> saveLoginData() async {
-    if (isCheckBok.value == true) {
-      await prefsService.saveStringData('dataEmail', emailController.text);
-      await prefsService.saveStringData('dataPass', passwordController.text);
-    }
-    await prefsService.saveBoolCheck('checkbook', isCheckBok.value);
-  }
-
-  Future<void> loadLoginData() async {
-    isCheckBok.value = await prefsService.readBoolCheck('checkbook');
-    if (isCheckBok.value) {
-      emailController.text =
-          await prefsService.readStringData('dataEmail') ?? "";
-      passwordController.text =
-          await prefsService.readStringData('dataPass') ?? "";
-    }
-  }
 
   String? ktEmail(String? value) {
     if (value == null || value.isEmpty) {
@@ -70,19 +46,30 @@ class SignInController extends GetxController {
     try {
       isLoading.value = true;
       bool result = await fireBaseUtil.login(email, pass);
+      isLoading.value = false;
+      
       if (result) {
-        await saveLoginData();
-        Get.lazyPut(() => HomeController());
-        Get.lazyPut(() => TransactionController());
-        Get.lazyPut(() => ReportController());
-        Get.off(() => const Home());
+        // Show loading animation first
+        Get.off(
+          () => LoginLoadingScreen(
+            title: 'Chào mừng trở lại!'.tr,
+            subtitle: 'Đang thiết lập tài khoản của bạn...'.tr,
+            onAnimationComplete: () {
+              // After animation completes, go to Home
+              Get.lazyPut(() => HomeController());
+              Get.lazyPut(() => TransactionController());
+              Get.lazyPut(() => ReportController());
+              Get.off(() => const Home());
+            },
+          ),
+          transition: Transition.fadeIn,
+        );
       } else {
         showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
       }
     } catch (e) {
-      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
-    } finally {
       isLoading.value = false;
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
   }
 
@@ -90,24 +77,35 @@ class SignInController extends GetxController {
     try {
       isLoading.value = true;
       bool result = await fireBaseUtil.signInWithGoogle();
+      isLoading.value = false;
+      
       if (result) {
-        Get.lazyPut(() => HomeController());
-        Get.lazyPut(() => TransactionController());
-        Get.lazyPut(() => ReportController());
-        Get.off(() => const Home());
+        // Show loading animation with Google-specific text
+        Get.off(
+          () => LoginLoadingScreen(
+            title: 'Đăng nhập Google thành công!'.tr,
+            subtitle: 'Đang đồng bộ tài khoản Google...'.tr,
+            onAnimationComplete: () {
+              // After animation completes, go to Home
+              Get.lazyPut(() => HomeController());
+              Get.lazyPut(() => TransactionController());
+              Get.lazyPut(() => ReportController());
+              Get.off(() => const Home());
+            },
+          ),
+          transition: Transition.fadeIn,
+        );
       } else {
         showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
       }
     } catch (e) {
-      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
-    } finally {
       isLoading.value = false;
+      showSnackbar('Thất bại'.tr, 'Vui lòng kiểm tra lại thông tin!'.tr, false);
     }
   }
 
   @override
   void onInit() {
     super.onInit();
-    loadLoginData();
   }
 }

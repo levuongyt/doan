@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import '../../config/SharedPreferences/prefs_service.dart';
 import '../../config/images/image_app.dart';
 import '../login/sign_in.dart';
 import '../login/sign_up.dart';
+
 class Welcome extends StatelessWidget {
   const Welcome({super.key});
+  
+  // Lưu flag đã xem Welcome và chuyển màn hình
+  Future<void> _markWelcomeAsSeenAndNavigate(Widget destination) async {
+    final PrefsService prefsService = PrefsService();
+    await prefsService.saveBoolCheck('hasSeenWelcome', true);
+    Get.off(() => destination);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,7 +83,7 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Get.off(() => const SignIn());
+          _markWelcomeAsSeenAndNavigate(const SignIn());
         },
         child: const Text(
           'Đăng nhập',
@@ -96,7 +105,7 @@ class Welcome extends StatelessWidget {
           ),
         ),
         onPressed: () {
-          Get.off(() => const SignUp());
+          _markWelcomeAsSeenAndNavigate(const SignUp());
         },
         child: Text(
           'Đăng ký'.tr,

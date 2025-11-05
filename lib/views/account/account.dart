@@ -505,10 +505,15 @@ class _AccountState extends State<Account> {
                               borderRadius: BorderRadius.circular(8),
                             ),
                 ),
-                onPressed: () {
+                onPressed: () async {
+                  // Đăng xuất Firebase
+                  await accountController.logout();
+                  // Xóa controllers
                   Get.delete<HomeController>();
                   Get.delete<TransactionController>();
                   Get.delete<ReportController>();
+                  Get.delete<AccountController>();
+                  // Về màn hình đăng nhập
                   Get.offAll(() => const SignIn());
                 },
                           child: Text(

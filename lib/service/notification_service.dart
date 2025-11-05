@@ -155,8 +155,6 @@ class NotificationService {
           ),
         ),
         androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
         matchDateTimeComponents: DateTimeComponents.time,
         payload: 'transaction_reminder',
       );
@@ -236,7 +234,7 @@ class NotificationService {
             showWhen: true,
           ),
         ),
-        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
       );
     } catch (e) {
       // Error scheduling test notification

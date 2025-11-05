@@ -64,19 +64,23 @@ class FireBaseUtil {
       await googleSignIn.signOut();
 
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      final GoogleSignInAuthentication? googleAuth =
-          await googleUser?.authentication;
+      if (googleUser == null) {
+        return false;
+      }
+      
+      final GoogleSignInAuthentication googleAuth =
+          await googleUser.authentication;
 
       final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth?.accessToken,
-        idToken: googleAuth?.idToken,
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
       );
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
       final String uid = userCredential.user?.uid ?? '';
-      final String name = googleUser?.displayName ?? '';
-      final String email = googleUser?.email ?? '';
+      final String name = googleUser.displayName ?? '';
+      final String email = googleUser.email;
       await FirebaseStorageUtil().addUsers(
           uid: uid,
           email: email,
@@ -100,5 +104,15 @@ class FireBaseUtil {
       result = false;
     }
     return result;
+  }
+
+  Future<void> signOut() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      final GoogleSignIn googleSignIn = GoogleSignIn();
+      await googleSignIn.signOut();
+    } catch (e) {
+      // Logout error
+    }
   }
 }

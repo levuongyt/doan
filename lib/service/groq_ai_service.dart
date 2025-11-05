@@ -1,11 +1,12 @@
 import 'package:get/get.dart';
 import 'package:groq/groq.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class GroqAIService {
   Groq? _groq;
   
-  // Lấy API key từ environment variable
-  static const String _apiKey = String.fromEnvironment('GROQ_API_KEY', defaultValue: '');
+  // Lấy API key từ .env file
+  String get _apiKey => dotenv.env['GROQ_API_KEY'] ?? '';
   
   GroqAIService() {
     _initializeGroq();
