@@ -78,19 +78,25 @@ class _SignUpSuccessScreenState extends State<SignUpSuccessScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final animationSize = screenHeight < 600 ? 200.0 : 280.0;
+    final titleFontSize = screenHeight < 600 ? 20.0 : 24.0;
+    final subtitleFontSize = screenHeight < 600 ? 14.0 : 16.0;
+    
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: SafeArea(
         child: Center(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 20.0),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 // Lottie Animation
                 SizedBox(
-                  width: 280,
-                  height: 280,
+                  width: animationSize,
+                  height: animationSize,
                   child: Lottie.asset(
                     'assets/Lottie/adduser.json',
                     fit: BoxFit.contain,
@@ -111,11 +117,13 @@ class _SignUpSuccessScreenState extends State<SignUpSuccessScreen>
                         Text(
                           'Chào mừng bạn đến với Ứng dụng Quản lý Thu Chi!'.tr,
                           style: TextStyle(
-                            fontSize: 24,
+                            fontSize: titleFontSize,
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).textTheme.titleLarge?.color,
                           ),
                           textAlign: TextAlign.center,
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
                         ),
                         
                         const SizedBox(height: 16),
@@ -124,10 +132,12 @@ class _SignUpSuccessScreenState extends State<SignUpSuccessScreen>
                           'Tài khoản của bạn đã được tạo thành công. Hãy bắt đầu quản lý tài chính của bạn!'.tr,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 16,
+                            fontSize: subtitleFontSize,
                             color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                             height: 1.5,
                           ),
+                          maxLines: 4,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ],
                     ),
@@ -182,4 +192,3 @@ class _SignUpSuccessScreenState extends State<SignUpSuccessScreen>
     );
   }
 }
-

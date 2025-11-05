@@ -81,6 +81,9 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    final animationSize = screenHeight < 600 ? 150.0 : 200.0;
+    
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       body: Container(
@@ -97,9 +100,12 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
         ),
         child: SafeArea(
           child: Center(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                 // Lottie Animation
                 AnimatedBuilder(
                   animation: _scaleAnimation,
@@ -107,8 +113,8 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
                     return Transform.scale(
                       scale: _scaleAnimation.value,
                       child: Container(
-                        width: 200,
-                        height: 200,
+                        width: animationSize,
+                        height: animationSize,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           boxShadow: [
@@ -121,8 +127,8 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
                         ),
                         child: Lottie.asset(
                           'assets/Lottie/login_loading.json',
-                          width: 200,
-                          height: 200,
+                          width: animationSize,
+                          height: animationSize,
                           fit: BoxFit.contain,
                           repeat: true,
                           animate: true,
@@ -143,11 +149,13 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
                       child: Text(
                         widget.title,
                         style: TextStyle(
-                          fontSize: 28,
+                          fontSize: screenHeight < 600 ? 22 : 28,
                           fontWeight: FontWeight.bold,
                           color: Theme.of(context).textTheme.titleLarge?.color,
                         ),
                         textAlign: TextAlign.center,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     );
                   },
@@ -164,11 +172,13 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
                       child: Text(
                         widget.subtitle,
                         style: TextStyle(
-                          fontSize: 16,
+                          fontSize: screenHeight < 600 ? 14 : 16,
                           color: Theme.of(context).textTheme.bodyMedium?.color?.withValues(alpha: 0.7),
                           height: 1.4,
                         ),
                         textAlign: TextAlign.center,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
                       ),
                     );
                   },
@@ -186,7 +196,8 @@ class _LoginLoadingScreenState extends State<LoginLoadingScreen>
                     );
                   },
                 ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

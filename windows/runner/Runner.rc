@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "doan_ql_thu_chi" "\0"
+            VALUE "FileDescription", "Pocki" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "doan_ql_thu_chi" "\0"
+            VALUE "InternalName", "Pocki" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "doan_ql_thu_chi.exe" "\0"
-            VALUE "ProductName", "doan_ql_thu_chi" "\0"
+            VALUE "OriginalFilename", "Pocki.exe" "\0"
+            VALUE "ProductName", "Pocki" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

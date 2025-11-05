@@ -1,7 +1,7 @@
 class ImageApp{
   static const String baseUrlImage= "assets/images/";
   static const String imageSignIn='${baseUrlImage}imageSignIn.jpg';
-  static const String imageLogo='${baseUrlImage}logo.png';
+  static const String imageLogo='${baseUrlImage}logo.webp';
   static const String imageWelcome='${baseUrlImage}welcome1.jpg';
   static const String imageWelcome2='${baseUrlImage}welcome4.png';
   static const String imageWelcome3='${baseUrlImage}imagePage3.png';

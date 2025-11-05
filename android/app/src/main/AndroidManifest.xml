@@ -11,7 +11,7 @@
     </queries>
 
     <application
-        android:label="doan_ql_thu_chi"
+        android:label="Pocki"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
