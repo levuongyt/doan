@@ -95,33 +95,6 @@ class NotificationService {
     // Notification tapped
   }
 
-  Future<void> showTestNotification() async {
-    try {
-      await _notifications.show(
-        999,
-        'Test Notification',
-        'Thông báo test - Nếu bạn thấy thông báo này thì hệ thống hoạt động tốt!',
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'test_channel',
-            'Test Channel',
-            channelDescription: 'Channel for testing notifications',
-            importance: Importance.high,
-            priority: Priority.high,
-            showWhen: true,
-          ),
-          iOS: DarwinNotificationDetails(
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
-        ),
-      );
-    } catch (e) {
-      // Test notification error
-    }
-  }
-
   Future<void> scheduleTransactionReminder({
     required String title,
     required String body,
@@ -148,7 +121,7 @@ class NotificationService {
             playSound: true,
           ),
           iOS: DarwinNotificationDetails(
-            sound: 'default.wav',
+            sound: 'default',
             presentAlert: true,
             presentBadge: true,
             presentSound: true,
@@ -206,43 +179,5 @@ class NotificationService {
     }
     return false;
   }
-
-  Future<void> debugPendingNotifications() async {
-    try {
-    } catch (e) {
-      // Error getting pending notifications
-    }
-  }
-
-  Future<void> scheduleTestIn10Seconds() async {
-    final now = tz.TZDateTime.now(_vietnamLocation);
-    final scheduledDate = now.add(const Duration(seconds: 10));
-    
-    try {
-      await _notifications.zonedSchedule(
-        998,
-        'Test Scheduled',
-        'Thông báo test sau 10 giây - Nếu thấy thì hệ thống hoạt động!',
-        scheduledDate,
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'test_scheduled',
-            'Test Scheduled',
-            channelDescription: 'Test scheduled notifications',
-            importance: Importance.high,
-            priority: Priority.high,
-            showWhen: true,
-          ),
-        ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      );
-    } catch (e) {
-      // Error scheduling test notification
-    }
-  }
-
-  Future<void> debugTimezone() async {
-    const testTime = TimeOfDay(hour: 23, minute: 35);
-    _nextInstanceOfTime(testTime);
-  }
-} 
+}
+ 

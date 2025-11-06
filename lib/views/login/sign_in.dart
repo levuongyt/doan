@@ -291,7 +291,7 @@ class _SignInState extends State<SignIn> {
             }
           },
           style: ElevatedButton.styleFrom(
-            backgroundColor: Theme.of(context).indicatorColor,
+            backgroundColor: Theme.of(context).primaryColor,
             foregroundColor: Colors.white,
             elevation: 2,
             shape: RoundedRectangleBorder(

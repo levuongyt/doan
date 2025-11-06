@@ -60,32 +60,24 @@ class FireBaseUtil {
   Future<bool> signInWithGoogle() async {
     bool result = false;
     try {
-      print('>>> Bước 1: Khởi tạo GoogleSignIn');
       final GoogleSignIn googleSignIn = GoogleSignIn();
       await googleSignIn.signOut();
-
-      print('>>> Bước 2: Mở màn hình chọn tài khoản Google');
       final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
       if (googleUser == null) {
-        print('>>> User hủy đăng nhập');
         return false;
       }
       
-      print('>>> Bước 3: Lấy authentication token');
       final GoogleSignInAuthentication googleAuth =
           await googleUser.authentication;
 
-      print('>>> Bước 4: Tạo Firebase credential');
       final credential = GoogleAuthProvider.credential(
         accessToken: googleAuth.accessToken,
         idToken: googleAuth.idToken,
       );
       
-      print('>>> Bước 5: Đăng nhập vào Firebase');
       final UserCredential userCredential =
           await FirebaseAuth.instance.signInWithCredential(credential);
 
-      print('>>> Bước 6: Lưu user vào Firestore');
       final String uid = userCredential.user?.uid ?? '';
       final String name = googleUser.displayName ?? '';
       final String email = googleUser.email;
@@ -96,11 +88,8 @@ class FireBaseUtil {
           ngayTao: DateTime.now(),
           tongSoDu: 0.0);
       
-      print('>>> ✅ Đăng nhập thành công!');
       result = true;
     } catch (e) {
-      print('>>> ❌ LỖI ĐĂNG NHẬP GOOGLE: $e');
-      print('>>> Stack trace: ${StackTrace.current}');
       result = false;
     }
     return result;

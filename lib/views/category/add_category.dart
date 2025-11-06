@@ -186,7 +186,7 @@ class _AddCategoryState extends State<AddCategory> with TickerProviderStateMixin
                         reset();
                       }
                     },
-                    backgroundColor: Theme.of(context).indicatorColor,
+                    backgroundColor: Theme.of(context).primaryColor,
                     foregroundColor: Colors.white,
                     label: Text(
                       'Lưu danh mục'.tr,

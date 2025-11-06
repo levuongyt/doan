@@ -111,11 +111,11 @@ class FirebaseStorageUtil {
     }
   }
 
-  Future<void> addCategory(
-      {required name,
-      required iconCode,
-      required colorIcon,
-      required type}) async {
+  Future<void> addCategory({
+      required String name,
+      required int iconCode,
+      required int colorIcon,
+      required String type}) async {
     try {
       await storage.collection('Categories').doc(const Uuid().v1()).set({
         'name': name,

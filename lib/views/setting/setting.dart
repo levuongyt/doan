@@ -342,7 +342,7 @@ class _SettingState extends State<Setting> {
                 await settingController.saveThemeToPreferences(settingController.isDarkMode.value);
                 Get.changeThemeMode(settingController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light);
               },
-              activeColor: Colors.orange,
+              activeTrackColor: Colors.orange,
             )),
           ],
         ),
@@ -406,7 +406,7 @@ class _SettingState extends State<Setting> {
                 ),
               );
             },
-            activeColor: Colors.blue,
+            activeTrackColor: Colors.blue,
           )),
         ],
       ),
@@ -481,7 +481,7 @@ class _SettingState extends State<Setting> {
                       );
                     }
                   : null,
-              activeColor: Colors.green,
+              activeTrackColor: Colors.green,
             )),
           ],
         ),
@@ -763,7 +763,7 @@ class _SettingState extends State<Setting> {
                             settingController.toggleReminder();
                           }
                         : null,
-                    activeColor: Colors.green,
+                    activeTrackColor: Colors.green,
                   )),
                 ],
               ),

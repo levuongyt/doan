@@ -76,7 +76,7 @@ class Welcome extends StatelessWidget {
       width: doubleWidth * (250 / 360),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).indicatorColor,
+          backgroundColor: Theme.of(context).primaryColor,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
@@ -98,7 +98,7 @@ class Welcome extends StatelessWidget {
       width: doubleWidth * (250 / 360),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: Theme.of(context).indicatorColor,
+          backgroundColor: Theme.of(context).primaryColor,
           padding: const EdgeInsets.symmetric(vertical: 14),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),

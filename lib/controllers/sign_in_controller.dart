@@ -104,8 +104,4 @@ class SignInController extends GetxController {
     }
   }
 
-  @override
-  void onInit() {
-    super.onInit();
-  }
 }

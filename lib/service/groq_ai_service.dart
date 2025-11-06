@@ -81,7 +81,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     
     // Xử lý câu hỏi về tiết kiệm
     if (lowerQuestion.contains('tiết kiệm')) {
-      return "💰 Lời khuyên tiết kiệm:\n\n"
+      return "Lời khuyên tiết kiệm:\n\n"
           "• Áp dụng quy tắc 50/30/20: 50% cho nhu cầu thiết yếu, 30% cho giải trí, 20% cho tiết kiệm\n"
           "• Tự động chuyển tiền tiết kiệm ngay khi nhận lương\n"
           "• Cắt giảm các chi phí không cần thiết như đăng ký dịch vụ không sử dụng\n"
@@ -90,7 +90,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     
     // Xử lý câu hỏi về chi tiêu
     if (lowerQuestion.contains('chi tiêu') || lowerQuestion.contains('cắt giảm')) {
-      return "📊 Quản lý chi tiêu hiệu quả:\n\n"
+      return "Quản lý chi tiêu hiệu quả:\n\n"
           "• Ghi chép mọi khoản chi tiêu trong 1 tháng để hiểu rõ thói quen\n"
           "• Ưu tiên chi tiêu theo thứ tự: nhu cầu thiết yếu → tiết kiệm → giải trí\n"
           "• Sử dụng phương pháp 'chờ 24h' trước khi mua đồ không thiết yếu\n"
@@ -99,7 +99,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     
     // Xử lý câu hỏi về ngân sách và kế hoạch
     if (lowerQuestion.contains('ngân sách') || lowerQuestion.contains('kế hoạch')) {
-      return "📈 Lập kế hoạch tài chính:\n\n"
+      return "Lập kế hoạch tài chính:\n\n"
           "• Xác định mục tiêu tài chính ngắn hạn và dài hạn\n"
           "• Tạo quỹ khẩn cấp bằng 3-6 tháng chi phí sinh hoạt\n"
           "• Đầu tư học hỏi về tài chính cá nhân\n"
@@ -108,8 +108,8 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
     
     // Xử lý câu hỏi chung khác
     if (lowerQuestion.contains('cảm ơn') || lowerQuestion.contains('thank')) {
-      return "😊 Không có gì! Tôi luôn sẵn sàng giúp bạn quản lý tài chính tốt hơn.\n\n"
-          "💡 Nhớ rằng: Quản lý tài chính tốt là chìa khóa cho cuộc sống hạnh phúc! 🔑";
+      return "Không có gì! Tôi luôn sẵn sàng giúp bạn quản lý tài chính tốt hơn.\n\n"
+          "Nhớ rằng: Quản lý tài chính tốt là chìa khóa cho cuộc sống hạnh phúc! ";
     }
     
     // Trả lời mặc định cho các câu hỏi khác
@@ -118,7 +118,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
   
   Future<String> getGeneralFinancialTip() async {
     if (_groq == null) {
-      return "💡 Mẹo tài chính hôm nay: Hãy theo dõi chi tiêu hàng ngày để kiểm soát tài chính tốt hơn! 📊";
+      return "Mẹo tài chính hôm nay: Hãy theo dõi chi tiêu hàng ngày để kiểm soát tài chính tốt hơn! ";
     }
     
     try {
@@ -127,7 +127,7 @@ Hãy đưa ra lời khuyên cụ thể và thực tế để giúp tôi quản l
       );
       return response.choices.first.message.content;
     } catch (e) {
-      return "💡 Mẹo tài chính: Hãy lập kế hoạch chi tiêu và tiết kiệm đều đặn! 💰";
+      return "Mẹo tài chính: Hãy lập kế hoạch chi tiêu và tiết kiệm đều đặn! ";
     }
   }
   

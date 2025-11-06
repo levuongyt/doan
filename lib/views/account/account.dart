@@ -67,7 +67,7 @@ class _AccountState extends State<Account> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           border: Border.all(
-                            color: Theme.of(context).indicatorColor.withValues(alpha: 0.3),
+                            color: Theme.of(context).primaryColor.withValues(alpha: 0.3),
                             width: 3,
                           ),
                           ),
@@ -97,7 +97,7 @@ class _AccountState extends State<Account> {
                             width: 32,
                             height: 32,
                             decoration: BoxDecoration(
-                    color: Theme.of(context).indicatorColor,
+                    color: Theme.of(context).primaryColor,
                               shape: BoxShape.circle,
                               border: Border.all(
                                 color: Colors.white,
@@ -432,7 +432,7 @@ class _AccountState extends State<Account> {
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 16,
-            color: Theme.of(context).primaryColor,
+            color: Theme.of(context).textTheme.titleMedium?.color,
           ),
         ),
         subtitle: Text(

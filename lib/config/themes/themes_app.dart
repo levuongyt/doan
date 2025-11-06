@@ -142,8 +142,12 @@ class ThemesApp {
     canvasColor: Colors.white,
     focusColor: Colors.grey[100],
     hintColor: Colors.grey,
-    indicatorColor: AppColors.primaryLight,
     dividerColor: AppColors.dividerLight,
+    tabBarTheme: const TabBarThemeData(
+      indicatorColor: AppColors.primaryLight,
+      labelColor: AppColors.primaryLight,
+      unselectedLabelColor: Colors.grey,
+    ),
     textTheme: TextTheme(
       displayLarge: AppTextStyles.headingLight.copyWith(color: Colors.white),
       titleLarge: AppTextStyles.titleLight,
@@ -206,8 +210,12 @@ class ThemesApp {
     canvasColor: AppColors.cardDark,
     focusColor: Colors.grey[850],
     hintColor: Colors.grey,
-    indicatorColor: AppColors.primaryDark,
     dividerColor: AppColors.dividerDark,
+    tabBarTheme: const TabBarThemeData(
+      indicatorColor: AppColors.primaryDark,
+      labelColor: AppColors.primaryDark,
+      unselectedLabelColor: Colors.grey,
+    ),
     textTheme: const TextTheme(
       displayLarge: AppTextStyles.headingDark,
       titleLarge: AppTextStyles.titleDark,

@@ -268,7 +268,7 @@ class _NhapLieuState extends State<NhapLieu> with TickerProviderStateMixin {
                       await _saveExpense();
                     }
                   },
-                  backgroundColor: Theme.of(context).indicatorColor,
+                  backgroundColor: Theme.of(context).primaryColor,
                   foregroundColor: Colors.white,
                   label: Text(
                     tabController.index == 0 
